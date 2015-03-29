@@ -45,7 +45,7 @@ describe("Jayuana.References", function () {
             });
 
             var testRefs = new J.References({name: "name", id: "id"});
-            expect(testRefs._list[0]).toEqual({id: "id", name: "name"});
+            expect(testRefs._list[0]).toEqual({name: "name", id: "id"});
          });
 
          it("should add an array of references to the reference list and" +
@@ -63,7 +63,6 @@ describe("Jayuana.References", function () {
                expect(testRefs._list[0]).toEqual({id: "id1", name: "name1"});
                expect(testRefs._list[1]).toEqual({id: "id2", name: "name2"});
                expect(testRefs._list[2]).toEqual({id: "id3", name: "name3"});
-               expect(testRefs._list[0].somethingElse).toBeUndefined();
             });
 
       });
