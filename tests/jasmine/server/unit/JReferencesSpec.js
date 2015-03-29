@@ -297,13 +297,129 @@ describe("Jayuana.References", function () {
       });
    });
 
-   xdescribe("isNameIn");
+   describe("isNameIn", function () {
+      beforeEach(function () {
+         spyOn(Match, "test").and.callFake(function (value) {
+            return !value.noId;
+         });
+         var refsList = [
+            {name: "name1", id: "id1"},
+            {name: "name2", id: "id2"},
+            {name: "name3", id: "id3"}
+         ];
+         this.testRefs = new J.References(refsList);
+         spyOn(this.testRefs, "_getIndexByName").and.callFake(function (name) {
+            switch(name){
+               case "name1":
+                  return 0;
+               case "name2":
+                  return 1;
+               case "name3":
+                  return 2;
+               default:
+                  return -1;
+            }
+         });
+      });
+      it("should return false if the name is not found", function () {
+         expect(this.testRefs.isNameIn("unknown")).toBeFalsy();
+      });
+      it("should return true if the name is found", function () {
+         expect(this.testRefs.isNameIn("name1")).toBeTruthy();
+         expect(this.testRefs.isNameIn("name2")).toBeTruthy();
+         expect(this.testRefs.isNameIn("name3")).toBeTruthy();
+      });
+   });
 
-   xdescribe("isIdIn");
+   describe("isIdIn", function () {
+      beforeEach(function () {
+         spyOn(Match, "test").and.callFake(function (value) {
+            return !value.noId;
+         });
+         var refsList = [
+            {name: "name1", id: "id1"},
+            {name: "name2", id: "id2"},
+            {name: "name3", id: "id3"}
+         ];
+         this.testRefs = new J.References(refsList);
+         spyOn(this.testRefs, "_getIndexById").and.callFake(function (id) {
+            switch(id){
+               case "id1":
+                  return 0;
+               case "id2":
+                  return 1;
+               case "id3":
+                  return 2;
+               default:
+                  return -1;
+            }
+         });
 
-   xdescribe("_getIndexById");
+      });
+      it("should return false if id is not found", function () {
+         expect(this.testRefs.isIdIn("unknown")).toBeFalsy();
+      });
+      it("should return true if id is found", function () {
+         expect(this.testRefs.isIdIn("id1")).toBeTruthy();
+         expect(this.testRefs.isIdIn("id2")).toBeTruthy();
+         expect(this.testRefs.isIdIn("id3")).toBeTruthy();
+      });
+   });
 
-   xdescribe("_getIndexByName");
+   xdescribe("_getIndexById", function () {
+      beforeEach(function () {
+         spyOn(Match, "test").and.callFake(function (value) {
+            return !value.noId;
+         });
+         var refsList = [
+            {name: "name1", id: "id1"},
+            {name: "name2", id: "id2"},
+            {name: "name3", id: "id3"}
+         ];
+         this.testRefs = new J.References(refsList);
+         spyOn(this.testRefs, "_getIndexByid").and.callFake(function (id) {
+            switch(id){
+               case "id1":
+                  return 0;
+               case "id2":
+                  return 1;
+               case "id3":
+                  return 2;
+               default:
+                  return -1;
+            }
+         });
+
+      });
+      it("should return the corresponding index to the given Id",
+         function () {
+
+      });
+      it("should return -1 if the given Id is not found", function () {
+
+      });
+   });
+
+   xdescribe("_getIndexByName", function () {
+      beforeEach(function () {
+         spyOn(Match, "test").and.callFake(function (value) {
+            return !value.noId;
+         });
+         var refsList = [
+            {name: "name1", id: "id1"},
+            {name: "name2", id: "id2"},
+            {name: "name3", id: "id3"}
+         ];
+         this.testRefs = new J.References(refsList);
+      });
+      it("should return the corresponding index to the given name",
+         function () {
+
+      });
+      it("should return -1 if the given name is not found", function () {
+
+      });
+   });
 
    xdescribe("patternOneRef");
 
