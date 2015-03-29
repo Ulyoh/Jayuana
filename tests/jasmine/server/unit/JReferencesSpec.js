@@ -366,37 +366,29 @@ describe("Jayuana.References", function () {
       });
    });
 
-   xdescribe("_getIndexById", function () {
+   describe("_getIndexById", function () {
       beforeEach(function () {
          spyOn(Match, "test").and.callFake(function (value) {
             return !value.noId;
          });
+         spyOn(_, "indexOf").and.callThrough();
          var refsList = [
             {name: "name1", id: "id1"},
             {name: "name2", id: "id2"},
             {name: "name3", id: "id3"}
          ];
          this.testRefs = new J.References(refsList);
-         spyOn(this.testRefs, "_getIndexByid").and.callFake(function (id) {
-            switch(id){
-               case "id1":
-                  return 0;
-               case "id2":
-                  return 1;
-               case "id3":
-                  return 2;
-               default:
-                  return -1;
-            }
-         });
-
       });
+
+      it("should return -1 if the given Id is not found", function () {
+         expect(this.testRefs._getIndexById("unknown")).toEqual(-1);
+      });
+
       it("should return the corresponding index to the given Id",
          function () {
-
-      });
-      it("should return -1 if the given Id is not found", function () {
-
+            expect(this.testRefs._getIndexById("id1")).toEqual(0);
+            expect(this.testRefs._getIndexById("id2")).toEqual(1);
+            expect(this.testRefs._getIndexById("id3")).toEqual(2);
       });
    });
 
