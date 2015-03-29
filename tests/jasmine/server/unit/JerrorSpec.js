@@ -1,4 +1,4 @@
-describe("Juyana.error", function () {
+describe("Jayuana.error", function () {
    var errorMsg = "error";
    var reason = "reason";
    var details = "details";
@@ -13,7 +13,7 @@ describe("Juyana.error", function () {
          }
       });
       spyOn(Meteor, "Error").and.callFake(function (a, b, c) {
-         this.errorMsg = a;
+         this.shortMsg = a;
          this.reason = b;
          this.details = c;
       });
@@ -23,21 +23,21 @@ describe("Juyana.error", function () {
       "without arguments",
       function () {
       var testError = J.error();
-      expect(testError.errorMsg).toEqual("unknown error");
+      expect(testError.shortMsg).toEqual("unknown error");
       expect(testError.reason).toEqual(" ");
       expect(testError.details).toBeDefined();
    });
    it("should return the error and reason messages and stack if" +
    "called with two arguments", function () {
       var testError = J.error(errorMsg, reason);
-      expect(testError.errorMsg).toEqual(errorMsg);
+      expect(testError.shortMsg).toEqual(errorMsg);
       expect(testError.reason).toEqual(reason);
       expect(testError.details).toBeDefined();
    });
    it("should return the error, reason and details messages if" +
    "called with three arguments", function () {
       var testError = J.error(errorMsg, reason, details);
-      expect(testError.errorMsg).toEqual(errorMsg);
+      expect(testError.shortMsg).toEqual(errorMsg);
       expect(testError.reason).toEqual(reason);
       expect(testError.details).toEqual(details);
    });
