@@ -11,6 +11,7 @@ describe("Jayuana.References", function () {
          error.details = c;
          return error;
       });
+
    });
 
    describe("constructor", function () {
@@ -23,5 +24,47 @@ describe("Jayuana.References", function () {
             reason: 'missing argument',
             details: 'stub stack' });
       });
+
+      describe("add", function () {
+         it("should throw an error if invalid argument passed", function () {
+            spyOn(Match, "test").and.callFake(function (value) {
+               return value !== "invalid";
+            });
+
+            expect(function () {
+               new J.References("invalid");
+            }).toThrow({
+               shortMsg: "References add",
+               reason: "invalid or not object passed to add method",
+               details: 'stub stack' });
+         });
+
+         it("should add a reference to the reference list", function () {
+            spyOn(Match, "test").and.callFake(function (value, pattern) {
+               return pattern !== Array;
+            });
+
+            var testRefs = new J.References({name: "name", id: "id"});
+            expect(testRefs._list["name"]).toEqual("id");
+         });
+
+         it("should add an array of references to the reference list",
+            function () {
+            spyOn(Match, "test").and.returnValue(true);
+
+            var refsList = [
+               {name: "name1", id: "id1"},
+               {name: "name2", id: "id2"},
+               {name: "name3", id: "id3"}
+            ];
+            var testRefs = new J.References(refsList);
+
+            expect(testRefs._list["name1"]).toEqual("id1");
+            expect(testRefs._list["name2"]).toEqual("id2");
+            expect(testRefs._list["name3"]).toEqual("id3");
+         });
+
+      });
+
    });
 });
