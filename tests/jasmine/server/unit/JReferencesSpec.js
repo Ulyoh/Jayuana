@@ -92,6 +92,9 @@ describe("Jayuana.References", function () {
                reason: "method removeById: id argument is not a string",
                details: 'stub stack'
             });
+            expect(this.testRefs._list[0]).toEqual({id: "id1", name: "name1"});
+            expect(this.testRefs._list[1]).toEqual({id: "id2", name: "name2"});
+            expect(this.testRefs._list[2]).toEqual({id: "id3", name: "name3"});
          });
 
 
@@ -106,6 +109,9 @@ describe("Jayuana.References", function () {
                reason: "method removeById: id not found",
                details: 'stub stack'
             });
+            expect(this.testRefs._list[0]).toEqual({id: "id1", name: "name1"});
+            expect(this.testRefs._list[1]).toEqual({id: "id2", name: "name2"});
+            expect(this.testRefs._list[2]).toEqual({id: "id3", name: "name3"});
          });
 
       it("should remove the reference corresponding to the given id",
@@ -130,31 +136,56 @@ describe("Jayuana.References", function () {
             {name: "name3", id: "id3"}
          ];
          this.testRefs = new J.References(refsList);
+         spyOn(this.testRefs, "_getIndexByName").and.callFake(function (name) {
+            switch(name){
+               case "name1":
+                  return 0;
+               case "name2":
+                  return 1;
+               case "name3":
+                  return 2;
+               default:
+                  return -1;
+            }
+         });
       });
       it("should throw an error if argument is not a string",
          function () {
+         //   spyOn(this.testRefs, "_getIndexByName").and.returnValue(-1);
             var that = this;
             expect(function () {
                that.testRefs.removeByName({noName: "noName"});
             }).toThrow({
                shortMsg: 'References',
-               reason: "method removeByName: name argument is not a string",
+               reason: "method removeByName: argument is not a string",
                details: 'stub stack'
             });
+            expect(this.testRefs._list[0]).toEqual({id: "id1", name: "name1"});
+            expect(this.testRefs._list[1]).toEqual({id: "id2", name: "name2"});
+            expect(this.testRefs._list[2]).toEqual({id: "id3", name: "name3"});
          });
 
-      it("should remove nothing if the name is not found", function () {
-         this.testRefs.removeByName("unknown");
-         expect(this.testRefs._list["name1"]).toEqual("id1");
-         expect(this.testRefs._list["name2"]).toEqual("id2");
-         expect(this.testRefs._list["name3"]).toEqual("id3");
+      it("should throw an error if the name is not found", function () {
+      //   spyOn(this.testRefs, "_getIndexByName").and.returnValue(-1);
+         var that = this;
+         expect(function () {
+            that.testRefs.removeByName("unknown");
+         }).toThrow({
+            shortMsg: 'References',
+            reason: "method removeByName: name not found",
+            details: 'stub stack'
+         });
+         expect(this.testRefs._list[0]).toEqual({id: "id1", name: "name1"});
+         expect(this.testRefs._list[1]).toEqual({id: "id2", name: "name2"});
+         expect(this.testRefs._list[2]).toEqual({id: "id3", name: "name3"});
       });
 
       it("should remove the reference", function () {
+
          this.testRefs.removeByName("name2");
-         expect(this.testRefs._list["name1"]).toEqual("id1");
-         expect(this.testRefs._list["name2"]).toBeUndefined();
-         expect(this.testRefs._list["name3"]).toEqual("id3");
+         expect(this.testRefs._list[0]).toEqual({id: "id1", name: "name1"});
+         expect(this.testRefs._list[1]).toBeUndefined();
+         expect(this.testRefs._list[2]).toEqual({id: "id3", name: "name3"});
       });
    });
 
