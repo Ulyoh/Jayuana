@@ -97,7 +97,7 @@ describe("Jayuana.References", function () {
 
       it("should throw an error if id is not found",
          function () {
-            spyOn(this.testRefs, "isIdIn").and.returnValue(false);
+            spyOn(this.testRefs, "_getIndexById").and.returnValue(-1);
             var that = this;
             expect(function () {
                that.testRefs.removeById("noId");
@@ -110,14 +110,12 @@ describe("Jayuana.References", function () {
 
       it("should remove the reference corresponding to the given id",
          function () {
-            spyOn(this.testRefs, "isIdIn").and.returnValue(true);
-            spyOn(this.testRefs, "getName").and.returnValue("name2");
-
+            spyOn(this.testRefs, "_getIndexById").and.returnValue(1);
             this.testRefs.removeById("id2");
 
-            expect(this.testRefs._list["name1"]).toEqual("id1");
-            expect(this.testRefs._list["name2"]).toBeUndefined();
-            expect(this.testRefs._list["name3"]).toEqual("id3");
+            expect(this.testRefs._list[0]).toEqual({id: "id1", name: "name1"});
+            expect(this.testRefs._list[1]).toBeUndefined();
+            expect(this.testRefs._list[2]).toEqual({id: "id3", name: "name3"});
          });
    });
 
