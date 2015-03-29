@@ -187,7 +187,7 @@ describe("Jayuana.References", function () {
       });
    });
 
-   describe("getId", function () {
+   describe("getIdByName", function () {
       beforeEach(function () {
          spyOn(Match, "test").and.callFake(function (value) {
             return !value.noName;
@@ -216,10 +216,10 @@ describe("Jayuana.References", function () {
          function () {
             var that = this;
             expect(function () {
-               that.testRefs.getId({noName: "noName"});
+               that.testRefs.getIdByName({noName: "noName"});
             }).toThrow({
                shortMsg: 'References',
-               reason: "method getId: argument is not a string",
+               reason: "method getIdByName: argument is not a string",
                details: 'stub stack'
             });
          });
@@ -227,22 +227,22 @@ describe("Jayuana.References", function () {
       it("should throw an error if the id is not found", function () {
          var that = this;
          expect(function () {
-            that.testRefs.getId("unknown");
+            that.testRefs.getIdByName("unknown");
          }).toThrow({
             shortMsg: 'References',
-            reason: "method getId: name not found",
+            reason: "method getIdByName: name not found",
             details: 'stub stack'
          });
       });
 
       it("should return the id if the name is found", function () {
-         expect(this.testRefs.getId("name1")).toEqual("id1");
-         expect(this.testRefs.getId("name2")).toEqual("id2");
-         expect(this.testRefs.getId("name3")).toEqual("id3");
+         expect(this.testRefs.getIdByName("name1")).toEqual("id1");
+         expect(this.testRefs.getIdByName("name2")).toEqual("id2");
+         expect(this.testRefs.getIdByName("name3")).toEqual("id3");
       });
    });
 
-   describe("getName", function () {
+   describe("getNameById", function () {
       beforeEach(function () {
          spyOn(Match, "test").and.callFake(function (value) {
             return !value.noId;
@@ -271,10 +271,10 @@ describe("Jayuana.References", function () {
          function () {
             var that = this;
             expect(function () {
-               that.testRefs.getName({noId: "noId"});
+               that.testRefs.getNameById({noId: "noId"});
             }).toThrow({
                shortMsg: 'References',
-               reason: "method getName: argument is not a string",
+               reason: "method getNameById: argument is not a string",
                details: 'stub stack'
             });
          });
@@ -282,19 +282,31 @@ describe("Jayuana.References", function () {
       it("should throw an error if the id is not found", function () {
          var that = this;
          expect(function () {
-            that.testRefs.getName("unknown");
+            that.testRefs.getNameById("unknown");
          }).toThrow({
             shortMsg: 'References',
-            reason: "method getName: id not found",
+            reason: "method getNameById: id not found",
             details: 'stub stack'
          });
       });
 
       it("should return the id if the name is found", function () {
-         expect(this.testRefs.getName("id1")).toEqual("name1");
-         expect(this.testRefs.getName("id2")).toEqual("name2");
-         expect(this.testRefs.getName("id3")).toEqual("name3");
+         expect(this.testRefs.getNameById("id1")).toEqual("name1");
+         expect(this.testRefs.getNameById("id2")).toEqual("name2");
+         expect(this.testRefs.getNameById("id3")).toEqual("name3");
       });
    });
+
+   xdescribe("isNameIn");
+
+   xdescribe("isIdIn");
+
+   xdescribe("_getIndexById");
+
+   xdescribe("_getIndexByName");
+
+   xdescribe("patternOneRef");
+
+   xdescribe("patternArg");
 
 });
