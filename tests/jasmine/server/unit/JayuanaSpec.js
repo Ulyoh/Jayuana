@@ -41,34 +41,49 @@ xdescribe("Jayuana", function () {
 
 xdescribe("Jayuana object", function () {
   beforeEach(function () {
-    Jobj = Jayuana.start();
+    var Jobj = Jayuana.start();
   });
 
   xdescribe("private properties created", function () {
-    it("should have a private id property");
-    it("should have a private name property");
-    it("should have a private refsFrom property");
-    it("should have a private refsTo property");
-    it("should have a private code property");
-    it("should have a private data property");
-    it("should have a private template property");
+    xit("should have a private id property");
+    xit("should have a private name property");
+    xit("should have a private refsFrom property");
+    xit("should have a private refsTo property");
+    xit("should have a private code property");
+    //xit("should have a private data property"); if I need datas, I do an instance of
+    xit("should have a private template property");
+  });
+
+  xdescribe("private method", function () {
+    xdescribe(".run", function () {
+      xit("should execute the code in the code property , with this = instance" +
+      " object ");
+    });
   });
 
   xdescribe("refsFrom and refsTo access", function () {
-    it("should have at least one reference if it is not the start element");
+    xit("should have at least one reference if it is not the start element");
   });
 
-  xdescribe("id value handle between server and client");
+  xdescribe("id value handle between server and client", function () {
+
+  });
 
   xdescribe("code", function () {
-    it("should be executed when the object is created");
-    it("should access to the refsFrom/To");
-    it("should be able to modify the private data property");
-    it("should be able to modify the template property");
-    it("should stop execution if the object is removed");
+    xit("should be executed when the object is created");
+    xit("should access to the refsFrom/To");
+    xit("should be able to modify the private data property");
+    xit("should be able to modify the template property");
+    xit("should stop execution if the object is removed");
   });
 
-  xdescribe("create underneath Jayuana objects");
+  xdescribe(".toString", function () {
+    xit("should show all private and public properties");
+  });
+
+  xdescribe("create underneath Jayuana objects", function () {
+    
+  });
 
 });
 
