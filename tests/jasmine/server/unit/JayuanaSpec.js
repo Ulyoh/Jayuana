@@ -2,30 +2,53 @@
  * Created by yoh on 4/12/15.
  */
 
-xdescribe("Jayuana", function () {
-  Jayuana();
-  xit("should create an empty db on the server");
+describe("Jayuana", function () {
+  it("should create an empty db on the server named 'jayuana_db'", function () {
+  });
+  it("should create a folder on the server named 'jayuana_db_files'");
 
-  xdescribe(".add", function () {
-    xit("should add new element(s) to the db");
-    xit("should throw an error if the argument do not match");
-    xit("should throw an error if the name already exists");
+  describe(".add", function () {
+    xdescribe("using JSON", function () {
+      it("should add new element(s) to the db as json");
+      xit("should verify that the new element(s) has(ve) been tested");
+      xit("should throw an error if the start flag is set to true");
+      xit("should throw an error if the argument do not match");
+      xit("should throw an error if the name already exists");
+    });
+    xdescribe("using code", function () {
+      it("should add new element(s) to the db as code");
+      it("should be able to set the start flag to true, and verify the object" +
+      "is a function");
+      xit("should verify that the new element(s) has(ve) been tested");
+      xit("should throw an error if try to set the start flag to true for a " +
+      "2nd element");
+      xit("should throw an error if the argument do not match");
+      xit("should throw an error if the name already exists");
+    });
+    xdescribe("using a file", function () {
+      xit("should add new element(s) to the db as code");
+      xit("should verify that the new element(s) has(ve) been tested");
+      xit("should throw an error if try to set the start flag to true for a " +
+      "2nd element");
+      xit("should throw an error if the argument do not match");
+      xit("should throw an error if the name already exists");
+    });
   });
 
   xdescribe(".getById", function () {
-    xit("should access to an element by its id");
+    it("should access to an element by its id");
     xit("should throw an error if the id is not found");
     xit("should throw an error if the argument is not a string");
   });
 
   xdescribe(".getByName", function () {
-    xit("should access to an element by its name");
+    it("should access to an element by its name");
     xit("should throw an error if the id is not found");
     xit("should throw an error if the argument is not a string");
   });
 
   xdescribe(".remove", function () {
-    xit("should remove elements from the db by id or name");
+    it("should remove elements from the db by id or name");
     xit("should remove elements from the db by a list of ids or names");
     xit("should throw an error if an instance of the elements is used");
     xit("should throw an error if the element can be used by an other element");
@@ -35,7 +58,8 @@ xdescribe("Jayuana", function () {
   });
 
   xdescribe(".start", function () {
-    xit("should execute new Jayuana with the element which has the start flag");
+    it("should execute new Jayuana with the element which has " +
+    "the start flag = true");
   });
 });
 
@@ -45,13 +69,12 @@ xdescribe("Jayuana object", function () {
   });
 
   xdescribe("private properties created", function () {
-    xit("should have a private id property");
-    xit("should have a private name property");
-    xit("should have a private refsFrom property");
-    xit("should have a private refsTo property");
-    xit("should have a private code property");
-    //xit("should have a private data property"); if I need datas, I do an instance of
-    xit("should have a private template property");
+    it("should have a private id property");
+    it("should have a private name property");
+    it("should have a private refsFrom property");
+    it("should have a private refsTo property");
+    it("should have a private object property");
+    it("should have a private template property");
   });
 
   xdescribe("private method", function () {

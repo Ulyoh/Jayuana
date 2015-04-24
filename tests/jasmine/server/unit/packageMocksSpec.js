@@ -7086,7 +7086,7 @@ var packageMetadata = {
                 },
                 "version": {
                   "type": "constant",
-                  "value": "21652b75ef72ee9a1a95e6d1b4737028dae5f07b"
+                  "value": "9d6db01168ea2413caa151f05d8b2ae305634ae8"
                 },
                 "PUBLIC_SETTINGS": {
                   "type": "undefined"
@@ -7366,6 +7366,7 @@ var packageMetadata = {
       }
     }
   },
+  "autopublish": {},
   "callback-hook": {
     "Hook": {
       "type": "function",
@@ -7854,11 +7855,11 @@ var packageMetadata = {
       "members": {
         "autoupdateVersion": {
           "type": "constant",
-          "value": "DvY3us4RfzAwprwMq"
+          "value": "TQQyTPzKGsvZSyNBY"
         },
         "autoupdateVersionRefreshable": {
           "type": "constant",
-          "value": "fe0280b4f1aae715550f5e69dd936c9a6ff598f3"
+          "value": "3a3391beee70f3894b9f37fdfd6338aec0648fbe"
         },
         "autoupdateVersionCordova": {
           "type": "constant",
@@ -7866,7 +7867,7 @@ var packageMetadata = {
         },
         "appId": {
           "type": "constant",
-          "value": "14av2o71gsk03x1iz0zoo"
+          "value": "eehgnc388eto86h8h1"
         }
       }
     }
@@ -8161,78 +8162,60 @@ var packageMetadata = {
       }
     }
   },
-  "alanning:package-stubber": {
-    "PackageStubber": {
-      "type": "object",
-      "members": {
-        "functionReplacementStr": {
-          "type": "constant",
-          "value": "function emptyFn () {}"
-        },
-        "validate": {
-          "type": "object",
-          "members": {
-            "stubPackages": {
-              "type": "function"
-            },
-            "deepCopyReplaceFn": {
-              "type": "function"
-            }
-          }
-        },
-        "stubPackages": {
-          "type": "function"
-        },
-        "listTestPackages": {
-          "type": "function"
-        },
-        "listPackages": {
-          "type": "function"
-        },
-        "listPackageExports": {
-          "type": "function"
-        },
-        "deepCopyReplaceFn": {
-          "type": "function"
-        },
-        "shouldIgnorePackage": {
-          "type": "function"
-        },
-        "replaceFnPlaceholders": {
-          "type": "function"
-        },
-        "stubGenerators": {
-          "type": "object",
-          "members": {
-            "function": {
-              "type": "function"
-            },
-            "object": {
-              "type": "function"
-            },
-            "string": {
-              "type": "function"
-            },
-            "number": {
-              "type": "function"
-            },
-            "undefined": {
-              "type": "function"
-            }
-          }
-        },
-        "generateStubJsCode": {
-          "type": "function"
-        }
-      }
-    }
-  },
   "sanjo:meteor-version": {
     "MeteorVersion": {
       "type": "object",
       "members": {
         "getSemanticVersion": {
           "type": "function"
+        }
+      }
+    }
+  },
+  "sanjo:long-running-child-process": {
+    "LongRunningChildProcess": {
+      "type": "function",
+      "members": {
+        "prototype": {
+          "type": "object",
+          "members": {
+            "taskName": {
+              "type": "null",
+              "value": null
+            },
+            "child": {
+              "type": "null",
+              "value": null
+            },
+            "pid": {
+              "type": "null",
+              "value": null
+            },
+            "getTaskName": {
+              "type": "function"
+            },
+            "getChild": {
+              "type": "function"
+            },
+            "getPid": {
+              "type": "function"
+            },
+            "isDead": {
+              "type": "function"
+            },
+            "isRunning": {
+              "type": "function"
+            },
+            "readPid": {
+              "type": "function"
+            },
+            "spawn": {
+              "type": "function"
+            },
+            "kill": {
+              "type": "function"
+            }
+          }
         }
       }
     }
@@ -8320,11 +8303,88 @@ var packageMetadata = {
                 },
                 "appPath": {
                   "type": "constant",
-                  "value": "/home/yoh/p/jayuana"
+                  "value": "/home/yoh/p/Jayuana"
                 },
                 "pid": {
                   "type": "constant",
-                  "value": 2696
+                  "value": 2776
+                },
+                "fout": {
+                  "type": "constant",
+                  "value": 26
+                },
+                "child": {
+                  "type": "object",
+                  "members": {
+                    "domain": {
+                      "type": "null",
+                      "value": null
+                    },
+                    "signalCode": {
+                      "type": "null",
+                      "value": null
+                    },
+                    "exitCode": {
+                      "type": "null",
+                      "value": null
+                    },
+                    "pid": {
+                      "type": "constant",
+                      "value": 2776
+                    },
+                    "stdin": {
+                      "type": "null",
+                      "value": null
+                    },
+                    "stdout": {
+                      "type": "null",
+                      "value": null
+                    },
+                    "stderr": {
+                      "type": "null",
+                      "value": null
+                    },
+                    "stdio": {
+                      "type": "array"
+                    },
+                    "spawn": {
+                      "type": "function"
+                    },
+                    "kill": {
+                      "type": "function"
+                    },
+                    "ref": {
+                      "type": "function"
+                    },
+                    "unref": {
+                      "type": "function"
+                    },
+                    "setMaxListeners": {
+                      "type": "function"
+                    },
+                    "emit": {
+                      "type": "function"
+                    },
+                    "addListener": {
+                      "type": "function",
+                      "refID": 17
+                    },
+                    "on": {
+                      "ref": 17
+                    },
+                    "once": {
+                      "type": "function"
+                    },
+                    "removeListener": {
+                      "type": "function"
+                    },
+                    "removeAllListeners": {
+                      "type": "function"
+                    },
+                    "listeners": {
+                      "type": "function"
+                    }
+                  }
                 },
                 "getTaskName": {
                   "type": "function"
