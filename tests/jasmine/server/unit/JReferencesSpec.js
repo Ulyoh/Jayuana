@@ -25,6 +25,8 @@ describe("Jayuana.References", function () {
             details: 'stub stack' });
       });
 
+      xit("should throw an error if not called with the new keyword");
+
       describe("add", function () {
          it("should throw an error if invalid argument passed", function () {
             spyOn(Match, "test").and.callFake(function (value) {
