@@ -5,16 +5,34 @@
 describe("Jayuana", function () {
 
   it("should create a db", function () {
-    Jayuana();
+    Jayuana(); //jshint ignore:line
     expect(Jayuana.db instanceof Mongo.Collection).toBeTruthy();
   });
 
   xit("it should throw an error if called with the 'new' keyword" );
+  xit("it should throw an error if called twice" );
   xit("should create a folder on the server named 'jayuana_db_files'");
 
-  xdescribe(".add", function () {
-    xdescribe("using JSON", function () {
-      it("should add an object to the db as json");
+  describe("add", function () {
+    beforeEach(function () {
+      Jayuana(); //jshint ignore:line
+    });
+
+    xit("should throw an error if the type of element is not given");
+
+    describe("using EJSON", function () {
+      it("should add an object to the db as EJSON", function () {
+        var obj = {
+          id: "an id",
+          name: "a name",
+          subobj: {
+            something: "a thing",
+            otherThing: "other"
+          }
+        };
+        var id = Jayuana.add(obj, "EJSON");
+        expect(Jayuana.db.findOne({_id: id})).not.toBeUndefined();
+      });
       xit("should verify that the new element(s) has(ve) been tested");
       xit("should throw an error if JSON.parse give a different result");
       xit("should throw an error if the start flag is set to true");
@@ -41,29 +59,29 @@ describe("Jayuana", function () {
     });
   });
 
-  xdescribe(".getById", function () {
+  xdescribe("getById", function () {
     it("should access to an element by its id");
     xit("should throw an error if the id is not found");
     xit("should throw an error if the argument is not a string");
   });
 
-  xdescribe(".getByName", function () {
+  xdescribe("getByName", function () {
     it("should access to an element by its name");
     xit("should throw an error if the id is not found");
     xit("should throw an error if the argument is not a string");
   });
 
-  xdescribe(".remove", function () {
+  xdescribe("remove", function () {
     it("should remove elements from the db by id or name");
     xit("should remove elements from the db by a list of ids or names");
     xit("should throw an error if an instance of the elements is used");
     xit("should throw an error if the element can be used by an other element");
-    xit("should throw an error if the element can be used by an other element " +
-    "witch is not removed at the same time");
+    xit("should throw an error if the element can be used by an other element" +
+    " witch is not removed at the same time");
     xit("should return the list of elements in RefsTo");
   });
 
-  xdescribe(".start", function () {
+  xdescribe("start", function () {
     it("should execute new Jayuana with the element which has " +
     "the start flag = true");
   });
@@ -71,7 +89,7 @@ describe("Jayuana", function () {
 
 xdescribe("Jayuana object", function () {
   beforeEach(function () {
-    var Jobj = Jayuana.start();
+    //var Jobj = Jayuana.start();
   });
 
   xdescribe("private properties created", function () {
@@ -84,8 +102,8 @@ xdescribe("Jayuana object", function () {
   });
 
   xdescribe("private method", function () {
-    xdescribe(".run", function () {
-      xit("should execute the code in the code property , with this = instance" +
+    xdescribe("run", function () {
+      xit("should execute the code in the code property ,with this = instance" +
       " object ");
     });
   });
@@ -106,7 +124,7 @@ xdescribe("Jayuana object", function () {
     xit("should stop execution if the object is removed");
   });
 
-  xdescribe(".toString", function () {
+  xdescribe("toString", function () {
     xit("should show all private and public properties");
   });
 
