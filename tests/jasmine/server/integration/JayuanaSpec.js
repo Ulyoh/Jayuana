@@ -3,14 +3,20 @@
  */
 
 describe("Jayuana", function () {
-  it("should create an empty db on the server named 'jayuana_db'", function () {
-  });
-  it("should create a folder on the server named 'jayuana_db_files'");
 
-  describe(".add", function () {
+  it("should create a db", function () {
+    Jayuana();
+    expect(Jayuana.db instanceof Mongo.Collection).toBeTruthy();
+  });
+
+  xit("it should throw an error if called with the 'new' keyword" );
+  xit("should create a folder on the server named 'jayuana_db_files'");
+
+  xdescribe(".add", function () {
     xdescribe("using JSON", function () {
-      it("should add new element(s) to the db as json");
+      it("should add an object to the db as json");
       xit("should verify that the new element(s) has(ve) been tested");
+      xit("should throw an error if JSON.parse give a different result");
       xit("should throw an error if the start flag is set to true");
       xit("should throw an error if the argument do not match");
       xit("should throw an error if the name already exists");
