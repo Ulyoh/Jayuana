@@ -1,4 +1,4 @@
-describe("Jayuana.error", function () {
+xdescribe("Jayuana.error", function () {
    var errorMsg = "error";
    var reason = "reason";
    var details = "details";
