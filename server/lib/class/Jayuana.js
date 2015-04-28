@@ -64,10 +64,6 @@ Jayuana = (function(){
     id = J.db.insert(element);
     fileName = C.FILES_FOLDER + id;
 
-    if (!fs){
-      throw J.error("fs missing");
-    }
-
     fs.writeFile(fileName, data, function (e) {
       if (e) {
         J.db.remove(id);

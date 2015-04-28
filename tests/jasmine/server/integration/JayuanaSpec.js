@@ -1,11 +1,13 @@
 /**
  * Created by yoh on 4/12/15.
  */
-
+//TODO: stringify
+//TODO: check arguments type
 describe("Jayuana", function () {
 
+  Jayuana(); //jshint ignore:line
+
   it("should create a db", function () {
-    Jayuana(); //jshint ignore:line
     expect(Jayuana.db instanceof Mongo.Collection).toBeTruthy();
   });
 
@@ -14,9 +16,6 @@ describe("Jayuana", function () {
   xit("should create a folder on the server named 'jayuana_db_files'");
 
   describe("add", function () {
-    beforeEach(function () {
-      Jayuana(); //jshint ignore:line
-    });
 
     xit("should throw an error if the type of element is not given");
 
@@ -30,28 +29,55 @@ describe("Jayuana", function () {
             otherThing: "other"
           }
         };
-        var id = Jayuana.add(obj, "EJSON");
-        expect(Jayuana.db.findOne({_id: id})).not.toBeUndefined();
+        var jasmineId;
+        Jayuana.add(obj, "EJSON", "", false, function (id, done) {
+          jasmineId = id;
+          done();
+        });
+
+
+        expect(Jayuana.db.findOne({_id: jasmineId})).not.toBeUndefined();
       });
+
       xit("should verify that the new element(s) has(ve) been tested");
       xit("should throw an error if JSON.parse give a different result");
       xit("should throw an error if the start flag is set to true");
       xit("should throw an error if the argument do not match");
       xit("should throw an error if the name already exists");
     });
+
     xdescribe("using code", function () {
-      it("should add new element(s) to the db as code");
-      it("should be able to set the start flag to true, and verify the object" +
-      "is a function");
+      var code = "function () {" +
+        "'use strict';" +
+        "return 'code executed';" +
+        "};";
+      it("should add a new element to the db as code", function () {
+        Jayuana.add(code, "code");
+        //expect(Jayuana.db.findOne({_id: id})).not.toBeUndefined();
+      });
+
+      it("should be able to set the start flag to true, and verify if the " +
+      "code is or create a function", function () {
+        var id = Jayuana.add(code, "code", '', true);
+        expect(Jayuana.db.findOne({_id: id}).start).toBeTruthy();
+      });
+
       xit("should verify that the new element(s) has(ve) been tested");
       xit("should throw an error if try to set the start flag to true for a " +
       "2nd element");
+      xit("should throw an error if code do note return an object");
       xit("should throw an error if the argument do not match");
       xit("should throw an error if the name already exists");
+      xit("should throw an error if the code add global variable");
+      xit("should throw an error if the code use undeclared global variable");
     });
     xdescribe("using a file", function () {
-      xit("should add new element(s) to the db as code");
-      xit("should verify that the new element(s) has(ve) been tested");
+    //TODO for client : use https://github.com/CollectionFS/Meteor-CollectionFS
+      it("should add a new element to the db from a file");
+      it("should be able to set the start flag to true, and verify the object" +
+      "is a function", function () {
+
+      });
       xit("should throw an error if try to set the start flag to true for a " +
       "2nd element");
       xit("should throw an error if the argument do not match");
