@@ -3,12 +3,12 @@
  */
 //TODO: stringify
 //TODO: check arguments type
-describe("Jayuana", function () {
+describe("J", function () {
 
-  Jayuana(); //jshint ignore:line
+  J(); //jshint ignore:line
 
   it("should create a db", function () {
-    expect(Jayuana.db instanceof Mongo.Collection).toBeTruthy();
+    expect(J.db instanceof Mongo.Collection).toBeTruthy();
   });
 
   xit("it should throw an error if called with the 'new' keyword" );
@@ -30,13 +30,13 @@ describe("Jayuana", function () {
           }
         };
         var jasmineId;
-        Jayuana.add(obj, "EJSON", "", false, function (id, done) {
+        J.add(obj, "EJSON", "", false, function (id, done) {
           jasmineId = id;
           done();
         });
 
 
-        expect(Jayuana.db.findOne({_id: jasmineId})).not.toBeUndefined();
+        expect(J.db.findOne({_id: jasmineId})).not.toBeUndefined();
       });
 
       xit("should verify that the new element(s) has(ve) been tested");
@@ -52,14 +52,14 @@ describe("Jayuana", function () {
         "return 'code executed';" +
         "};";
       it("should add a new element to the db as code", function () {
-        Jayuana.add(code, "code");
-        //expect(Jayuana.db.findOne({_id: id})).not.toBeUndefined();
+        J.add(code, "code");
+        //expect(J.db.findOne({_id: id})).not.toBeUndefined();
       });
 
       it("should be able to set the start flag to true, and verify if the " +
       "code is or create a function", function () {
-        var id = Jayuana.add(code, "code", '', true);
-        expect(Jayuana.db.findOne({_id: id}).start).toBeTruthy();
+        var id = J.add(code, "code", '', true);
+        expect(J.db.findOne({_id: id}).start).toBeTruthy();
       });
 
       xit("should verify that the new element(s) has(ve) been tested");
@@ -108,14 +108,14 @@ describe("Jayuana", function () {
   });
 
   xdescribe("start", function () {
-    it("should execute new Jayuana with the element which has " +
+    it("should execute new J with the element which has " +
     "the start flag = true");
   });
 });
 
-xdescribe("Jayuana object", function () {
+xdescribe("J object", function () {
   beforeEach(function () {
-    //var Jobj = Jayuana.start();
+    //var Jobj = J.start();
   });
 
   xdescribe("private properties created", function () {
@@ -154,7 +154,7 @@ xdescribe("Jayuana object", function () {
     xit("should show all private and public properties");
   });
 
-  xdescribe("create underneath Jayuana objects", function () {
+  xdescribe("create underneath J objects", function () {
     
   });
 

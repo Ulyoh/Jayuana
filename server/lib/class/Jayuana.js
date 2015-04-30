@@ -1,5 +1,5 @@
 
-Jayuana = (function(){
+J = (function(){
   "use strict";
   var J = function () {
     if (this instanceof J){
@@ -9,7 +9,7 @@ Jayuana = (function(){
       J.db = new Mongo.Collection("jayuanaDb");
     }
     else{
-      throw J.error("Jayuana", "called twice");
+      throw J.error("J", "called twice");
     }
   };
 
@@ -32,7 +32,7 @@ Jayuana = (function(){
     };
 
     if((type !== "EJSON") && (type !== "code") && (type !== "file")){
-      throw J.error("Jayuana.add", "type not defined correctly");
+      throw J.error("J.add", "type not defined correctly");
     }
 
     switch (type){
@@ -46,7 +46,7 @@ Jayuana = (function(){
           eval('objUnderTest = ' + obj); //jshint ignore:line
         }
         catch (e){
-          throw J.error("Jayuana.add", "eval(): " + e.message);
+          throw J.error("J.add", "eval(): " + e.message);
         }
 
         break;
@@ -57,7 +57,7 @@ Jayuana = (function(){
     }
 
     if (objUnderTest === undefined){
-      throw J.error("Jayuana.add", "undefined object");
+      throw J.error("J.add", "undefined object");
     }
     objUnderTest = undefined;
 
@@ -67,7 +67,7 @@ Jayuana = (function(){
     fs.writeFile(fileName, data, function (e) {
       if (e) {
         J.db.remove(id);
-        throw J.error("Jayuana.add", "writeFile: " + e.message);
+        throw J.error("J.add", "writeFile: " + e.message);
       }
       else{
         J.db.update({_id: id},{$set: {

@@ -1,5 +1,5 @@
 
-xdescribe("Jayuana.References", function () {
+xdescribe("J.References", function () {
    beforeEach(function () {
       spyOn(J, "error").and.callFake(function (a, b, c) {
          if (!c){
