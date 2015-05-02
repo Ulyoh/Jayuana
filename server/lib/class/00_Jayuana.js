@@ -7,6 +7,9 @@ J = (function(){
     }
     else if (J.db === undefined){
       J.db = new Mongo.Collection("jayuanaDb");
+      //TODO : create folders of C.FILES_FOLDER path
+      //TODO : verify that any modifying file inside the folder will not
+      //TODO : restart the server (path must begin with a dot)
     }
     else{
       throw J.error("J", "called twice");
@@ -18,7 +21,7 @@ J = (function(){
 
   // STATICS METHODS:
   J.add = function(obj, type, name, start, callback){
-    var objUnderTest, element, id, data, fileName;
+    var objUnderTest, element, id, data, filePath;
     var fs = Npm.require('fs');
 
     name = name || '';
@@ -59,24 +62,24 @@ J = (function(){
     if (objUnderTest === undefined){
       throw J.error("J.add", "undefined object");
     }
-    objUnderTest = undefined;
 
     id = J.db.insert(element);
-    fileName = C.FILES_FOLDER + id;
+    filePath = process.env.PWD + "/" + C.FILES_FOLDER + id;
 
-    fs.writeFile(fileName, data, function (e) {
+    fs.writeFile(filePath, data, Meteor.bindEnvironment(function (e) {
       if (e) {
         J.db.remove(id);
         throw J.error("J.add", "writeFile: " + e.message);
       }
       else{
+        console.log("successfully wrote: " + filePath);
         J.db.update({_id: id},{$set: {
           available: true,
-          path: fileName}});
+          path: filePath}});
 
         callback(id);
       }
-    });
+    }));
   };
 
   return J;

@@ -4,6 +4,9 @@
 //TODO: stringify
 //TODO: check arguments type
 describe("J", function () {
+  console.log("start JayuanaSpec tests");
+
+  var that = this;
 
   J(); //jshint ignore:line
 
@@ -20,23 +23,36 @@ describe("J", function () {
     xit("should throw an error if the type of element is not given");
 
     describe("using EJSON", function () {
-      it("should add an object to the db as EJSON", function () {
-        var obj = {
-          id: "an id",
-          name: "a name",
-          subobj: {
-            something: "a thing",
-            otherThing: "other"
-          }
-        };
-        var jasmineId;
-        J.add(obj, "EJSON", "", false, function (id, done) {
-          jasmineId = id;
+      var obj = {
+        id: "an id",
+        name: "a name",
+        subobj: {
+          something: "a thing",
+          otherThing: "other"
+        }
+      };
+      var fs = Npm.require('fs');
+
+      it("should add an element in the db with related properties",
+        function (done) {
+        J.add(obj, "EJSON", "", false, function (id) {
+          that.pathFile = process.env.PWD + "/" + C.FILES_FOLDER + id;
+          expect(J.db.findOne({_id: id }))
+            .toEqual({
+                _id: id,
+                name: "",
+                type: "EJSON",
+                start: false,
+                available: true,
+                path: that.pathFile
+            });
           done();
         });
-
-
-        expect(J.db.findOne({_id: jasmineId})).not.toBeUndefined();
+      });
+      
+      it("should have the object saved in a file", function () {
+        expect(EJSON.stringify(obj))
+          .toEqual(fs.readFileSync(that.pathFile, {encoding: "utf8"}));
       });
 
       xit("should verify that the new element(s) has(ve) been tested");
