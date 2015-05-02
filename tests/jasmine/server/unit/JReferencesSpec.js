@@ -6,7 +6,7 @@ xdescribe("J.References", function () {
             c = "stub stack";
          }
          var error = {};
-         error.shortMsg = a;
+         error.error = a;
          error.reason = b;
          error.details = c;
          return error;
@@ -20,7 +20,7 @@ xdescribe("J.References", function () {
          expect(function () {
             new J.References();
          }).toThrow({
-            shortMsg: 'References constructor',
+            error: 'References constructor',
             reason: 'missing argument',
             details: 'stub stack' });
       });
@@ -36,7 +36,7 @@ xdescribe("J.References", function () {
             expect(function () {
                new J.References("invalid");
             }).toThrow({
-               shortMsg: "References add",
+               error: "References add",
                reason: "invalid or not object passed to add method",
                details: 'stub stack' });
          });
@@ -90,7 +90,7 @@ xdescribe("J.References", function () {
             expect(function () {
                that.testRefs.removeById({noId: "noId"});
             }).toThrow({
-               shortMsg: 'References',
+               error: 'References',
                reason: "method removeById: id argument is not a string",
                details: 'stub stack'
             });
@@ -106,7 +106,7 @@ xdescribe("J.References", function () {
             expect(function () {
                that.testRefs.removeById("noId");
             }).toThrow({
-               shortMsg: 'References',
+               error: 'References',
                reason: "method removeById: id not found",
                details: 'stub stack'
             });
@@ -157,7 +157,7 @@ xdescribe("J.References", function () {
             expect(function () {
                that.testRefs.removeByName({noName: "noName"});
             }).toThrow({
-               shortMsg: 'References',
+               error: 'References',
                reason: "method removeByName: argument is not a string",
                details: 'stub stack'
             });
@@ -171,7 +171,7 @@ xdescribe("J.References", function () {
          expect(function () {
             that.testRefs.removeByName("unknown");
          }).toThrow({
-            shortMsg: 'References',
+            error: 'References',
             reason: "method removeByName: name not found",
             details: 'stub stack'
          });
@@ -220,7 +220,7 @@ xdescribe("J.References", function () {
             expect(function () {
                that.testRefs.getIdByName({noName: "noName"});
             }).toThrow({
-               shortMsg: 'References',
+               error: 'References',
                reason: "method getIdByName: argument is not a string",
                details: 'stub stack'
             });
@@ -231,7 +231,7 @@ xdescribe("J.References", function () {
          expect(function () {
             that.testRefs.getIdByName("unknown");
          }).toThrow({
-            shortMsg: 'References',
+            error: 'References',
             reason: "method getIdByName: name not found",
             details: 'stub stack'
          });
@@ -275,7 +275,7 @@ xdescribe("J.References", function () {
             expect(function () {
                that.testRefs.getNameById({noId: "noId"});
             }).toThrow({
-               shortMsg: 'References',
+               error: 'References',
                reason: "method getNameById: argument is not a string",
                details: 'stub stack'
             });
@@ -286,7 +286,7 @@ xdescribe("J.References", function () {
          expect(function () {
             that.testRefs.getNameById("unknown");
          }).toThrow({
-            shortMsg: 'References',
+            error: 'References',
             reason: "method getNameById: id not found",
             details: 'stub stack'
          });
