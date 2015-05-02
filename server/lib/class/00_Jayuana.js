@@ -5,14 +5,8 @@ J = (function(){
     if (this instanceof J){
 
     }
-    else if (J.db === undefined){
-      J.db = new Mongo.Collection("jayuanaDb");
-      //TODO : create folders of C.FILES_FOLDER path
-      //TODO : verify that any modifying file inside the folder will not
-      //TODO : restart the server (path must begin with a dot)
-    }
     else{
-      throw J.error("J", "called twice");
+      throw J.error("J", "must be called with the 'new' keyword");
     }
   };
 
@@ -20,6 +14,15 @@ J = (function(){
   J.prototype = {};
 
   // STATICS METHODS:
+  J.init = function () {
+    if (J.db === undefined) {
+      J.db = new Mongo.Collection("jayuanaDb");
+      //TODO : create folders of C.FILES_FOLDER path
+      //TODO : verify that any modifying file inside the folder will not
+      //TODO : restart the server (path must begin with a dot)
+    }
+  };
+
   J.add = function(obj, type, name, start, callback){
     var objUnderTest, element, id, data, filePath;
     var fs = Npm.require('fs');

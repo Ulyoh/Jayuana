@@ -11,7 +11,7 @@ describe("J", function () {
 
   var that = this;
 
-  J(); //jshint ignore:line
+  J.init();
 
   it("should create a db", function () {
     expect(J.db instanceof Mongo.Collection).toBeTruthy();
@@ -111,6 +111,7 @@ describe("J", function () {
       "2nd element");
       xit("should throw an error if the argument do not match");
       xit("should throw an error if the name already exists");
+      xit("should verify if file with same code already exists");
     });
   });
 
