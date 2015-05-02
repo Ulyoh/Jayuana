@@ -3,6 +3,9 @@
  */
 //TODO: stringify
 //TODO: check arguments type
+
+"use strict";
+
 describe("J", function () {
   console.log("start JayuanaSpec tests");
 
@@ -22,6 +25,27 @@ describe("J", function () {
 
     xit("should throw an error if the type of element is not given");
 
+    function testAdd(type, obj){
+      if ((type !== "EJSON") && (type !== "code") && (type !== "file")){
+        return;
+      }
+      return function (done) {
+        J.add(obj, type, "", false, function (id) {
+          that.pathFile = process.env.PWD + "/" + C.FILES_FOLDER + id;
+          expect(J.db.findOne({_id: id }))
+            .toEqual({
+              _id: id,
+              name: "",
+              type: type,
+              start: false,
+              available: true,
+              path: that.pathFile
+            });
+          done();
+        });
+      };
+    }
+
     describe("using EJSON", function () {
       var obj = {
         id: "an id",
@@ -34,21 +58,8 @@ describe("J", function () {
       var fs = Npm.require('fs');
 
       it("should add an element in the db with related properties",
-        function (done) {
-        J.add(obj, "EJSON", "", false, function (id) {
-          that.pathFile = process.env.PWD + "/" + C.FILES_FOLDER + id;
-          expect(J.db.findOne({_id: id }))
-            .toEqual({
-                _id: id,
-                name: "",
-                type: "EJSON",
-                start: false,
-                available: true,
-                path: that.pathFile
-            });
-          done();
-        });
-      });
+        testAdd("EJSON", obj)
+        );
       
       it("should have the object saved in a file", function () {
         expect(EJSON.stringify(obj))
@@ -56,26 +67,28 @@ describe("J", function () {
       });
 
       xit("should verify that the new element(s) has(ve) been tested");
-      xit("should throw an error if JSON.parse give a different result");
+      xit("should throw an error if EJSON.parse give a different result");
       xit("should throw an error if the start flag is set to true");
       xit("should throw an error if the argument do not match");
       xit("should throw an error if the name already exists");
     });
 
-    xdescribe("using code", function () {
+    describe("using code", function () {
       var code = "function () {" +
         "'use strict';" +
         "return 'code executed';" +
         "};";
-      it("should add a new element to the db as code", function () {
-        J.add(code, "code");
-        //expect(J.db.findOne({_id: id})).not.toBeUndefined();
-      });
+      it("should add a new element to the db as code", testAdd("code", code));
 
       it("should be able to set the start flag to true, and verify if the " +
-      "code is or create a function", function () {
-        var id = J.add(code, "code", '', true);
-        expect(J.db.findOne({_id: id}).start).toBeTruthy();
+      "code generate a function", function (done) {
+        J.add(code, "code", '', true, function (id) {
+          expect(J.db.findOne({_id: id}).start).toBeTruthy();
+          done();
+        });
+        expect(function(){
+          J.add("{info: 'this is not a function'}", "code", '', true);})
+          .toThrowError("start flag true and object is not a function [J.add]");
       });
 
       xit("should verify that the new element(s) has(ve) been tested");

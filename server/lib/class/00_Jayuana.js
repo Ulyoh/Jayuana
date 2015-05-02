@@ -51,6 +51,7 @@ J = (function(){
         catch (e){
           throw J.error("J.add", "eval(): " + e.message);
         }
+        data = obj;
 
         break;
 
@@ -61,6 +62,10 @@ J = (function(){
 
     if (objUnderTest === undefined){
       throw J.error("J.add", "undefined object");
+    }
+
+    if ((element.start === true) && !(_.isFunction(objUnderTest))){
+      throw J.error("J.add", "start flag true and object is not a function");
     }
 
     id = J.db.insert(element);
