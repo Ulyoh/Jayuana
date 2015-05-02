@@ -77,6 +77,8 @@ J = (function(){
     fs.writeFile(filePath, data, Meteor.bindEnvironment(function (e) {
       if (e) {
         J.db.remove(id);
+        //TODO : should not throw an error but pass the error to callback(e, id)
+        //TODO : save it in a log
         throw J.error("J.add", "writeFile: " + e.message);
       }
       else{
