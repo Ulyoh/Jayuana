@@ -92,6 +92,18 @@ J = (function(){
     }));
   };
 
+  J.getById = function (id, callback) {
+    var fs = Npm.require('fs');
+    var element = J.db.findOne({_id: id });
+
+    fs.readFile(element.path, {encoding: 'utf8'}, function (err, data){
+      if(!err){
+        element.objToEval = data;
+      }
+      callback(err, element);
+    });
+  };
+
   return J;
 })();
 

@@ -7,8 +7,6 @@
 "use strict";
 
 describe("J", function () {
-  console.log("start JayuanaSpec tests");
-
   var that = this;
 
   J.init();
@@ -100,10 +98,11 @@ describe("J", function () {
       xit("should throw an error if the code add global variable");
       xit("should throw an error if the code use undeclared global variable");
     });
+
     xdescribe("using a file", function () {
     //TODO for client : use https://github.com/CollectionFS/Meteor-CollectionFS
-      it("should add a new element to the db from a file");
-      it("should be able to set the start flag to true, and verify the object" +
+      xit("should add a new element to the db from a file");
+      xit("should be able to set the start flag to true, and verify the object" +
       "is a function", function () {
 
       });
@@ -115,8 +114,26 @@ describe("J", function () {
     });
   });
 
-  xdescribe("getById", function () {
-    it("should access to an element by its id");
+  describe("getById", function () {
+    it("should access to an element by its id", function (done) {
+      var obj = "blabla"; //TODO: add test with different objects
+                          //TODO: is a non object should be accepted?
+      var elementPartial = {
+        name: "",
+        type: "EJSON",
+        start: false,
+        available: true
+      };
+
+      J.add(obj, "EJSON", "", false, function (id) {
+        J.getById(id, function (err, data) {
+          elementPartial.objToEval = EJSON.stringify(obj);
+          expect(data).toEqual(jasmine.objectContaining(elementPartial));
+          done();
+        });
+      });
+    });
+
     xit("should throw an error if the id is not found");
     xit("should throw an error if the argument is not a string");
   });
