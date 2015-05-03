@@ -104,6 +104,11 @@ J = (function(){
     });
   };
 
+  J.getByName = function(name, callback) {
+    var id =  J.db.findOne({name: name})._id;
+    J.getById(id, callback);
+  };
+
   return J;
 })();
 

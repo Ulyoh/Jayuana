@@ -102,7 +102,7 @@ describe("J", function () {
     xdescribe("using a file", function () {
     //TODO for client : use https://github.com/CollectionFS/Meteor-CollectionFS
       xit("should add a new element to the db from a file");
-      xit("should be able to set the start flag to true, and verify the object" +
+      xit("should be able to set the start flag to true and verify the object" +
       "is a function", function () {
 
       });
@@ -114,7 +114,7 @@ describe("J", function () {
     });
   });
 
-  describe("getById", function () {
+  xdescribe("getById", function () {
     it("should access to an element by its id", function (done) {
       var obj = "blabla"; //TODO: add test with different objects
                           //TODO: is a non object should be accepted?
@@ -122,12 +122,12 @@ describe("J", function () {
         name: "",
         type: "EJSON",
         start: false,
-        available: true
+        available: true,
+        objToEval: EJSON.stringify(obj)
       };
 
       J.add(obj, "EJSON", "", false, function (id) {
         J.getById(id, function (err, data) {
-          elementPartial.objToEval = EJSON.stringify(obj);
           expect(data).toEqual(jasmine.objectContaining(elementPartial));
           done();
         });
@@ -138,10 +138,29 @@ describe("J", function () {
     xit("should throw an error if the argument is not a string");
   });
 
-  xdescribe("getByName", function () {
-    it("should access to an element by its name");
+  describe("getByName", function () {
+    it("should access to an element by its name", function (done) {
+      var obj = "blabla"; //TODO: add test with different objects
+      //TODO: is a non object should be accepted?
+      var name = "name_test";
+      var elementPartial = {
+        name: name,
+        type: "EJSON",
+        start: false,
+        available: true,
+        objToEval: EJSON.stringify(obj)
+      };
+
+      J.add(obj, "EJSON", name, false, function () {
+        J.getByName(name, function (err, data) {
+          expect(data).toEqual(jasmine.objectContaining(elementPartial));
+          done();
+        });
+      });
+    });
     xit("should throw an error if the id is not found");
     xit("should throw an error if the argument is not a string");
+    xit("should throw an error if the string is empty");
   });
 
   xdescribe("remove", function () {
