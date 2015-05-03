@@ -87,7 +87,9 @@ J = (function(){
           available: true,
           path: filePath}});
 
-        callback(id);
+        if (callback){
+          callback(id);
+        }
       }
     }));
   };
@@ -100,7 +102,9 @@ J = (function(){
       if(!err){
         element.objToEval = data;
       }
-      callback(err, element);
+      if (callback){
+        callback(err, element);
+      }
     });
   };
 
