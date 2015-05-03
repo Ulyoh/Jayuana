@@ -114,7 +114,7 @@ describe("J", function () {
     });
   });
 
-  xdescribe("getById", function () {
+  describe("getById", function () {
     it("should access to an element by its id", function (done) {
       var obj = "blabla"; //TODO: add test with different objects
                           //TODO: is a non object should be accepted?
@@ -128,10 +128,13 @@ describe("J", function () {
 
       J.add(obj, "EJSON", "", false, function (id) {
         J.getById(id, function (err, data) {
-          expect(data).toEqual(jasmine.objectContaining(elementPartial));
-          done();
+          that.data = data;
         });
       });
+      Meteor.setTimeout(function () {
+        expect(that.data).toEqual(jasmine.objectContaining(elementPartial));
+        done();
+      }, 50);
     });
 
     xit("should throw an error if the id is not found");
@@ -153,10 +156,13 @@ describe("J", function () {
 
       J.add(obj, "EJSON", name, false, function () {
         J.getByName(name, function (err, data) {
-          expect(data).toEqual(jasmine.objectContaining(elementPartial));
-          done();
+          that.data = data;
         });
       });
+      Meteor.setTimeout(function () {
+        expect(that.data).toEqual(jasmine.objectContaining(elementPartial));
+        done();
+      }, 50);
     });
     xit("should throw an error if the id is not found");
     xit("should throw an error if the argument is not a string");
