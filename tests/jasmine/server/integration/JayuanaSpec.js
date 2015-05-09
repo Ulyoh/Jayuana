@@ -6,7 +6,7 @@
 
 "use strict";
 
-xdescribe("J", function () {
+describe("J", function () {
   var that = this;
 
   J.init();

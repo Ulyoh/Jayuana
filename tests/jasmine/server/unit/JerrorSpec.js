@@ -12,11 +12,6 @@ describe("J.Error", function () {
           return undefined;
        }
     });
-    /*spyOn(Meteor, "Error").and.callFake(function (a, b, c) {
-       this.error = a;
-       this.reason = b;
-       this.details = c;
-    });*/
   });
 
   it("should return 'unknown Error' and stack if call " +
