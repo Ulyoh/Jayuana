@@ -8,7 +8,7 @@ J.References = (function () {
    var References = function (refArrayOrOne) {
       var refArray = [];
       if (!refArrayOrOne){
-         throw J.error("References constructor", "missing argument");
+         throw new J.Error("References constructor", "missing argument");
       }
       else if(!Match.test(refArrayOrOne, Array)){
          refArray[0] = refArrayOrOne;
@@ -29,7 +29,7 @@ J.References = (function () {
          this._list.push(cleanRef);
       }
       else{
-         throw J.error("References add", "invalid or not object " +
+         throw new J.Error("References add", "invalid or not object " +
          "passed to add method");
       }
    };
@@ -37,13 +37,13 @@ J.References = (function () {
    References.prototype.removeById = function (id) {
       var index;
       if (!Match.test(id, String)){
-         throw J.error("References", "method removeById: id argument is " +
+         throw new J.Error("References", "method removeById: id argument is " +
          "not a string");
       }
 
       index = this._getIndexById(id);
       if (index === -1){
-         throw J.error("References", "method removeById: id not found");
+         throw new J.Error("References", "method removeById: id not found");
       }
       this._list[index] = undefined;
    };
@@ -51,13 +51,13 @@ J.References = (function () {
    References.prototype.removeByName = function (name) {
       var index;
       if (!Match.test(name, String)){
-         throw J.error("References", "method removeByName: argument is " +
+         throw new J.Error("References", "method removeByName: argument is " +
          "not a string");
       }
 
       index = this._getIndexByName(name);
       if (index === -1){
-         throw J.error("References", "method removeByName: name not found");
+         throw new J.Error("References", "method removeByName: name not found");
       }
       this._list[index] = undefined;
    };
@@ -65,12 +65,12 @@ J.References = (function () {
    References.prototype.getIdByName = function(name){
       var index;
       if (!Match.test(name, String)){
-         throw J.error("References", "method getIdByName: argument is " +
+         throw new J.Error("References", "method getIdByName: argument is " +
          "not a string");
       }
       index = this._getIndexByName(name);
       if (index === -1){
-         throw J.error("References", "method getIdByName: name not found");
+         throw new J.Error("References", "method getIdByName: name not found");
       }
       return this._list[index].id;
    };
@@ -78,12 +78,12 @@ J.References = (function () {
    References.prototype.getNameById = function (id) {
       var index;
       if (!Match.test(id, String)){
-         throw J.error("References", "method getNameById: argument is " +
+         throw new J.Error("References", "method getNameById: argument is " +
          "not a string");
       }
       index = this._getIndexById(id);
       if (index === -1){
-         throw J.error("References", "method getNameById: id not found");
+         throw new J.Error("References", "method getNameById: id not found");
       }
       return this._list[index].name;
    };

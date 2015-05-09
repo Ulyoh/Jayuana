@@ -6,7 +6,7 @@ J = (function(){
 
     }
     else{
-      throw J.error("J", "must be called with the 'new' keyword");
+      throw new J.Error("J", "must be called with the 'new' keyword");
     }
   };
 
@@ -38,7 +38,7 @@ J = (function(){
     };
 
     if((type !== "EJSON") && (type !== "code") && (type !== "file")){
-      throw J.error("J.add", "type not defined correctly");
+      throw new J.Error("J.add", "type not defined correctly");
     }
 
     switch (type){
@@ -52,7 +52,7 @@ J = (function(){
           eval('objUnderTest = ' + obj); //jshint ignore:line
         }
         catch (e){
-          throw J.error("J.add", "eval(): " + e.message);
+          throw new J.Error("J.add", "eval(): " + e.message);
         }
         data = obj;
 
@@ -64,11 +64,11 @@ J = (function(){
     }
 
     if (objUnderTest === undefined){
-      throw J.error("J.add", "undefined object");
+      throw new J.Error("J.add", "undefined object");
     }
 
     if ((element.start === true) && !(_.isFunction(objUnderTest))){
-      throw J.error("J.add", "start flag true and object is not a function");
+      throw new J.Error("J.add", "start flag true and object is not a function");
     }
 
     id = J.db.insert(element);
@@ -77,9 +77,9 @@ J = (function(){
     fs.writeFile(filePath, data, Meteor.bindEnvironment(function (e) {
       if (e) {
         J.db.remove(id);
-        //TODO : should not throw an error but pass the error to callback(e, id)
+        //TODO : should not throw an Error but pass the Error to callback(e, id)
         //TODO : save it in a log
-        throw J.error("J.add", "writeFile: " + e.message);
+        throw new J.Error("J.add", "writeFile: " + e.message);
       }
       else{
         console.log("successfully wrote: " + filePath);

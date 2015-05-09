@@ -1,12 +1,12 @@
 
 xdescribe("J.References", function () {
    beforeEach(function () {
-      spyOn(J, "error").and.callFake(function (a, b, c) {
+      spyOn(J, "Error").and.callFake(function (a, b, c) {
          if (!c){
             c = "stub stack";
          }
          var error = {};
-         error.error = a;
+         error.Error = a;
          error.reason = b;
          error.details = c;
          return error;
@@ -16,19 +16,19 @@ xdescribe("J.References", function () {
 
    describe("constructor", function () {
 
-      it("should throw an error if no argument passed", function () {
+      it("should throw an Error if no argument passed", function () {
          expect(function () {
             new J.References();
          }).toThrow({
-            error: 'References constructor',
+            Error: 'References constructor',
             reason: 'missing argument',
             details: 'stub stack' });
       });
 
-      xit("should throw an error if not called with the new keyword");
+      xit("should throw an Error if not called with the new keyword");
 
       describe("add", function () {
-         it("should throw an error if invalid argument passed", function () {
+         it("should throw an Error if invalid argument passed", function () {
             spyOn(Match, "test").and.callFake(function (value) {
                return value !== "invalid";
             });
@@ -36,7 +36,7 @@ xdescribe("J.References", function () {
             expect(function () {
                new J.References("invalid");
             }).toThrow({
-               error: "References add",
+               Error: "References add",
                reason: "invalid or not object passed to add method",
                details: 'stub stack' });
          });
@@ -84,13 +84,13 @@ xdescribe("J.References", function () {
          this.testRefs = new J.References(refsList);
       });
 
-      it("should throw an error if argument is not a string",
+      it("should throw an Error if argument is not a string",
          function () {
             var that = this;
             expect(function () {
                that.testRefs.removeById({noId: "noId"});
             }).toThrow({
-               error: 'References',
+               Error: 'References',
                reason: "method removeById: id argument is not a string",
                details: 'stub stack'
             });
@@ -99,14 +99,14 @@ xdescribe("J.References", function () {
             expect(this.testRefs._list[2]).toEqual({id: "id3", name: "name3"});
          });
 
-      it("should throw an error if id is not found",
+      it("should throw an Error if id is not found",
          function () {
             spyOn(this.testRefs, "_getIndexById").and.returnValue(-1);
             var that = this;
             expect(function () {
                that.testRefs.removeById("noId");
             }).toThrow({
-               error: 'References',
+               Error: 'References',
                reason: "method removeById: id not found",
                details: 'stub stack'
             });
@@ -150,14 +150,14 @@ xdescribe("J.References", function () {
             }
          });
       });
-      it("should throw an error if argument is not a string",
+      it("should throw an Error if argument is not a string",
          function () {
          //   spyOn(this.testRefs, "_getIndexByName").and.returnValue(-1);
             var that = this;
             expect(function () {
                that.testRefs.removeByName({noName: "noName"});
             }).toThrow({
-               error: 'References',
+               Error: 'References',
                reason: "method removeByName: argument is not a string",
                details: 'stub stack'
             });
@@ -166,12 +166,12 @@ xdescribe("J.References", function () {
             expect(this.testRefs._list[2]).toEqual({id: "id3", name: "name3"});
          });
 
-      it("should throw an error if the name is not found", function () {
+      it("should throw an Error if the name is not found", function () {
          var that = this;
          expect(function () {
             that.testRefs.removeByName("unknown");
          }).toThrow({
-            error: 'References',
+            Error: 'References',
             reason: "method removeByName: name not found",
             details: 'stub stack'
          });
@@ -214,24 +214,24 @@ xdescribe("J.References", function () {
          });
       });
 
-      it("should throw an error if argument is not a string",
+      it("should throw an Error if argument is not a string",
          function () {
             var that = this;
             expect(function () {
                that.testRefs.getIdByName({noName: "noName"});
             }).toThrow({
-               error: 'References',
+               Error: 'References',
                reason: "method getIdByName: argument is not a string",
                details: 'stub stack'
             });
          });
 
-      it("should throw an error if the id is not found", function () {
+      it("should throw an Error if the id is not found", function () {
          var that = this;
          expect(function () {
             that.testRefs.getIdByName("unknown");
          }).toThrow({
-            error: 'References',
+            Error: 'References',
             reason: "method getIdByName: name not found",
             details: 'stub stack'
          });
@@ -269,24 +269,24 @@ xdescribe("J.References", function () {
          });
       });
 
-      it("should throw an error if argument is not a string",
+      it("should throw an Error if argument is not a string",
          function () {
             var that = this;
             expect(function () {
                that.testRefs.getNameById({noId: "noId"});
             }).toThrow({
-               error: 'References',
+               Error: 'References',
                reason: "method getNameById: argument is not a string",
                details: 'stub stack'
             });
          });
 
-      it("should throw an error if the id is not found", function () {
+      it("should throw an Error if the id is not found", function () {
          var that = this;
          expect(function () {
             that.testRefs.getNameById("unknown");
          }).toThrow({
-            error: 'References',
+            Error: 'References',
             reason: "method getNameById: id not found",
             details: 'stub stack'
          });

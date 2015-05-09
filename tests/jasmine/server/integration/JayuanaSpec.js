@@ -6,7 +6,7 @@
 
 "use strict";
 
-describe("J", function () {
+xdescribe("J", function () {
   var that = this;
 
   J.init();
@@ -15,13 +15,13 @@ describe("J", function () {
     expect(J.db instanceof Mongo.Collection).toBeTruthy();
   });
 
-  xit("it should throw an error if called with the 'new' keyword" );
-  xit("it should throw an error if called twice" );
+  xit("it should throw an Error if called with the 'new' keyword" );
+  xit("it should throw an Error if called twice" );
   xit("should create a folder on the server named 'jayuana_db_files'");
 
   describe("add", function () {
 
-    xit("should throw an error if the type of element is not given");
+    xit("should throw an Error if the type of element is not given");
 
     function testAdd(type, obj){
       if ((type !== "EJSON") && (type !== "code") && (type !== "file")){
@@ -65,10 +65,10 @@ describe("J", function () {
       });
 
       xit("should verify that the new element(s) has(ve) been tested");
-      xit("should throw an error if EJSON.parse give a different result");
-      xit("should throw an error if the start flag is set to true");
-      xit("should throw an error if the argument do not match");
-      xit("should throw an error if the name already exists");
+      xit("should throw an Error if EJSON.parse give a different result");
+      xit("should throw an Error if the start flag is set to true");
+      xit("should throw an Error if the argument do not match");
+      xit("should throw an Error if the name already exists");
     });
 
     describe("using code", function () {
@@ -90,13 +90,13 @@ describe("J", function () {
       });
 
       xit("should verify that the new element(s) has(ve) been tested");
-      xit("should throw an error if try to set the start flag to true for a " +
+      xit("should throw an Error if try to set the start flag to true for a " +
       "2nd element");
-      xit("should throw an error if code do note return an object");
-      xit("should throw an error if the argument do not match");
-      xit("should throw an error if the name already exists");
-      xit("should throw an error if the code add global variable");
-      xit("should throw an error if the code use undeclared global variable");
+      xit("should throw an Error if code do note return an object");
+      xit("should throw an Error if the argument do not match");
+      xit("should throw an Error if the name already exists");
+      xit("should throw an Error if the code add global variable");
+      xit("should throw an Error if the code use undeclared global variable");
     });
 
     xdescribe("using a file", function () {
@@ -106,10 +106,10 @@ describe("J", function () {
       "is a function", function () {
 
       });
-      xit("should throw an error if try to set the start flag to true for a " +
+      xit("should throw an Error if try to set the start flag to true for a " +
       "2nd element");
-      xit("should throw an error if the argument do not match");
-      xit("should throw an error if the name already exists");
+      xit("should throw an Error if the argument do not match");
+      xit("should throw an Error if the name already exists");
       xit("should verify if file with same code already exists");
     });
   });
@@ -137,8 +137,8 @@ describe("J", function () {
       }, 50);
     });
 
-    xit("should throw an error if the id is not found");
-    xit("should throw an error if the argument is not a string");
+    xit("should throw an Error if the id is not found");
+    xit("should throw an Error if the argument is not a string");
   });
 
   describe("getByName", function () {
@@ -164,17 +164,17 @@ describe("J", function () {
         done();
       }, 50);
     });
-    xit("should throw an error if the id is not found");
-    xit("should throw an error if the argument is not a string");
-    xit("should throw an error if the string is empty");
+    xit("should throw an Error if the id is not found");
+    xit("should throw an Error if the argument is not a string");
+    xit("should throw an Error if the string is empty");
   });
 
   xdescribe("remove", function () {
     it("should remove elements from the db by id or name");
     xit("should remove elements from the db by a list of ids or names");
-    xit("should throw an error if an instance of the elements is used");
-    xit("should throw an error if the element can be used by an other element");
-    xit("should throw an error if the element can be used by an other element" +
+    xit("should throw an Error if an instance of the elements is used");
+    xit("should throw an Error if the element can be used by an other element");
+    xit("should throw an Error if the element can be used by an other element" +
     " witch is not removed at the same time");
     xit("should return the list of elements in RefsTo");
   });
