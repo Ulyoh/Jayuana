@@ -3,9 +3,12 @@
 J.Error = (function() {
 
   var e = function (error, reason, details) {
-    var self = this;
+    var self = this, tmpStack, endFirstLine;
 
     self.name = "Jayuana.Error";
+    tmpStack = (new Error()).stack;
+    endFirstLine = tmpStack.indexOf("\n", 8) + 1;
+    self.stack = "Error: \n" + tmpStack.slice(endFirstLine);
 
     if (!Match.test(error, String)) {
       error = "unknown Error";
@@ -14,19 +17,14 @@ J.Error = (function() {
       reason = " ";
     }
     if (!Match.test(details, String)) {
-      details = (new Error()).stack;
+      details = "";
     }
 
     self.error = error;
     self.reason = reason;
     self.details = details;
 
-    if (self.reason) {
-      self.message = self.reason + ' [' + self.error + ']';
-    }
-    else {
-      self.message = '[' + self.error + ']';
-    }
+    self.message = self.reason + ' [' + self.error + ']';
   };
 
   e.prototype = Object.create(Error.prototype);
