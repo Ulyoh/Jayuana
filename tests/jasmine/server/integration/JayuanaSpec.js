@@ -12,7 +12,9 @@ describe("J", function () {
   var self = this;
   var options = {folderName: directoryName};
 
-  J.init(options);
+  beforeEach(function () {
+    J.init(options);
+  });
 
   it("should create a db", function () {
     expect(J.db instanceof Mongo.Collection).toBeTruthy();
