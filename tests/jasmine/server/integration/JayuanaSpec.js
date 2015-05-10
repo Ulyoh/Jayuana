@@ -8,7 +8,7 @@
 
 describe("J", function () {
   var self = this;
-  var directoryName = ".packagesFileTest";
+  var directoryName = ".packagesFilesTest";
   var options = {folderName: directoryName};
 
   J.init(options);
