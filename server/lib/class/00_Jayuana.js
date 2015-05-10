@@ -14,10 +14,30 @@ J = (function(){
   J.prototype = {};
 
   // STATICS METHODS:
-  J.init = function () {
+  J.init = function (options) {
+    var fs = Npm.require('fs');
+
     if (J.db === undefined) {
+      J._rootPath = process.env.PWD + "/";
+
+      if((options) && (options.folderName)){
+        J._folderName = options.folderName + "/";
+      }
+      else{
+        J._folderName = C.DEFAULT_FOLDER + "/";
+      }
+
+      try {
+        fs.mkdirSync(J._rootPath + J._folderName);
+      }
+      catch(e){
+        if (e.code !== 'EEXIST') {
+          throw e;
+        }
+      }
+
+
       J.db = new Mongo.Collection("jayuanaDb");
-      //TODO : create folders of C.FILES_FOLDER path
       //TODO : verify that any modifying file inside the folder will not
       //TODO : restart the server (path must begin with a dot)
     }
@@ -72,7 +92,7 @@ J = (function(){
     }
 
     id = J.db.insert(element);
-    filePath = process.env.PWD + "/" + C.FILES_FOLDER + id;
+    filePath = J._rootPath + J._folderName + id;
 
     fs.writeFile(filePath, data, Meteor.bindEnvironment(function (e) {
       if (e) {

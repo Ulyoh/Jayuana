@@ -7,14 +7,33 @@
 "use strict";
 
 describe("J", function () {
-  var that = this;
+  var self = this;
+  var directoryName = ".packagesFileTest";
+  var options = {folderName: directoryName};
 
-  J.init();
+  J.init(options);
 
   it("should create a db", function () {
     expect(J.db instanceof Mongo.Collection).toBeTruthy();
   });
 
+  it("should create a property _folderName", function () {
+    expect(J._folderName).toEqual(directoryName + "/");
+  });
+
+  it("should create a folder the named was passed to J.init()", function () {
+
+    var fs = Npm.require('fs');
+    //fs.accessSync not working yet, use it when existsSync is removed
+    //from fs API :
+    //expect(fs.accessSync(process.env.PWD + "/" + directoryName)).not
+    //.toThrow();
+    expect(fs.existsSync(process.env.PWD + "/" + directoryName)).toBeTruthy();
+  });
+
+  xit("it should create a _rootPath property");
+  xit("it should create a folder with C.DEFAULT_FOLDER")
+  xit("it should throw an Error if folder name do not begin with a dot");
   xit("it should throw an Error if called with the 'new' keyword" );
   xit("it should throw an Error if called twice" );
   xit("should create a folder on the server named 'jayuana_db_files'");
@@ -29,7 +48,7 @@ describe("J", function () {
       }
       return function (done) {
         J.add(obj, type, "", false, function (id) {
-          that.pathFile = process.env.PWD + "/" + C.FILES_FOLDER + id;
+          self.pathFile = process.env.PWD + "/" + directoryName + "/" + id;
           expect(J.db.findOne({_id: id }))
             .toEqual({
               _id: id,
@@ -37,7 +56,7 @@ describe("J", function () {
               type: type,
               start: false,
               available: true,
-              path: that.pathFile
+              path: self.pathFile
             });
           done();
         });
@@ -61,10 +80,10 @@ describe("J", function () {
       
       it("should have the object saved in a file", function () {
         expect(EJSON.stringify(obj))
-          .toEqual(fs.readFileSync(that.pathFile, {encoding: "utf8"}));
+          .toEqual(fs.readFileSync(self.pathFile, {encoding: "utf8"}));
       });
 
-      xit("should verify that the new element(s) has(ve) been tested");
+      xit("should verify self the new element(s) has(ve) been tested");
       xit("should throw an Error if EJSON.parse give a different result");
       xit("should throw an Error if the start flag is set to true");
       xit("should throw an Error if the argument do not match");
@@ -89,7 +108,7 @@ describe("J", function () {
           .toThrowError("start flag true and object is not a function [J.add]");
       });
 
-      xit("should verify that the new element(s) has(ve) been tested");
+      xit("should verify self the new element(s) has(ve) been tested");
       xit("should throw an Error if try to set the start flag to true for a " +
       "2nd element");
       xit("should throw an Error if code do note return an object");
@@ -128,11 +147,11 @@ describe("J", function () {
 
       J.add(obj, "EJSON", "", false, function (id) {
         J.getById(id, function (err, data) {
-          that.data = data;
+          self.data = data;
         });
       });
       Meteor.setTimeout(function () {
-        expect(that.data).toEqual(jasmine.objectContaining(elementPartial));
+        expect(self.data).toEqual(jasmine.objectContaining(elementPartial));
         done();
       }, 50);
     });
@@ -156,13 +175,13 @@ describe("J", function () {
 
       J.add(obj, "EJSON", name, false, function () {
         J.getByName(name, function (err, data) {
-          that.data = data;
+          self.data = data;
         });
       });
       Meteor.setTimeout(function () {
-        expect(that.data).toEqual(jasmine.objectContaining(elementPartial));
+        expect(self.data).toEqual(jasmine.objectContaining(elementPartial));
         done();
-      }, 50);
+      }, 100);
     });
     xit("should throw an Error if the id is not found");
     xit("should throw an Error if the argument is not a string");

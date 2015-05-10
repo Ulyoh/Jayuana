@@ -3,7 +3,7 @@
  */
 
 C = {  // jshint ignore:line
-  FILES_FOLDER: ".packagesFiles/"
+  DEFAULT_FOLDER: ".packagesFiles"
 };
 
 

@@ -1,5 +1,5 @@
 
-xdescribe("J.References", function () {
+describe("J.References", function () {
    beforeEach(function () {
       spyOn(J, "Error").and.callFake(function (a, b, c) {
          if (!c){
