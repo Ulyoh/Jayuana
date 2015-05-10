@@ -22,7 +22,7 @@ describe("J", function () {
     expect(J._folderName).toEqual(directoryName + "/");
   });
 
-  it("should create a folder the named was passed to J.init()", function () {
+  it("should create a folder with the named passed to J.init()", function () {
 
     var fs = Npm.require('fs');
     //fs.accessSync not working yet, use it when existsSync is removed
