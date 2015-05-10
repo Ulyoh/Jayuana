@@ -201,9 +201,23 @@ describe("J", function () {
     xit("should return the list of elements in RefsTo");
   });
 
-  xdescribe("start", function () {
+  describe("start", function () {
     it("should execute new J with the element which has " +
-    "the start flag = true");
+    "the start flag = true", function (done) {
+      var code = "function() {" +
+                 "   coucou = 'hello world';" +
+                 "};";
+      jasmine.DEFAULT_TIMEOUT_INTERVAL = 2000;
+      J.add(code, "code", "coucou", true, function () {
+        J.start();
+      });
+
+      Meteor.setTimeout(function () {
+        expect(coucou).toEqual('hello world');
+        done();
+      }, 200);
+
+    });
   });
 });
 

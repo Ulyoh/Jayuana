@@ -115,9 +115,9 @@ J = (function(){
     }));
   };
 
-  J.getById = function (id, callback) {
+  J._getBy = function(condition, callback){
     var fs = Npm.require('fs');
-    var element = J.db.findOne({_id: id });
+    var element = J.db.findOne(condition);
 
     fs.readFile(element.path, {encoding: 'utf8'}, function (err, data){
       if(!err){
@@ -129,9 +129,16 @@ J = (function(){
     });
   };
 
+  J.getById = function (id, callback) {
+    J._getBy({_id: id }, callback);
+  };
+
   J.getByName = function(name, callback) {
-    var id =  J.db.findOne({name: name})._id;
-    J.getById(id, callback);
+    J._getBy({name: name}, callback);
+  };
+
+  J.start = function(){
+
   };
 
   return J;
