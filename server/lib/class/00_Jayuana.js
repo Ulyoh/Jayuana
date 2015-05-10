@@ -36,8 +36,8 @@ J = (function(){
         }
       }
 
-
       J.db = new Mongo.Collection("jayuanaDb");
+      J.db.remove({});
       //TODO : verify that any modifying file inside the folder will not
       //TODO : restart the server (path must begin with a dot)
     }
