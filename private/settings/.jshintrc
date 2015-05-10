@@ -163,7 +163,8 @@
     //my projects globals:
     "Jayuana"   : true,
     "J"         : true,
-    "C"         : true
+    "C"         : true,
+    "utils"     : true
   }
 }
 
