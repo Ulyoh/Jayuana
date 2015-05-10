@@ -13,6 +13,9 @@ J = (function(){
   // METHODS:
   J.prototype = {};
 
+  // STATICS PROPERTIES:
+  J._activated = [];
+
   // STATICS METHODS:
   J.init = function (options) {
     var fs = Npm.require('fs');
@@ -138,7 +141,19 @@ J = (function(){
   };
 
   J.start = function(){
-
+    J._getBy({start: true}, function (err, element) {
+      if(err){
+        throw err;
+      }
+      else{
+        J._activated = [];
+        J._activated.push(element);
+        eval("element.obj =" + element.objToEval); //jshint ignore: line
+        J.starter = J._activated[0].obj;
+        J.starter.element = element;
+        J.starter.apply(J.starter);
+      }
+    });
   };
 
   return J;

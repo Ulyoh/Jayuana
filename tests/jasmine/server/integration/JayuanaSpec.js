@@ -8,6 +8,10 @@
 
 var directoryName = ".packagesFilesTest";
 
+var clean = function(){
+  utils._emptyDirectory(process.env.PWD + "/" + directoryName);
+};
+
 describe("J", function () {
   var self = this;
   var options = {folderName: directoryName};
@@ -33,6 +37,8 @@ describe("J", function () {
     //.toThrow();
     expect(fs.existsSync(process.env.PWD + "/" + directoryName)).toBeTruthy();
   });
+
+  clean();
 
   xit("it should create a _rootPath property");
   xit("it should create a folder with C.DEFAULT_FOLDER");
@@ -92,8 +98,8 @@ describe("J", function () {
       xit("should throw an Error if the argument do not match");
       xit("should throw an Error if the name already exists");
     });
-
-    describe("using code", function () {
+//
+    xdescribe("using code", function () {
       var code = "function () {" +
         "'use strict';" +
         "return 'code executed';" +
@@ -136,6 +142,8 @@ describe("J", function () {
     });
   });
 
+  clean();
+
   describe("getById", function () {
     it("should access to an element by its id", function (done) {
       var obj = "blabla"; //TODO: add test with different objects
@@ -162,6 +170,8 @@ describe("J", function () {
     xit("should throw an Error if the id is not found");
     xit("should throw an Error if the argument is not a string");
   });
+
+  clean();
 
   describe("getByName", function () {
     it("should access to an element by its name", function (done) {
@@ -191,6 +201,8 @@ describe("J", function () {
     xit("should throw an Error if the string is empty");
   });
 
+  clean();
+
   xdescribe("remove", function () {
     it("should remove elements from the db by id or name");
     xit("should remove elements from the db by a list of ids or names");
@@ -204,20 +216,22 @@ describe("J", function () {
   describe("start", function () {
     it("should execute new J with the element which has " +
     "the start flag = true", function (done) {
-      var code = "function() {" +
-                 "   coucou = 'hello world';" +
-                 "};";
-      jasmine.DEFAULT_TIMEOUT_INTERVAL = 2000;
+
+
+      var code = "function() {this.testMessage = 'coucou';}";
       J.add(code, "code", "coucou", true, function () {
         J.start();
       });
 
       Meteor.setTimeout(function () {
-        expect(coucou).toEqual('hello world');
+        expect(J.starter.testMessage).toEqual('coucou');
         done();
-      }, 200);
+      }, 500);
 
     });
+    xit("J.starter should have a reference to its element root");
+    xit("should throw an error if none found");
+    xit("should throw an error if more than none found");
   });
 });
 
