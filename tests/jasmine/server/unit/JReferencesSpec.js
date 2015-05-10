@@ -25,6 +25,12 @@ describe("J.References", function () {
             details: 'stub stack' });
       });
 
+      it("should create an empty Reference object if argument is null",
+        function () {
+           var refNull = new J.References(null);
+         expect(refNull._list.length).toEqual(0);
+      });
+
       xit("should throw an Error if not called with the new keyword");
 
       describe("add", function () {

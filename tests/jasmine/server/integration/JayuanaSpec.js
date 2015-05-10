@@ -217,16 +217,15 @@ describe("J", function () {
     it("should execute new J with the element which has " +
     "the start flag = true", function (done) {
 
-
       var code = "function() {this.testMessage = 'coucou';}";
       J.add(code, "code", "coucou", true, function () {
         J.start();
       });
 
       Meteor.setTimeout(function () {
-        expect(J.starter.testMessage).toEqual('coucou');
+        expect(J._starter.testMessage).toEqual('coucou');
         done();
-      }, 500);
+      }, 200);
 
     });
     xit("J.starter should have a reference to its element root");

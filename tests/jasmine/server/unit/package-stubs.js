@@ -7085,7 +7085,7 @@ var packageMetadata = {
                 },
                 "version": {
                   "type": "constant",
-                  "value": "709c7eef002e4c3898f5d7a8923f19778a639901"
+                  "value": "e617420507eec60207ebeb1cf679cff49bde2c0a"
                 },
                 "PUBLIC_SETTINGS": {
                   "type": "undefined"
@@ -7209,7 +7209,7 @@ var packageMetadata = {
             },
             "connections": {
               "type": "constant",
-              "value": 1
+              "value": 0
             },
             "timeout": {
               "type": "constant",
@@ -7854,7 +7854,7 @@ var packageMetadata = {
       "members": {
         "autoupdateVersion": {
           "type": "constant",
-          "value": "2f8fb8001a4bef74098c8bfcca407a7b7d69f820"
+          "value": "23644023c08d1bb3e6beec4721692c2275ae5957"
         },
         "autoupdateVersionRefreshable": {
           "type": "constant",

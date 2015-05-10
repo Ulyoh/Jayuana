@@ -1,9 +1,29 @@
 
 J = (function(){
   "use strict";
-  var J = function () {
+  var J = function (element) {
     if (this instanceof J){
+      var self = this;
 
+      if (!element){
+        throw J.Error("J.constructor", "no element passed");
+      }
+      if (!element.refsFrom){
+        element.refsFrom = null;
+      }
+      if (!element.refsTo){
+        element.refsTo = null;
+      }
+
+      J[element._id] = self;
+
+      self._element = element;
+      self._id = element._id;
+      self._name = element.name;
+      self._refsFrom = new J.References(element.refsFrom);
+      self._refsTo = new J.References(element.refsTo);
+      eval("element.obj =" + element.objToEval);  //jshint ignore: line
+      self._obj = element.obj;
     }
     else{
       throw new J.Error("J", "must be called with the 'new' keyword");
@@ -13,11 +33,21 @@ J = (function(){
   // METHODS:
   J.prototype = {};
 
+  J.prototype.exec = function(){
+    console.log("+ start J.prototype.exec");
+    var self = this;
+    self._obj();
+    console.log("- end J.prototype.exec");
+  };
+
   // STATICS PROPERTIES:
   J._activated = [];
 
   // STATICS METHODS:
+  J._starter = function(){};
+
   J.init = function (options) {
+    console.log("+ start J.init()");
     var fs = Npm.require('fs');
 
     if (J.db === undefined) {
@@ -43,10 +73,12 @@ J = (function(){
       J.db.remove({});
       //TODO : verify that any modifying file inside the folder will not
       //TODO : restart the server (path must begin with a dot)
+      console.log("- end J.init()");
     }
   };
 
   J.add = function(obj, type, name, start, callback){
+    console.log("+ start J.add( " + name + " )");
     var objUnderTest, element, id, data, filePath;
     var fs = Npm.require('fs');
 
@@ -106,7 +138,7 @@ J = (function(){
         throw new J.Error("J.add", "writeFile: " + e.message);
       }
       else{
-        console.log("successfully wrote: " + filePath);
+        console.log("- end J.add( " + name + " )");
         J.db.update({_id: id},{$set: {
           available: true,
           path: filePath}});
@@ -141,17 +173,17 @@ J = (function(){
   };
 
   J.start = function(){
+    console.log("+ start J.start()");
     J._getBy({start: true}, function (err, element) {
       if(err){
         throw err;
       }
       else{
+        J._starter = new J(element);
         J._activated = [];
-        J._activated.push(element);
-        eval("element.obj =" + element.objToEval); //jshint ignore: line
-        J.starter = J._activated[0].obj;
-        J.starter.element = element;
-        J.starter.apply(J.starter);
+        J._activated.push(J._starter);
+        J._starter.exec();
+        console.log("- end J.start()");
       }
     });
   };
