@@ -33,7 +33,7 @@ describe("J", function () {
   });
 
   xit("it should create a _rootPath property");
-  xit("it should create a folder with C.DEFAULT_FOLDER")
+  xit("it should create a folder with C.DEFAULT_FOLDER");
   xit("it should throw an Error if folder name do not begin with a dot");
   xit("it should throw an Error if called with the 'new' keyword" );
   xit("it should throw an Error if called twice" );

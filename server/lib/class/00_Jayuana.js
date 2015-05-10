@@ -88,7 +88,8 @@ J = (function(){
     }
 
     if ((element.start === true) && !(_.isFunction(objUnderTest))){
-      throw new J.Error("J.add", "start flag true and object is not a function");
+      throw new J.Error("J.add",
+        "start flag true and object is not a function");
     }
 
     id = J.db.insert(element);
