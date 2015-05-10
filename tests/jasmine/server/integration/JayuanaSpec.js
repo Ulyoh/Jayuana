@@ -6,9 +6,10 @@
 
 "use strict";
 
+var directoryName = ".packagesFilesTest";
+
 describe("J", function () {
   var self = this;
-  var directoryName = ".packagesFilesTest";
   var options = {folderName: directoryName};
 
   J.init(options);
@@ -251,3 +252,7 @@ xdescribe("J object", function () {
 
 });
 
+
+Meteor.setTimeout(function () {
+  utils._emptyDirectory(process.env.PWD + "/" + directoryName);
+}, 2000);

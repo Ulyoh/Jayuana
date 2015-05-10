@@ -6,7 +6,7 @@ utils = {
 
   _emptyDirectory: function (target) {
     utils.fs.readdirSync(target).forEach(function (element) {
-      utils._rm(path.join(target, element));
+      utils._rm(target + "/" + element);
     });
   },
 
