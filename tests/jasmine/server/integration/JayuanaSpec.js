@@ -234,17 +234,37 @@ describe("J", function () {
   });
 });
 
-xdescribe("J object", function () {
-  beforeEach(function () {
-    //var Jobj = J.start();
+describe("J object", function () {
+  beforeEach(function (done) {
+    var code = "function() {this.testMessage = 'coucou';}";
+    J.add(code, "code", "coucou", true, function () {
+      J.start();
+      done();
+    });
   });
 
-  xdescribe("private properties created", function () {
-    it("should have a private id property");
-    it("should have a private name property");
-    it("should have a private refsFrom property");
-    it("should have a private refsTo property");
-    it("should have a private object property");
+  xdescribe("verify if element fit the minimum requirement", function () {
+    xit("should throw an error if the element do not have xxx property");
+  });
+
+  describe("private properties created", function () {
+    //TODO: test also with an object which is not J._starter
+    it("should have a private id property", function () {
+      expect(J._starter._id).toEqual(jasmine.any(String));
+    });
+    it("should have a private name property", function () {
+      expect(J._starter._name).toEqual(jasmine.any(String));
+    });
+    it("should have a private refsFrom property", function () {
+      expect(J._starter._refsFrom).toEqual(jasmine.any(J.References));
+    });
+    it("should have a private refsTo property", function () {
+      expect(J._starter._refsTo).toEqual(jasmine.any(J.References));
+    });
+    it("should have a private object property which is a Function", function(){
+      expect(J._starter._obj).toEqual(jasmine.any(Function));
+      //TODO: test either a regular object or a Function
+    });
     it("should have a private template property");
   });
 
@@ -284,4 +304,4 @@ xdescribe("J object", function () {
 
 Meteor.setTimeout(function () {
   utils._emptyDirectory(process.env.PWD + "/" + directoryName);
-}, 2000);
+}, 5000);
