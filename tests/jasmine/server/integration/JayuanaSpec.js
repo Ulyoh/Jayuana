@@ -56,7 +56,13 @@ describe("J", function () {
         return;
       }
       return function (done) {
-        J.add(obj, type, "", false, function (id) {
+        var eltDef = {
+          obj: obj,
+          type: type,
+          name: "",
+          start: false
+      };
+        J.add(eltDef, function (id) {
           self.pathFile = process.env.PWD + "/" + directoryName + "/" + id;
           expect(J.db.findOne({_id: id }))
             .toEqual({
@@ -108,12 +114,25 @@ describe("J", function () {
 
       it("should be able to set the start flag to true, and verify if the " +
       "code generate a function", function (done) {
-        J.add(code, "code", '', true, function (id) {
+        var eltDef = {
+          obj: code,
+          type: "code",
+          name: "",
+          start: false
+        };
+        J.add(eltDef, function (id) {
           expect(J.db.findOne({_id: id}).start).toBeTruthy();
           done();
         });
         expect(function(){
-          J.add("{info: 'this is not a function'}", "code", '', true);})
+
+          var eltDef = {
+            obj: "{info: 'this is not a function'}",
+            type: "code",
+            name: "",
+            start: true
+          };
+          J.add(eltDef);})
           .toThrowError("start flag true and object is not a function [J.add]");
       });
 
@@ -155,8 +174,14 @@ describe("J", function () {
         available: true,
         objToEval: EJSON.stringify(obj)
       };
+      var eltDef = {
+        obj: obj,
+        type: "EJSON",
+        name: "",
+        start: false
+      };
 
-      J.add(obj, "EJSON", "", false, function (id) {
+      J.add(eltDef, function (id) {
         J.getById(id, function (err, data) {
           self.data = data;
         });
@@ -185,8 +210,15 @@ describe("J", function () {
         available: true,
         objToEval: EJSON.stringify(obj)
       };
+      var eltDef = {
+        obj: obj,
+        type: "EJSON",
+        name: name,
+        start: false
+      };
 
-      J.add(obj, "EJSON", name, false, function () {
+
+      J.add(eltDef, function () {
         J.getByName(name, function (err, data) {
           self.data = data;
         });
@@ -216,9 +248,13 @@ describe("J", function () {
   describe("start", function () {
     it("should execute new J with the element which has " +
     "the start flag = true", function (done) {
-
-      var code = "function() {this.testMessage = 'coucou';}";
-      J.add(code, "code", "coucou", true, function () {
+      var eltDef = {
+        obj: "function() {this.testMessage = 'coucou';}",
+        type: "code",
+        name: "coucou",
+        start: true
+      };
+      J.add(eltDef, function () {
         J.start();
       });
 
@@ -236,8 +272,13 @@ describe("J", function () {
 
 describe("J object", function () {
   beforeEach(function (done) {
-    var code = "function() {this.testMessage = 'coucou';}";
-    J.add(code, "code", "coucou", true, function () {
+    var eltDef = {
+      obj: "function() {this.testMessage = 'coucou';}",
+      type: "code",
+      name: "coucou",
+      start: true
+    };
+    J.add(eltDef, function () {
       J.start();
       done();
     });
@@ -263,6 +304,7 @@ describe("J object", function () {
     });
     xit("should have a private template property");
     xit("should throw an error if the element do not have xxx property");
+    xit("should throw an error if the element is not found in the database");
   });
 
   xdescribe("private method", function () {

@@ -77,8 +77,21 @@ J = (function(){
     }
   };
 
-  J.add = function(obj, type, name, start, callback){
-    console.log("+ start J.add( " + name + " )");
+  J.add = function(oneOreMoreElts, callback){
+    var eltsDef = [];
+    if (_.isArray(oneOreMoreElts)){
+      eltsDef = oneOreMoreElts;
+    }
+    else{
+      eltsDef[0] = oneOreMoreElts;
+    }
+    eltsDef.forEach(function (eltDef) {
+      J._addOne(eltDef.obj, eltDef.type, eltDef.name, eltDef.start, callback);
+    });
+  };
+
+  J._addOne = function(obj, type, name, start, callback){
+    console.log("+ start J._addOne( " + name + " )");
     var objUnderTest, element, id, data, filePath;
     var fs = Npm.require('fs');
 
