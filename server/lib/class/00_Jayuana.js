@@ -33,11 +33,11 @@ J = (function(){
   // METHODS:
   J.prototype = {};
 
-  J.prototype.exec = function(){
-    console.log("+ start J.prototype.exec");
+  J.prototype.run = function(){
+    console.log("+ start J.prototype.run");
     var self = this;
     self._obj();
-    console.log("- end J.prototype.exec");
+    console.log("- end J.prototype.run");
   };
 
   // STATICS PROPERTIES:
@@ -182,7 +182,7 @@ J = (function(){
         J._starter = new J(element);
         J._activated = [];
         J._activated.push(J._starter);
-        J._starter.exec();
+        J._starter.run();
         console.log("- end J.start()");
       }
     });
