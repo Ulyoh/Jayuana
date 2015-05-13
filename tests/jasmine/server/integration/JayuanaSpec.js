@@ -229,8 +229,8 @@ describe("J", function () {
 
     });
     xit("J.starter should have a reference to its element root");
-    xit("should throw an error if none found");
-    xit("should throw an error if more than none found");
+    xit("should throw an error if none element found with start flag = true");
+    xit("should throw an error if more than one found");
   });
 });
 
@@ -241,10 +241,6 @@ describe("J object", function () {
       J.start();
       done();
     });
-  });
-
-  xdescribe("verify if element fit the minimum requirement", function () {
-    xit("should throw an error if the element do not have xxx property");
   });
 
   describe("private properties created", function () {
@@ -265,7 +261,8 @@ describe("J object", function () {
       expect(J._starter._obj).toEqual(jasmine.any(Function));
       //TODO: test either a regular object or a Function
     });
-    it("should have a private template property");
+    xit("should have a private template property");
+    xit("should throw an error if the element do not have xxx property");
   });
 
   xdescribe("private method", function () {
