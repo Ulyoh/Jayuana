@@ -104,7 +104,7 @@ describe("J", function () {
       xit("should throw an Error if the argument do not match");
       xit("should throw an Error if the name already exists");
     });
-//
+
     xdescribe("using code", function () {
       var code = "function () {" +
         "'use strict';" +
@@ -136,6 +136,7 @@ describe("J", function () {
           .toThrowError("start flag true and object is not a function [J.add]");
       });
 
+      xit("should accept an array of elements");
       xit("should verify self the new element(s) has(ve) been tested");
       xit("should throw an Error if try to set the start flag to true for a " +
       "2nd element");
@@ -268,43 +269,71 @@ describe("J", function () {
     xit("should throw an error if none element found with start flag = true");
     xit("should throw an error if more than one found");
   });
+
+  clean();
 });
 
 describe("J object", function () {
-  beforeEach(function (done) {
-    var eltDef = {
-      obj: "function() {this.testMessage = 'coucou';}",
-      type: "code",
-      name: "coucou",
-      start: true
-    };
-    J.add(eltDef, function () {
-      J.start();
-      done();
-    });
-  });
+  var options = {folderName: directoryName};
+  var eltsDefs = [];
+  eltsDefs[0] = {
+    obj: "function() {this.testMessage = 'coucou';}",
+    type: "code",
+    name: "coucou",
+    start: true
+  };
+  eltsDefs[1] = {
+    obj: "function() {this.testMessage = 'I have said coucou once';}",
+    type: "code",
+    name: "coucou2",
+    start: false
+  };
 
-  describe("private properties created", function () {
+  describe("private properties created", function (done) {
+
+    var JayuanaElts = [];
+
+    beforeEach(function (done) {
+      var self = this;
+      J.init(options);
+      J.add(eltsDefs, function () {
+        J.start();
+        JayuanaElts.push(J._starter);
+        JayuanaElts.push((J.db.findOne({start: false})));
+        done();
+      });
+    });
+
+    var verifyPropertiesTypes = function(elt, property, type){
+      expect(elt[property]).toEqual(jasmine.any(type));
+    };
+    var forMyJayuanaElts = function(JElts, property, type){
+      JElts.forEach(function (elt) {
+        verifyPropertiesTypes(elt, property, type);
+      });
+    };
+
     //TODO: test also with an object which is not J._starter
     it("should have a private id property", function () {
-      expect(J._starter._id).toEqual(jasmine.any(String));
+      forMyJayuanaElts(JayuanaElts, "_id", String);
     });
-    it("should have a private name property", function () {
-      expect(J._starter._name).toEqual(jasmine.any(String));
+    xit("should have a private name property", function () {
+      forMyJayuanaElts(JayuanaElts, "_name", String);
     });
     it("should have a private refsFrom property", function () {
-      expect(J._starter._refsFrom).toEqual(jasmine.any(J.References));
+      forMyJayuanaElts(JayuanaElts, "_refsFrom", J.References);
     });
     it("should have a private refsTo property", function () {
-      expect(J._starter._refsTo).toEqual(jasmine.any(J.References));
+      forMyJayuanaElts(JayuanaElts, "_refsTo", J.References);
     });
     it("should have a private object property which is a Function", function(){
-      expect(J._starter._obj).toEqual(jasmine.any(Function));
+      forMyJayuanaElts(JayuanaElts, "_obj", Function);
       //TODO: test either a regular object or a Function
     });
     xit("should have a private template property");
     xit("should throw an error if the element do not have xxx property");
     xit("should throw an error if the element is not found in the database");
+
   });
 
   xdescribe("private method", function () {

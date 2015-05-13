@@ -24,6 +24,8 @@ J = (function(){
       self._refsTo = new J.References(element.refsTo);
       eval("element.obj =" + element.objToEval);  //jshint ignore: line
       self._obj = element.obj;
+
+      J._activated.push(J._starter);
     }
     else{
       throw new J.Error("J", "must be called with the 'new' keyword");
@@ -193,8 +195,6 @@ J = (function(){
       }
       else{
         J._starter = new J(element);
-        J._activated = [];
-        J._activated.push(J._starter);
         J._starter.run();
         console.log("- end J.start()");
       }
