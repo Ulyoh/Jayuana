@@ -6,12 +6,16 @@
 
 J.References = (function () {
   var References = function (refArrayOrOne) {
+    var self = this;
     var refArray = [];
+
+    self.objType = "J.References";
+
     if (refArrayOrOne === undefined){
        throw new J.Error("References constructor", "missing argument");
     }
 
-    this._list = [];
+    self._list = [];
 
     if (refArrayOrOne !== null) {
        if (!Match.test(refArrayOrOne, Array)) {

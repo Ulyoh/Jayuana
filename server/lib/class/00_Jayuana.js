@@ -5,6 +5,8 @@ J = (function(){
     if (this instanceof J){
       var self = this;
 
+      self.objType = "Jayuana";
+
       if (!element){
         throw J.Error("J.constructor", "no element passed");
       }

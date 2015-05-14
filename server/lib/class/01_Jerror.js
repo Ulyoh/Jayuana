@@ -5,7 +5,8 @@ J.Error = (function() {
   var e = function (error, reason, details) {
     var self = this, tmpStack, endFirstLine;
 
-    self.name = "Jayuana.Error";
+    self.objType = "J.Error";
+
     tmpStack = (new Error()).stack;
     endFirstLine = tmpStack.indexOf("\n", 8) + 1;
     self.stack = "Error: \n" + tmpStack.slice(endFirstLine);
