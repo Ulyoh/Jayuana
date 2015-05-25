@@ -12,6 +12,7 @@ var clean = function(){
   utils._emptyDirectory(process.env.PWD + "/" + directoryName);
 };
 
+
 describe("J", function () {
   var self = this;
   var options = {folderName: directoryName};
@@ -274,64 +275,79 @@ describe("J", function () {
 });
 
 describe("J object", function () {
+  jasmine.DEFAULT_TIMEOUT_INTERVAL = 2000;
   var options = {folderName: directoryName};
   var eltsDefs = [];
   eltsDefs[0] = {
-    obj: "function() {this.testMessage = 'coucou';}",
+    obj:  "function() {this.testMessage = 'coucou';" +
+          "  this.addRef({name: 'coucou 2'}, 'to');" +
+          "}",
     type: "code",
-    name: "coucou",
+    name: "coucou 1",
     start: true
   };
   eltsDefs[1] = {
     obj: "function() {this.testMessage = 'I have said coucou once';}",
     type: "code",
-    name: "coucou2",
+    name: "coucou 2",
     start: false
   };
 
   describe("private properties created", function () {
-
-    var JayuanaElts = [];
-
     var verifyPropertiesTypes = function(elt, property, type){
       expect(elt[property]).toEqual(jasmine.any(type));
     };
     var verifyPropertiesMyTypes = function(elt, property, type){
-      console.log(elt[property]);
+      console.log(elt);
       expect(elt[property].objType).toEqual(type);
     };
 
-    beforeEach(function (done) {
+    console.log("beforeAll should start:");
+    beforeAll(function (done) {
+      console.log("beforeAll started");
+      var self = this;
+      self.JayuanaElts = [];
       J.init(options);
       J.add(eltsDefs, function () {
         J.start();
-        JayuanaElts.push(J._starter);
-        JayuanaElts.push((J.db.findOne({start: false})));
+        self.JayuanaElts = J._activated;
+
+        console.log("beforeAll finshed");
         done();
       });
     });
 
-
     //TODO: test also with an object which is not J._starter
-    it("should have a private id property", function () {
-      verifyPropertiesTypes(JayuanaElts[0], "_id", String);
-      verifyPropertiesTypes(JayuanaElts[1], "_id", String);
+    it("should have a private id property", function (done) {
+      var self = this;
+      verifyPropertiesTypes(self.JayuanaElts[0], "_id", String);
+      verifyPropertiesTypes(self.JayuanaElts[1], "_id", String);
+      done();
     });
-    it("should have a private name property", function () {
-      verifyPropertiesTypes(JayuanaElts[0], "_name", String);
-      verifyPropertiesTypes(JayuanaElts[1], "_name", String);
+    it("should have a private name property", function (done) {
+      var self = this;
+      verifyPropertiesTypes(self.JayuanaElts[0], "_name", String);
+      verifyPropertiesTypes(self.JayuanaElts[1], "_name", String);
+      done();
     });
-    it("should have a private refsFrom property", function () {
-      verifyPropertiesMyTypes(JayuanaElts[0], "_refsFrom", "J.References");
-      verifyPropertiesMyTypes(JayuanaElts[1], "_refsFrom", "J.References");
+    it("should have a private refsFrom property", function (done) {
+      var self = this;
+      verifyPropertiesMyTypes(self.JayuanaElts[0], "_refsFrom", "J.References");
+      verifyPropertiesMyTypes(self.JayuanaElts[1], "_refsFrom", "J.References");
+      done();
     });
-    it("should have a private refsTo property", function () {
-      verifyPropertiesMyTypes(JayuanaElts[0], "_refsTo", "J.References");
-      verifyPropertiesMyTypes(JayuanaElts[1], "_refsTo", "J.References");
+    it("should have a private refsTo property", function (done) {
+      var self = this;
+      verifyPropertiesMyTypes(self.JayuanaElts[0], "_refsTo", "J.References");
+      verifyPropertiesMyTypes(self.JayuanaElts[1], "_refsTo", "J.References");
+      done();
     });
-    it("should have a private object property which is a Function", function(){
-      verifyPropertiesTypes(JayuanaElts[0], "_obj", Function);
-      verifyPropertiesTypes(JayuanaElts[1], "_obj", Function);
+    it("should have a private object property which is a Function",
+      function(done){
+        var self = this;
+        verifyPropertiesTypes(self.JayuanaElts[0], "_obj", Function);
+        verifyPropertiesTypes(self.JayuanaElts[1], "_obj", Function);
+        done();
       //TODO: test either a regular object or a Function
     });
     xit("should have a private template property");
