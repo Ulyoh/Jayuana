@@ -48,6 +48,13 @@ describe("J", function () {
   xit("it should throw an Error if called twice" );
   xit("should create a folder on the server named 'jayuana_db_files'");
 
+  xdescribe("init", function () {
+    xit("it should clean all trace of previous elts from the folder given," +
+      "the db and J");
+  });
+
+  xdescribe("_wipe");
+
   describe("add", function () {
 
     xit("should throw an Error if the type of element is not given");

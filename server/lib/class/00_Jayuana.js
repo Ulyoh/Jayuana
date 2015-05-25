@@ -74,11 +74,13 @@ J = (function(){
       }
 
       J.db = new Mongo.Collection("jayuanaDb");
-      J.db.remove({});
+
       //TODO : verify that any modifying file inside the folder will not
       //TODO : restart the server (path must begin with a dot)
-      console.log("- end J.init()");
     }
+
+    J._wipe();
+    console.log("- end J.init()");
   };
 
   J.add = function(oneOreMoreElts, callback){
@@ -204,6 +206,17 @@ J = (function(){
         console.log("- end J.start()");
       }
     });
+  };
+
+  J._wipe = function () {
+    //remove all files within the folder:
+    utils._emptyDirectory(process.env.PWD + "/" + J._folderName);
+
+    //empty the db:
+    J.db.remove({});
+
+    //clean the activated elts:
+    J._activated = [];
   };
 
   return J;
