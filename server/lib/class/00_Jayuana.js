@@ -17,7 +17,7 @@ J = (function(){
         element.refsTo = null;
       }
 
-      J[element._id] = self;
+      //J[element._id] = self;
 
       self._element = element;
       self._id = element._id;
@@ -27,7 +27,7 @@ J = (function(){
       eval("element.obj =" + element.objToEval);  //jshint ignore: line
       self._obj = element.obj;
 
-      J._activated.push(J._starter);
+      J._activated.push(self);
     }
     else{
       throw new J.Error("J", "must be called with the 'new' keyword");
@@ -83,14 +83,17 @@ J = (function(){
 
   J.add = function(oneOreMoreElts, callback){
     var eltsDef = [];
+    var callbackOnce;
     if (_.isArray(oneOreMoreElts)){
       eltsDef = oneOreMoreElts;
     }
     else{
       eltsDef[0] = oneOreMoreElts;
     }
+    callbackOnce = _.after(eltsDef.length, callback);
     eltsDef.forEach(function (eltDef) {
-      J._addOne(eltDef.obj, eltDef.type, eltDef.name, eltDef.start, callback);
+      J._addOne(eltDef.obj, eltDef.type, eltDef.name, eltDef.start,
+        callbackOnce);
     });
   };
 

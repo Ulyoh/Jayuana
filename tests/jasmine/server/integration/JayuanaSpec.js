@@ -161,6 +161,8 @@ describe("J", function () {
       xit("should throw an Error if the name already exists");
       xit("should verify if file with same code already exists");
     });
+
+    xdescribe("should call the callback only once");
   });
 
   clean();
@@ -308,9 +310,17 @@ describe("J object", function () {
       var self = this;
       self.JayuanaElts = [];
       J.init(options);
+      console.log("******************* J._activated ***************");
+      console.log(J._activated);
+
+      console.log("******************* J._activated ***************");
       J.add(eltsDefs, function () {
         J.start();
         self.JayuanaElts = J._activated;
+        console.log("****************start self.JayuanaElts ***************");
+        console.log(self.JayuanaElts);
+
+        console.log("****************end self.JayuanaElts ***************");
 
         console.log("beforeAll finshed");
         done();
