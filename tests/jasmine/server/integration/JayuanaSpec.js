@@ -8,11 +8,6 @@
 
 var directoryName = ".packagesFilesTest";
 
-var clean = function(){
-  utils._emptyDirectory(process.env.PWD + "/" + directoryName);
-};
-
-
 describe("J", function () {
   var self = this;
   var options = {folderName: directoryName};
@@ -39,8 +34,6 @@ describe("J", function () {
     expect(fs.existsSync(process.env.PWD + "/" + directoryName)).toBeTruthy();
   });
 
-  clean();
-
   xit("it should create a _rootPath property");
   xit("it should create a folder with C.DEFAULT_FOLDER");
   xit("it should throw an Error if folder name do not begin with a dot");
@@ -59,7 +52,7 @@ describe("J", function () {
 
     xit("should throw an Error if the type of element is not given");
 
-    function testAdd(type, obj){
+    function setAdd(type, obj){
       if ((type !== "EJSON") && (type !== "code") && (type !== "file")){
         return;
       }
@@ -72,21 +65,14 @@ describe("J", function () {
       };
         J.add(eltDef, function (id) {
           self.pathFile = process.env.PWD + "/" + directoryName + "/" + id;
-          expect(J.db.findOne({_id: id }))
-            .toEqual({
-              _id: id,
-              name: "",
-              type: type,
-              start: false,
-              available: true,
-              path: self.pathFile
-            });
+          self.id = id;
           done();
         });
       };
     }
 
     describe("using EJSON", function () {
+      var type = "EJSON";
       var obj = {
         id: "an id",
         name: "a name",
@@ -97,13 +83,31 @@ describe("J", function () {
       };
       var fs = Npm.require('fs');
 
+      beforeEach(setAdd(type, obj));
+
       it("should add an element in the db with related properties",
-        testAdd("EJSON", obj)
-        );
+        function (done) {
+
+        expect(J.db.findOne({_id: self.id }))
+          .toEqual({
+            _id: self.id,
+            name: "",
+            type: type,
+            start: false,
+            available: true,
+            path: self.pathFile
+          });
+
+        done();
+      });
+
+
       
-      it("should have the object saved in a file", function () {
+      it("should have the object saved in a file", function (done) {
         expect(EJSON.stringify(obj))
           .toEqual(fs.readFileSync(self.pathFile, {encoding: "utf8"}));
+
+        done();
       });
 
       xit("should verify self the new element(s) has(ve) been tested");
@@ -172,7 +176,7 @@ describe("J", function () {
     xdescribe("should call the callback only once");
   });
 
-  clean();
+  
 
   describe("getById", function () {
     it("should access to an element by its id", function (done) {
@@ -206,8 +210,6 @@ describe("J", function () {
     xit("should throw an Error if the id is not found");
     xit("should throw an Error if the argument is not a string");
   });
-
-  clean();
 
   describe("getByName", function () {
     it("should access to an element by its name", function (done) {
@@ -244,8 +246,6 @@ describe("J", function () {
     xit("should throw an Error if the string is empty");
   });
 
-  clean();
-
   xdescribe("remove", function () {
     it("should remove elements from the db by id or name");
     xit("should remove elements from the db by a list of ids or names");
@@ -280,7 +280,7 @@ describe("J", function () {
     xit("should throw an error if more than one found");
   });
 
-  clean();
+  
 });
 
 describe("J object", function () {
@@ -405,7 +405,6 @@ describe("J object", function () {
   });
 
 });
-
 
 Meteor.setTimeout(function () {
   utils._emptyDirectory(process.env.PWD + "/" + directoryName);
