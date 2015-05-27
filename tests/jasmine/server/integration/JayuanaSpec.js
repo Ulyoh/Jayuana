@@ -287,19 +287,20 @@ describe("J object", function () {
   jasmine.DEFAULT_TIMEOUT_INTERVAL = 2000;
   var options = {folderName: directoryName};
   var eltsDefs = [];
+
   eltsDefs[0] = {
+    obj: "function() {this.testMessage = 'I have said coucou once';}",
+    type: "code",
+    name: "coucou 2",
+    start: false
+  };
+  eltsDefs[1] = {
     obj:  "function() {this.testMessage = 'coucou';" +
           "  this.addRef({name: 'coucou 2'}, 'to');" +
           "}",
     type: "code",
     name: "coucou 1",
     start: true
-  };
-  eltsDefs[1] = {
-    obj: "function() {this.testMessage = 'I have said coucou once';}",
-    type: "code",
-    name: "coucou 2",
-    start: false
   };
 
   describe("private properties created", function () {

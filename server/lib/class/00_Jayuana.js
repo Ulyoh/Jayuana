@@ -44,6 +44,48 @@ J = (function(){
     console.log("- end J.prototype.run");
   };
 
+  J.prototype._addRef = function(ref, type, nameForOtherRef){
+    var self = this;
+    var otherJayuana = J.db.findOne({_id: ref.element._id});
+    var localRef = {
+      id: self._id,
+      name: nameForOtherRef || (nameForOtherRef = self._name),
+      element: self._element
+    };
+    switch(type){
+      case 'to':
+        self._refsTo.add(ref);
+        otherJayuana._refsFrom.add(localRef);
+        break;
+      case 'from':
+        otherJayuana._refsTo.add(localRef);
+        self._refsFrom.add(ref);
+        break;
+      case 'both':
+        self._refsTo.add(ref);
+        self._refsFrom.add(ref);
+        otherJayuana._refsTo.add(localRef);
+        otherJayuana._refsFrom.add(localRef);
+        break;
+      default :
+        throw new J.error("Jobj.addRef");
+    }
+  };
+
+  J.prototype.addRefByName =
+    function(type, nameInDb, nameLocalRef, nameForOtherRef){
+    var self = this;
+    nameLocalRef || (nameLocalRef = nameInDb);
+    J.getByName(nameInDb, function(err, element){
+        //TODO: handle the error
+      var ref;
+      ref.name = nameLocalRef;
+      ref.id = element._id;
+      ref.element = element;
+      self._addref(ref, nameForOtherRef, type);
+    });
+  };
+
   // STATICS PROPERTIES:
   J._activated = [];
 
@@ -206,6 +248,23 @@ J = (function(){
         console.log("- end J.start()");
       }
     });
+  };
+
+  //TODO if necesary:
+  J._addRef = function (element1, element2, relation){
+    if((element1.objType !== "Jayuana") || (!element1.objType !=="Jayuana")){
+      throw new J.Error("J._addRef", "at least one element is not a Jayuana " +
+        "object");
+    }
+    if (relation === 'both'){
+
+    }
+    else if (relation === 'fromTo'){
+
+    }
+    else{
+      throw new J.Error("J._addRef", "relation type wrong");
+    }
   };
 
   J._wipe = function () {
