@@ -7,3 +7,10 @@ C = {  // jshint ignore:line
 };
 
 
+RefType = {
+  TO: "to",
+  FROM: "from",
+  BOTH: "both"
+};
+
+
