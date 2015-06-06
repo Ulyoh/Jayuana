@@ -6,11 +6,33 @@ C = {  // jshint ignore:line
   DEFAULT_FOLDER: ".packagesFiles"
 };
 
-
+/**
+ * Define a type of reference
+ * @type {{TO: string, FROM: string, BOTH: string}}
+ */
 RefType = {
   TO: "to",
   FROM: "from",
   BOTH: "both"
+};
+
+/**
+ *
+ * @type {{idInDb: string, localName: string, activeElt: *}}
+ */
+RefInfo = {
+  idInDb: "sth",
+  localName: "sth",
+  activeElt: new J()
+};
+
+/**
+ * Used as param to look for either by id or name
+ * @type {{id: string, name: string}}
+ */
+ObjInfo = {
+  idInDb: "sth",
+  nameInDb: "sth"
 };
 
 

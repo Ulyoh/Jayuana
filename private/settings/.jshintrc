@@ -165,7 +165,9 @@
     "J"         : true,
     "C"         : true,
     "utils"     : true,
-    "RefType"   : true
+    "RefType"   : true,
+    "RefInfo"   : true,
+    "ObjInfo"   : true
   }
 }
 
