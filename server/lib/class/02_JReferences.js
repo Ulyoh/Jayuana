@@ -2,6 +2,10 @@
   * Created by yoh on 15-3-24.
   */
 
+  //TODO: replace id in each reference by idInDb
+  //TODO: replace name in each reference by localName
+  //TODO: create a reference constructor
+
   "use strict";
 
 J.References = (function () {

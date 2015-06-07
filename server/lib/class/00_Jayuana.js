@@ -1,6 +1,29 @@
 
+//TODO: replace all this by self in all files
+//TODO: replace all *getBy* by *getBy*InDb
+//TODO: create _getActiveBy, getActiveByName and getActiveById
+//TODO: create prototype.getId and .getName
+
+/*TODO: create test for:
+*   J.
+*   _getActiveBy
+*   getActiveById
+*   getActiveByName
+*
+*   J.proto.
+*   _addRef
+*   addRef
+*   write doc for each method
+*
+* */
+
 J = (function(){
   "use strict";
+  /**
+   *
+   * @param element
+   * @constructor
+   */
   var J = function (element) {
     if (this instanceof J){
       var self = this;
@@ -34,7 +57,10 @@ J = (function(){
     }
   };
 
-  // METHODS:
+  /**#@+
+   * @public
+   */
+
   J.prototype = {};
 
   J.prototype.run = function(){
@@ -44,47 +70,86 @@ J = (function(){
     console.log("- end J.prototype.run");
   };
 
-  J.prototype._addRef = function(ref, type, nameForOtherRef){
+  /**
+   * Add references with an other object
+   * @param {Object} options
+   * @param {RefType} options.refType
+   * @param {ObjInfo} options.otherObj must contain idInDb or nameInDb property,
+   * nameInDb is ignored if idInDb is found
+   * @param {string} [options.nameRef = options.otherObj._name]
+   * @param {string} [options.nameSelfForOtherRef = self._name]
+   */
+  J.prototype.addRef = function(options){
+    var id, name, otherJayuana, refInfo;
     var self = this;
-    var otherJayuana = J.db.findOne({_id: ref.element._id});
-    var localRef = {
+    if (Match.test(options.otherObj.idInDb, String)){
+      id = options.otherObj.idInDb;
+      otherJayuana = J.getActiveById(id);
+      name = options.nameRef || otherJayuana._name;
+    }
+    else if (Match.test(options.otherObj.nameInDb, String)){
+      name = options.otherObj.nameInDb;
+      otherJayuana = J.getActiveByName(name);
+      id = otherJayuana._id;
+    }
+    else{
+      throw new J.Error("J.addRef", "no valid Id neither name");
+    }
+
+    refInfo = {
+      idInDb: id,
+      localName: name,
+      activeElt: otherJayuana
+    };
+
+    self._addRef(refInfo, options.refType,
+      options.nameSelfForOtherRef || self._name);
+  };
+
+  /**#@-*/
+  /**#@+
+   * @private
+   */
+
+  /**
+   *
+   * @param {RefInfo} refInfo of the other Jayuana object
+   * @param {RefType} refType
+   * @param {string} [nameSelfForOtherRef = refInfo.element._id]
+   * @private
+   */
+  J.prototype._addRef = function(refInfo, refType, nameSelfForOtherRef){
+    var self = this;
+    var otherJayuana = refInfo.element;
+    var refToSelf = {
       id: self._id,
-      name: nameForOtherRef || (nameForOtherRef = self._name),
+      name: nameSelfForOtherRef || self._name,
       element: self._element
     };
-    switch(type){
+    switch(refType){
       case 'to':
-        self._refsTo.add(ref);
-        otherJayuana._refsFrom.add(localRef);
+        self._refsTo.add(refInfo);
+        otherJayuana._refsFrom.add(refToSelf);
         break;
       case 'from':
-        otherJayuana._refsTo.add(localRef);
-        self._refsFrom.add(ref);
+        otherJayuana._refsTo.add(refToSelf);
+        self._refsFrom.add(refInfo);
         break;
       case 'both':
-        self._refsTo.add(ref);
-        self._refsFrom.add(ref);
-        otherJayuana._refsTo.add(localRef);
-        otherJayuana._refsFrom.add(localRef);
+        self._refsTo.add(refInfo);
+        self._refsFrom.add(refInfo);
+        otherJayuana._refsTo.add(refToSelf);
+        otherJayuana._refsFrom.add(refToSelf);
         break;
       default :
         throw new J.error("Jobj.addRef");
     }
   };
 
-  J.prototype.addRefByName =
-    function(type, nameInDb, nameLocalRef, nameForOtherRef){
-    var self = this;
-    nameLocalRef || (nameLocalRef = nameInDb);
-    J.getByName(nameInDb, function(err, element){
-        //TODO: handle the error
-      var ref;
-      ref.name = nameLocalRef;
-      ref.id = element._id;
-      ref.element = element;
-      self._addref(ref, nameForOtherRef, type);
-    });
-  };
+
+  /**#@-*/
+
+
 
   // STATICS PROPERTIES:
   J._activated = [];
@@ -228,12 +293,28 @@ J = (function(){
     });
   };
 
+  J._getActiveBy = function(condition){
+    var index = _.findIndex(J._activated, function (value) {
+      var pattern = Match.ObjectIncluding(condition);
+      Meteor.test(value, pattern);
+    });
+    return J._activated[index];
+  };
+
   J.getById = function (id, callback) {
     J._getBy({_id: id }, callback);
   };
 
   J.getByName = function(name, callback) {
     J._getBy({name: name}, callback);
+  };
+
+  J.getActiveById = function (id) {
+    J._getActiveBy({id:id});
+  };
+
+  J.getActiveByName = function (name) {
+    J._getActiveBy({_name:name});
   };
 
   J.start = function(){
@@ -280,4 +361,3 @@ J = (function(){
 
   return J;
 })();
-
