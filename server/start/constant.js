@@ -18,12 +18,12 @@ RefType = {
 
 /**
  *
- * @type {{idInDb: string, localName: string, activeElt: *}}
+ * @type {{idInDb: string, localName: string, activeElt: J}}
  */
 RefInfo = {
   idInDb: "sth",
   localName: "sth",
-  activeElt: new J()
+  activeElt: "Jayuana obj"
 };
 
 /**
