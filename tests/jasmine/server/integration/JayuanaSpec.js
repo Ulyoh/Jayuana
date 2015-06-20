@@ -26,12 +26,12 @@ describe("J", function () {
 
   it("should create a folder with the named passed to J.init()", function () {
 
-    var fs = Npm.require('fs');
-    //fs.accessSync not working yet, use it when existsSync is removed
+    //var fs = Npm.require('fs');
+    //utils.fs.accessSync not working yet, use it when existsSync is removed
     //from fs API :
-    //expect(fs.accessSync(process.env.PWD + "/" + directoryName)).not
+    //expect(utils.fs.accessSync(process.env.PWD + "/" + directoryName)).not
     //.toThrow();
-    expect(fs.existsSync(process.env.PWD + "/" + directoryName)).toBeTruthy();
+    expect(utils.fs.existsSync(process.env.PWD + "/" + directoryName)).toBeTruthy();
   });
 
   xit("it should create a _rootPath property");
@@ -81,7 +81,7 @@ describe("J", function () {
           otherThing: "other"
         }
       };
-      var fs = Npm.require('fs');
+      //var fs = Npm.require('fs');
 
       beforeEach(setAdd(type, obj));
 
@@ -105,7 +105,7 @@ describe("J", function () {
       
       it("should have the object saved in a file", function (done) {
         expect(EJSON.stringify(obj))
-          .toEqual(fs.readFileSync(self.pathFile, {encoding: "utf8"}));
+          .toEqual(utils.fs.readFileSync(self.pathFile, {encoding: "utf8"}));
 
         done();
       });
@@ -291,12 +291,16 @@ describe("J object", function () {
   eltsDefs[0] = {
     obj: "function() {this.testMessage = 'I have said coucou once';}",
     type: "code",
-    name: "coucou 2",
+    name: "coucou child",
     start: false
   };
   eltsDefs[1] = {
     obj:  "function() {this.testMessage = 'coucou';" +
-          "  this.addRef({name: 'coucou 2'}, 'to');" +
+          "   this.addRef({" +
+          "     refType: RefType.TO" +
+          "     otherObj: {nameInDb: 'coucou child'}," +
+          "     " +
+          "   }, 'to');" +
           "}",
     type: "code",
     name: "coucou 1",
@@ -320,6 +324,7 @@ describe("J object", function () {
       J.init(options);
       console.log("******************* J._activated ***************");
       console.log(J._activated);
+      console.log(J._activated.length);
 
       console.log("******************* J._activated ***************");
       J.add(eltsDefs, function () {

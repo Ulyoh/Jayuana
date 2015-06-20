@@ -1,4 +1,4 @@
-
+//var fs = Npm.require('fs');
 //TODO: replace all this by self in all files
 //TODO: replace all *getBy* by *getBy*InDb
 //TODO: create _getActiveBy, getActiveByName and getActiveById
@@ -159,7 +159,7 @@ J = (function(){
 
   J.init = function (options) {
     console.log("+ start J.init()");
-    var fs = Npm.require('fs');
+    //var fs = Npm.require('fs');
 
     if (J.db === undefined) {
       J._rootPath = process.env.PWD + "/";
@@ -172,7 +172,7 @@ J = (function(){
       }
 
       try {
-        fs.mkdirSync(J._rootPath + J._folderName);
+        utils.fs.mkdirSync(J._rootPath + J._folderName);
       }
       catch(e){
         if (e.code !== 'EEXIST') {
@@ -209,7 +209,6 @@ J = (function(){
   J._addOne = function(obj, type, name, start, callback){
     console.log("+ start J._addOne( " + name + " )");
     var objUnderTest, element, id, data, filePath;
-    var fs = Npm.require('fs');
 
     name = name || '';
     start = start || false;
@@ -259,7 +258,10 @@ J = (function(){
     id = J.db.insert(element);
     filePath = J._rootPath + J._folderName + id;
 
-    fs.writeFile(filePath, data, Meteor.bindEnvironment(function (e) {
+    console.log("+ ready to writeFile of " + name);
+
+    utils.fs.writeFile(filePath, data, Meteor.bindEnvironment(function (e) {
+      console.log("+ start writeFile of " + name);
       if (e) {
         J.db.remove(id);
         //TODO : should not throw an Error but pass the Error to callback(e, id)
@@ -275,15 +277,17 @@ J = (function(){
         if (callback){
           callback(id);
         }
+        console.log("+ end writeFile of " + name);
       }
+
     }));
   };
 
   J._getBy = function(condition, callback){
-    var fs = Npm.require('fs');
+    //var fs = Npm.require('fs');
     var element = J.db.findOne(condition);
 
-    fs.readFile(element.path, {encoding: 'utf8'}, function (err, data){
+    utils.fs.readFile(element.path, {encoding: 'utf8'}, function (err, data){
       if(!err){
         element.objToEval = data;
       }
@@ -333,7 +337,7 @@ J = (function(){
 
   //TODO if necesary:
   J._addRef = function (element1, element2, relation){
-    if((element1.objType !== "Jayuana") || (!element1.objType !=="Jayuana")){
+    if((element1.objType !== "Jayuana") || ((!(element1.objType)) !=="Jayuana")){
       throw new J.Error("J._addRef", "at least one element is not a Jayuana " +
         "object");
     }
