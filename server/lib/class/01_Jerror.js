@@ -26,6 +26,8 @@ J.Error = (function() {
     self.details = details;
 
     self.message = self.reason + ' [' + self.error + ']';
+
+    utils.v("ERROR: " + error + ", reason: " + reason);
   };
 
   e.prototype = Object.create(Error.prototype);
