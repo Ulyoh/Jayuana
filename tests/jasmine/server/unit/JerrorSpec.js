@@ -1,4 +1,4 @@
-describe("J.Error", function () {
+xdescribe("J.Error", function () {
   var errorMsg = "error";
   var reason = "reason";
   var details = "details";

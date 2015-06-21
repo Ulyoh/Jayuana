@@ -63,7 +63,7 @@ describe("J", function () {
           name: "",
           start: false
       };
-        J.add(eltDef, function (id) {
+        J.addInDb(eltDef, function (id) {
           self.pathFile = process.env.PWD + "/" + directoryName + "/" + id;
           self.id = id;
           done();
@@ -132,7 +132,7 @@ describe("J", function () {
           name: "",
           start: false
         };
-        J.add(eltDef, function (id) {
+        J.addInDb(eltDef, function (id) {
           expect(J.db.findOne({_id: id}).start).toBeTruthy();
           done();
         });
@@ -144,8 +144,8 @@ describe("J", function () {
             name: "",
             start: true
           };
-          J.add(eltDef);})
-          .toThrowError("start flag true and object is not a function [J.add]");
+          J.addInDb(eltDef);})
+          .toThrowError("start flag true and object is not a function [J.addInDb]");
       });
 
       xit("should accept an array of elements");
@@ -196,7 +196,7 @@ describe("J", function () {
         start: false
       };
 
-      J.add(eltDef, function (id) {
+      J.addInDb(eltDef, function (id) {
         J.getById(id, function (err, data) {
           self.data = data;
         });
@@ -231,7 +231,7 @@ describe("J", function () {
       };
 
 
-      J.add(eltDef, function () {
+      J.addInDb(eltDef, function () {
         J.getByName(name, function (err, data) {
           self.data = data;
         });
@@ -265,7 +265,7 @@ describe("J", function () {
         name: "coucou",
         start: true
       };
-      J.add(eltDef, function () {
+      J.addInDb(eltDef, function () {
         J.start();
       });
 
@@ -291,19 +291,18 @@ describe("J object", function () {
   eltsDefs[0] = {
     obj: "function() {this.testMessage = 'I have said coucou once';}",
     type: "code",
-    name: "coucou child",
+    name: "coucou_child",
     start: false
   };
   eltsDefs[1] = {
     obj:  "function() {this.testMessage = 'coucou';" +
           "   this.addRef({" +
-          "     refType: RefType.TO" +
-          "     otherObj: {nameInDb: 'coucou child'}," +
-          "     " +
-          "   }, 'to');" +
+          "     refType: RefType.TO," +
+          "     otherObj: {nameInDb: 'coucou_child'}" +
+          "   });" +
           "}",
     type: "code",
-    name: "coucou 1",
+    name: "coucou_1",
     start: true
   };
 
@@ -327,7 +326,7 @@ describe("J object", function () {
       utils.v(J._activated.length);
 
       utils.v("******************* J._activated ***************");
-      J.add(eltsDefs, function () {
+      J.addInDb(eltsDefs, function () {
         J.start();
         self.JayuanaElts = J._activated;
         utils.v("****************start self.JayuanaElts ***************");

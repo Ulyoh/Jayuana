@@ -26,6 +26,7 @@ J = (function(){
    */
   var J = function (element) {
     if (this instanceof J){
+      utils.v("+ start create new instance of J, name :" + element.name);
       var self = this;
 
       self.objType = "Jayuana";
@@ -51,6 +52,7 @@ J = (function(){
       self._obj = element.obj;
 
       J._activated.push(self);
+      utils.v("+ end create new instance of J, name :" + element.name);
     }
     else{
       throw new J.Error("J", "must be called with the 'new' keyword");
@@ -80,6 +82,7 @@ J = (function(){
    * @param {string} [options.nameSelfForOtherRef = self._name]
    */
   J.prototype.addRef = function(options){
+    utils.v("+ start addRef of ( " + this._name + " )");
     var id, name, otherJayuana, refInfo;
     var self = this;
     if (Match.test(options.otherObj.idInDb, String)){
@@ -104,6 +107,8 @@ J = (function(){
 
     self._addRef(refInfo, options.refType,
       options.nameSelfForOtherRef || self._name);
+
+    utils.v("+ end addRef of ( " + this._name + " )");
   };
 
   /**#@-*/
@@ -119,6 +124,7 @@ J = (function(){
    * @private
    */
   J.prototype._addRef = function(refInfo, refType, nameSelfForOtherRef){
+    J._addingRefInfoDelayed(true);
     var self = this;
     var otherJayuana = refInfo.element;
     var refToSelf = {
@@ -153,8 +159,22 @@ J = (function(){
 
   // STATICS PROPERTIES:
   J._activated = [];
+  J._addingElt = false;
 
   // STATICS METHODS:
+  J._addingEltEndDelayed = function(bool){
+    if (bool) {
+      this.refDelay && (Meteor.setTimeout(this.refDelay));
+      J._addingRef = true;
+    }
+    else{
+        this.refDelay = Meteor.setTimeout(function () {
+        J._addingRef = false;
+      },100);
+    }
+
+  };
+
   J._starter = function(){};
 
   J.init = function (options) {
@@ -190,7 +210,7 @@ J = (function(){
     utils.v("- end J.init()");
   };
 
-  J.add = function(oneOreMoreElts, callback){
+  J.addInDb = function(oneOreMoreElts, callback){
     var eltsDef = [];
     var callbackOnce;
     if (_.isArray(oneOreMoreElts)){
@@ -221,7 +241,7 @@ J = (function(){
     };
     utils.v("+ ++++1 J._addOne( " + name + " )");
     if((type !== "EJSON") && (type !== "code") && (type !== "file")){
-      throw new J.Error("J.add", "type not defined correctly");
+      throw new J.Error("J.addInDb", "type not defined correctly");
     }
 
     utils.v("+ ++++2 J._addOne( " + name + " )");
@@ -237,7 +257,7 @@ J = (function(){
           eval('objUnderTest = ' + obj); //jshint ignore:line
         }
         catch (e){
-          throw new J.Error("J.add", "eval(): " + e.message);
+          throw new J.Error("J.addInDb", "eval(): " + e.message);
         }
         data = obj;
 
@@ -248,14 +268,18 @@ J = (function(){
         break;
     }
 
+    utils.v("+ ++++3 J._addOne( " + name + " )");
+
     if (objUnderTest === undefined){
-      throw new J.Error("J.add", "undefined object");
+      throw new J.Error("J.addInDb", "undefined object");
     }
 
     if ((element.start === true) && !(_.isFunction(objUnderTest))){
-      throw new J.Error("J.add",
+      throw new J.Error("J.addInDb",
         "start flag true and object is not a function");
     }
+
+    utils.v("+ ++++4 J._addOne( " + name + " )");
 
     id = J.db.insert(element);
     filePath = J._rootPath + J._folderName + id;
@@ -268,10 +292,10 @@ J = (function(){
         J.db.remove(id);
         //TODO : should not throw an Error but pass the Error to callback(e, id)
         //TODO : save it in a log
-        throw new J.Error("J.add", "writeFile: " + e.message);
+        throw new J.Error("J.addInDb", "writeFile: " + e.message);
       }
       else{
-        utils.v("- end J.add( " + name + " )");
+        utils.v("- end J.addInDb( " + name + " )");
         J.db.update({_id: id},{$set: {
           available: true,
           path: filePath}});
@@ -300,10 +324,18 @@ J = (function(){
   };
 
   J._getActiveBy = function(condition){
-    var index = _.findIndex(J._activated, function (value) {
+    utils.v("+ start J._getActiveBy( " + EJSON.stringify(condition) + " ), " +
+      "J._activated.length: " + J._activated.length + "/n J._activated: " +
+      EJSON.stringify(J._activated));
+    var index = __.findIndex(J._activated, function (value) {
       var pattern = Match.ObjectIncluding(condition);
-      Meteor.test(value, pattern);
+      Match.test(value, pattern);
     });
+    if (index === -1){
+      throw J.Error(  J._getActiveBy, "index not found, index: " + index);
+    }
+    utils.v("+ end J._getActiveBy( " +  EJSON.stringify(condition)  +
+      " ), index: " + index);
     return J._activated[index];
   };
 
