@@ -64,10 +64,10 @@ J = (function(){
   J.prototype = {};
 
   J.prototype.run = function(){
-    console.log("+ start J.prototype.run");
+    utils.v("+ start J.prototype.run");
     var self = this;
     self._obj();
-    console.log("- end J.prototype.run");
+    utils.v("- end J.prototype.run");
   };
 
   /**
@@ -158,7 +158,7 @@ J = (function(){
   J._starter = function(){};
 
   J.init = function (options) {
-    console.log("+ start J.init()");
+    utils.v("+ start J.init()");
     //var fs = Npm.require('fs');
 
     if (J.db === undefined) {
@@ -187,7 +187,7 @@ J = (function(){
     }
 
     J._wipe();
-    console.log("- end J.init()");
+    utils.v("- end J.init()");
   };
 
   J.add = function(oneOreMoreElts, callback){
@@ -207,7 +207,7 @@ J = (function(){
   };
 
   J._addOne = function(obj, type, name, start, callback){
-    console.log("+ start J._addOne( " + name + " )");
+    utils.v("+ start J._addOne( " + name + " )");
     var objUnderTest, element, id, data, filePath;
 
     name = name || '';
@@ -219,10 +219,12 @@ J = (function(){
       available: false,
       path: 'unknown'
     };
-
+    utils.v("+ ++++1 J._addOne( " + name + " )");
     if((type !== "EJSON") && (type !== "code") && (type !== "file")){
       throw new J.Error("J.add", "type not defined correctly");
     }
+
+    utils.v("+ ++++2 J._addOne( " + name + " )");
 
     switch (type){
       case "EJSON":
@@ -258,10 +260,10 @@ J = (function(){
     id = J.db.insert(element);
     filePath = J._rootPath + J._folderName + id;
 
-    console.log("+ ready to writeFile of " + name);
+    utils.v("+ ready to writeFile of " + name);
 
     utils.fs.writeFile(filePath, data, Meteor.bindEnvironment(function (e) {
-      console.log("+ start writeFile of " + name);
+      utils.v("+ start writeFile of " + name);
       if (e) {
         J.db.remove(id);
         //TODO : should not throw an Error but pass the Error to callback(e, id)
@@ -269,7 +271,7 @@ J = (function(){
         throw new J.Error("J.add", "writeFile: " + e.message);
       }
       else{
-        console.log("- end J.add( " + name + " )");
+        utils.v("- end J.add( " + name + " )");
         J.db.update({_id: id},{$set: {
           available: true,
           path: filePath}});
@@ -277,7 +279,7 @@ J = (function(){
         if (callback){
           callback(id);
         }
-        console.log("+ end writeFile of " + name);
+        utils.v("+ end writeFile of " + name);
       }
 
     }));
@@ -322,7 +324,7 @@ J = (function(){
   };
 
   J.start = function(){
-    console.log("+ start J.start()");
+    utils.v("+ start J.start()");
     J._getBy({start: true}, function (err, element) {
       if(err){
         throw err;
@@ -330,7 +332,7 @@ J = (function(){
       else{
         J._starter = new J(element);
         J._starter.run();
-        console.log("- end J.start()");
+        utils.v("- end J.start()");
       }
     });
   };

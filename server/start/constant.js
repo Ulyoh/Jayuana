@@ -3,7 +3,8 @@
  */
 
 C = {  // jshint ignore:line
-  DEFAULT_FOLDER: ".packagesFiles"
+  DEFAULT_FOLDER: ".packagesFiles",
+  VERBOSE: true
 };
 
 /**
@@ -34,5 +35,6 @@ ObjInfo = {
   idInDb: "sth",
   nameInDb: "sth"
 };
+
 
 

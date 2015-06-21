@@ -312,30 +312,30 @@ describe("J object", function () {
       expect(elt[property]).toEqual(jasmine.any(type));
     };
     var verifyPropertiesMyTypes = function(elt, property, type){
-      console.log(elt);
+      utils.v(elt);
       expect(elt[property].objType).toEqual(type);
     };
 
-    console.log("beforeAll should start:");
+    utils.v("beforeAll should start:");
     beforeAll(function (done) {
-      console.log("beforeAll started");
+      utils.v("beforeAll started");
       var self = this;
       self.JayuanaElts = [];
       J.init(options);
-      console.log("******************* J._activated ***************");
-      console.log(J._activated);
-      console.log(J._activated.length);
+      utils.v("******************* J._activated ***************");
+      utils.v(J._activated);
+      utils.v(J._activated.length);
 
-      console.log("******************* J._activated ***************");
+      utils.v("******************* J._activated ***************");
       J.add(eltsDefs, function () {
         J.start();
         self.JayuanaElts = J._activated;
-        console.log("****************start self.JayuanaElts ***************");
-        console.log(self.JayuanaElts);
+        utils.v("****************start self.JayuanaElts ***************");
+        utils.v(self.JayuanaElts);
 
-        console.log("****************end self.JayuanaElts ***************");
+        utils.v("****************end self.JayuanaElts ***************");
 
-        console.log("beforeAll finshed");
+        utils.v("beforeAll finshed");
         done();
       });
     });

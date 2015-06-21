@@ -18,5 +18,13 @@ utils = {
     else{
       utils.fs.unlinkSync(target);
     }
+  },
+  verbose: function(text) {
+    if (C.VERBOSE) {
+      console.log(text);
+    }
+  },
+  v: function(text){
+    return this.verbose(text);
   }
 };
