@@ -2,6 +2,8 @@
  * Created by yoh on 4/27/15.
  */
 
+__ = lodash;
+
 C = {  // jshint ignore:line
   DEFAULT_FOLDER: ".packagesFiles",
   VERBOSE: true
