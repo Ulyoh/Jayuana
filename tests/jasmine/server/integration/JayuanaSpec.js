@@ -291,7 +291,7 @@ describe("J object", function () {
   eltsDefs[0] = {
     obj: "function() {this.testMessage = 'I have said coucou once';}",
     type: "code",
-    name: "coucou_child",
+    name: "coucou child",
     start: false
   };
   eltsDefs[1] = {
@@ -302,16 +302,17 @@ describe("J object", function () {
           "   });" +
           "}",
     type: "code",
-    name: "coucou_1",
+    name: "coucou 1",
     start: true
   };
 
   describe("private properties created", function () {
     var verifyPropertiesTypes = function(elt, property, type){
+      utils.v("verifyPropertiesTypes of " + elt);
       expect(elt[property]).toEqual(jasmine.any(type));
     };
     var verifyPropertiesMyTypes = function(elt, property, type){
-      utils.v(elt);
+      utils.v("verifyPropertiesMyTypes of " + elt);
       expect(elt[property].objType).toEqual(type);
     };
 
@@ -321,11 +322,6 @@ describe("J object", function () {
       var self = this;
       self.JayuanaElts = [];
       J.init(options);
-      utils.v("******************* J._activated ***************");
-      utils.v(J._activated);
-      utils.v(J._activated.length);
-
-      utils.v("******************* J._activated ***************");
       J.addInDb(eltsDefs, function () {
         J.start();
         self.JayuanaElts = J._activated;

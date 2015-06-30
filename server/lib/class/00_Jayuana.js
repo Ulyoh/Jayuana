@@ -25,9 +25,9 @@ J = (function(){
    * @constructor
    */
   var J = function (element) {
-    if (this instanceof J){
+    var self = this;
+    if (self instanceof J){
       utils.v("+ start create new instance of J, name :" + element.name);
-      var self = this;
 
       self.objType = "Jayuana";
 
@@ -66,8 +66,8 @@ J = (function(){
   J.prototype = {};
 
   J.prototype.run = function(){
-    utils.v("+ start J.prototype.run");
     var self = this;
+    utils.v("+ start J.prototype.run");
     self._obj();
     utils.v("- end J.prototype.run");
   };
@@ -124,7 +124,6 @@ J = (function(){
    * @private
    */
   J.prototype._addRef = function(refInfo, refType, nameSelfForOtherRef){
-    J._addingRefInfoDelayed(true);
     var self = this;
     var otherJayuana = refInfo.element;
     var refToSelf = {
@@ -163,12 +162,13 @@ J = (function(){
 
   // STATICS METHODS:
   J._addingEltEndDelayed = function(bool){
+    var self = this;
     if (bool) {
-      this.refDelay && (Meteor.setTimeout(this.refDelay));
+      self.refDelay && (Meteor.setTimeout(self.refDelay,100));
       J._addingRef = true;
     }
     else{
-        this.refDelay = Meteor.setTimeout(function () {
+      self.refDelay = Meteor.setTimeout(function () {
         J._addingRef = false;
       },100);
     }

@@ -28,17 +28,18 @@ J.References = (function () {
        else {
           refArray = refArrayOrOne;
        }
-       refArray.forEach(this.add, this);
+       refArray.forEach(self.add, self);
     }
   };
 
   References.prototype.add = function(ref){
     var cleanRef = {};
+    var self = this;
     if (Match.test(ref, Object) && ref.name && ref.id &&
        Match.test(ref.name, String) && Match.test(ref.id, String)) {
        cleanRef.id = ref.id;
        cleanRef.name = ref.name;
-       this._list.push(cleanRef);
+      self._list.push(cleanRef);
     }
     else{
        throw new J.Error("References add", "invalid or not object " +
@@ -48,72 +49,79 @@ J.References = (function () {
 
   References.prototype.removeById = function (id) {
     var index;
+    var self = this;
     if (!Match.test(id, String)){
        throw new J.Error("References", "method removeById: id argument is " +
        "not a string");
     }
 
-    index = this._getIndexById(id);
+    index = self._getIndexById(id);
     if (index === -1){
        throw new J.Error("References", "method removeById: id not found");
     }
-    this._list[index] = undefined;
+    self._list[index] = undefined;
   };
 
   References.prototype.removeByName = function (name) {
     var index;
+    var self = this;
     if (!Match.test(name, String)){
        throw new J.Error("References", "method removeByName: argument is " +
        "not a string");
     }
 
-    index = this._getIndexByName(name);
+    index = self._getIndexByName(name);
     if (index === -1){
        throw new J.Error("References", "method removeByName: name not found");
     }
-    this._list[index] = undefined;
+    self._list[index] = undefined;
   };
 
   References.prototype.getIdByName = function(name){
     var index;
+    var self = this;
     if (!Match.test(name, String)){
        throw new J.Error("References", "method getIdByName: argument is " +
        "not a string");
     }
-    index = this._getIndexByName(name);
+    index = self._getIndexByName(name);
     if (index === -1){
        throw new J.Error("References", "method getIdByName: name not found");
     }
-    return this._list[index].id;
+    return self._list[index].id;
   };
 
   References.prototype.getNameById = function (id) {
     var index;
+    var self = this;
     if (!Match.test(id, String)){
        throw new J.Error("References", "method getNameById: argument is " +
        "not a string");
     }
-    index = this._getIndexById(id);
+    index = self._getIndexById(id);
     if (index === -1){
        throw new J.Error("References", "method getNameById: id not found");
     }
-    return this._list[index].name;
+    return self._list[index].name;
   };
 
   References.prototype.isNameIn = function (name) {
-    return this._getIndexByName(name) >= 0;
+    var self = this;
+    return self._getIndexByName(name) >= 0;
   };
 
   References.prototype.isIdIn = function (id) {
-    return this._getIndexById(id) >= 0;
+    var self = this;
+    return self._getIndexById(id) >= 0;
   };
 
   /////////////////////////////////
   ///     private methods
   ////////////////////////////////
   References.prototype._getIndexBy = function (property, value) {
-    for( var i = this._list.length - 1; i >= 0; i--){
-       if(this._list[i][property] === value){
+    var self = this;
+    for( var i = self._list.length - 1; i >= 0; i--){
+       if(self._list[i][property] === value){
           return i;
        }
     }
@@ -121,11 +129,13 @@ J.References = (function () {
   };
 
   References.prototype._getIndexById = function (id) {
-    return this._getIndexBy("id", id);
+    var self = this;
+    return self._getIndexBy("id", id);
   };
 
   References.prototype._getIndexByName = function (name) {
-    return this._getIndexBy("name", name);
+    var self = this;
+    return self._getIndexBy("name", name);
   };
 
   /////////////////////////////////

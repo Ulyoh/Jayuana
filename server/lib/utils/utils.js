@@ -25,6 +25,7 @@ utils = {
     }
   },
   v: function(text){
-    return this.verbose(text);
+    var self = this;
+    return self.verbose(text);
   }
 };
