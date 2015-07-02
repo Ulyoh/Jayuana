@@ -289,18 +289,24 @@ describe("J object", function () {
   var eltsDefs = [];
 
   eltsDefs[0] = {
-    obj: "function() {this.testMessage = 'I have said coucou once';}",
+    obj: "function() {console.log('hello Jayuana');}",
     type: "code",
-    name: "coucou child",
+    name: "coucou_child",
     start: false
   };
   eltsDefs[1] = {
-    obj:  "function() {this.testMessage = 'coucou';" +
-          "   this.addRef({" +
+    obj:  "function() {" +
+          "   self = this;" +
+          "   self.useElt({" +
           "     refType: RefType.TO," +
           "     otherObj: {nameInDb: 'coucou_child'}" +
-          "   });" +
-          "}",
+          "     }," +
+          "     function(){" +
+          "       var idToCall = self.getIdByName('coucou_child');" +
+          "       J.getActiveById(idToCall)();" +
+      //TODO: replace two previous lines by:
+          "       self.execRef({name:'coucou_child'})" +
+          "   })};",
     type: "code",
     name: "coucou 1",
     start: true
