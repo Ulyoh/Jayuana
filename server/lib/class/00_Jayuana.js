@@ -44,7 +44,7 @@ J = (function(){
 
       self._element = element;
       self.dbId = element.dbId;
-      self._name = element.dbName;
+      self._dbName = element.dbName;
       self._refsFrom = new J.References(element.refsFrom);
       self._refsTo = new J.References(element.refsTo);
       eval("element.obj =" + element.objToEval);  //jshint ignore: line
@@ -77,18 +77,18 @@ J = (function(){
    * @param {RefType} options.refType
    * @param {ObjInfo} options.otherObj must contain dbId or nameInDb property,
    *                  nameInDb is ignored if dbId is found
-   * @param {string} [options.nameRef = options.otherObj._name]
-   * @param {string} [options.nameSelfForOtherRef = self._name]
+   * @param {string} [options.nameRef = options.otherObj._dbName]
+   * @param {string} [options.nameSelfForOtherRef = self._dbName]
    */
   J.prototype.addRef = function(options){
     J._addingRef = true;
-    utils.v("+ start addRef of ( " + this._name + " )");
+    utils.v("+ start addRef of ( " + this._dbName + " )");
     var dbId, name, otherJayuana, refInfo;
     var self = this;
     if (Match.test(options.otherObj.dbId, String)){
       dbId = options.otherObj.dbId;
       otherJayuana = J.getActiveByDbId(dbId);
-      name = options.nameRef || otherJayuana._name;
+      name = options.nameRef || otherJayuana._dbName;
     }
     else if (Match.test(options.otherObj.nameInDb, String)){
       name = options.otherObj.nameInDb;
@@ -106,10 +106,10 @@ J = (function(){
     };
 
     self._addRef(refInfo, options.refType,
-      options.nameSelfForOtherRef || self._name);
+      options.nameSelfForOtherRef || self._dbName);
 
     J._addingRef = false;
-    utils.v("+ end addRef of ( " + this._name + " )");
+    utils.v("+ end addRef of ( " + this._dbName + " )");
   };
 
   /**#@-*/
@@ -129,7 +129,7 @@ J = (function(){
     var otherJayuana = refInfo.element;
     var refToSelf = {
       dbId: self.dbId,
-      dbName: nameSelfForOtherRef || self._name,
+      dbName: nameSelfForOtherRef || self._dbName,
       element: self._element
     };
     switch(refType){
@@ -340,7 +340,7 @@ J = (function(){
   };
 
   J.getActiveByName = function (name) {
-    J._getActiveBy({_name:name});
+    J._getActiveBy({_dbName:name});
   };
 
   J.start = function(){

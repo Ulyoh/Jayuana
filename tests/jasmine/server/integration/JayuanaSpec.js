@@ -350,8 +350,8 @@ describe("J object", function () {
     });
     it("should have a private dbName property", function (done) {
       var self = this;
-      verifyPropertiesTypes(self.JayuanaElts[0], "_name", String);
-      verifyPropertiesTypes(self.JayuanaElts[1], "_name", String);
+      verifyPropertiesTypes(self.JayuanaElts[0], "_dbName", String);
+      verifyPropertiesTypes(self.JayuanaElts[1], "_dbName", String);
       done();
     });
     it("should have a private refsFrom property", function (done) {
