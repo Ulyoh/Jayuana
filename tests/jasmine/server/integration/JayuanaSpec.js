@@ -31,8 +31,7 @@ describe("J", function () {
     //from fs API :
     //expect(utils.fs.accessSync(process.env.PWD + "/" + directoryName)).not
     //.toThrow();
-    expect(utils.fs.existsSync(process.env.PWD + "/" + directoryName))
-      .toBeTruthy();
+    expect(utils.fs.existsSync(process.env.PWD + "/" + directoryName)).toBeTruthy();
   });
 
   xit("it should create a _rootPath property");
@@ -66,7 +65,7 @@ describe("J", function () {
       };
         J.addInDb(eltDef, function (id) {
           self.pathFile = process.env.PWD + "/" + directoryName + "/" + id;
-          self.id = id;
+          self.dbId = dbId;
           done();
         });
       };
@@ -75,7 +74,7 @@ describe("J", function () {
     describe("using EJSON", function () {
       var type = "EJSON";
       var obj = {
-        id: "an id",
+        dbId: "an dbId",
         name: "a name",
         subobj: {
           something: "a thing",
@@ -89,9 +88,9 @@ describe("J", function () {
       it("should add an element in the db with related properties",
         function (done) {
 
-        expect(J.db.findOne({_id: self.id }))
+        expect(J.db.findOne({_id: self.dbId }))
           .toEqual({
-            _id: self.id,
+            dbId: self.dbId,
             name: "",
             type: type,
             start: false,
@@ -115,7 +114,7 @@ describe("J", function () {
       xit("should throw an Error if EJSON.parse give a different result");
       xit("should throw an Error if the start flag is set to true");
       xit("should throw an Error if the argument do not match");
-      xit("should throw an Error if the name already exists");
+      xit("should throw an Error if the dbName already exists");
     });
 
     xdescribe("using code", function () {
@@ -123,7 +122,7 @@ describe("J", function () {
         "'use strict';" +
         "return 'code executed';" +
         "};";
-      //it("should add a new element to the db as code", testAdd("code", code));
+      it("should add a new element to the db as code", testAdd("code", code));
 
       it("should be able to set the start flag to true, and verify if the " +
       "code generate a function", function (done) {
@@ -134,7 +133,7 @@ describe("J", function () {
           start: false
         };
         J.addInDb(eltDef, function (id) {
-          expect(J.db.findOne({_id: id}).start).toBeTruthy();
+          expect(J.db.findOne({_id: dbId}).start).toBeTruthy();
           done();
         });
         expect(function(){
@@ -146,8 +145,7 @@ describe("J", function () {
             start: true
           };
           J.addInDb(eltDef);})
-          .toThrowError("start flag true and object is not a function " +
-          "[J.addInDb]");
+          .toThrowError("start flag true and object is not a function [J.addInDb]");
       });
 
       xit("should accept an array of elements");
@@ -156,7 +154,7 @@ describe("J", function () {
       "2nd element");
       xit("should throw an Error if code do note return an object");
       xit("should throw an Error if the argument do not match");
-      xit("should throw an Error if the name already exists");
+      xit("should throw an Error if the dbName already exists");
       xit("should throw an Error if the code add global variable");
       xit("should throw an Error if the code use undeclared global variable");
     });
@@ -171,7 +169,7 @@ describe("J", function () {
       xit("should throw an Error if try to set the start flag to true for a " +
       "2nd element");
       xit("should throw an Error if the argument do not match");
-      xit("should throw an Error if the name already exists");
+      xit("should throw an Error if the dbName already exists");
       xit("should verify if file with same code already exists");
     });
 
@@ -180,8 +178,8 @@ describe("J", function () {
 
   
 
-  describe("getById", function () {
-    it("should access to an element by its id", function (done) {
+  describe("getByDbId", function () {
+    it("should access to an element by its dbId", function (done) {
       var obj = "blabla"; //TODO: add test with different objects
                           //TODO: is a non object should be accepted?
       var elementPartial = {
@@ -199,7 +197,7 @@ describe("J", function () {
       };
 
       J.addInDb(eltDef, function (id) {
-        J.getById(id, function (err, data) {
+        J.getByDbId(dbId, function (err, data) {
           self.data = data;
         });
       });
@@ -209,12 +207,12 @@ describe("J", function () {
       }, 50);
     });
 
-    xit("should throw an Error if the id is not found");
+    xit("should throw an Error if the dbId is not found");
     xit("should throw an Error if the argument is not a string");
   });
 
-  describe("getByName", function () {
-    it("should access to an element by its name", function (done) {
+  describe("getByDbName", function () {
+    it("should access to an element by its dbName", function (done) {
       var obj = "blabla"; //TODO: add test with different objects
       //TODO: is a non object should be accepted?
       var name = "name_test";
@@ -234,7 +232,7 @@ describe("J", function () {
 
 
       J.addInDb(eltDef, function () {
-        J.getByName(name, function (err, data) {
+        J.getByDbName(name, function (err, data) {
           self.data = data;
         });
       });
@@ -243,13 +241,13 @@ describe("J", function () {
         done();
       }, 100);
     });
-    xit("should throw an Error if the id is not found");
+    xit("should throw an Error if the dbId is not found");
     xit("should throw an Error if the argument is not a string");
     xit("should throw an Error if the string is empty");
   });
 
   xdescribe("remove", function () {
-    it("should remove elements from the db by id or name");
+    it("should remove elements from the db by dbId or dbName");
     xit("should remove elements from the db by a list of ids or names");
     xit("should throw an Error if an instance of the elements is used");
     xit("should throw an Error if the element can be used by an other element");
@@ -304,8 +302,8 @@ describe("J object", function () {
           "     otherObj: {nameInDb: 'coucou_child'}" +
           "     }," +
           "     function(){" +
-          "       var idToCall = self.getIdByName('coucou_child');" +
-          "       J.getActiveById(idToCall)();" +
+          "       var idToCall = self.getDbIdByName('coucou_child');" +
+          "       J.getActiveByDbId(idToCall)();" +
       //TODO: replace two previous lines by:
           "       self.execRef({name:'coucou_child'})" +
           "   })};",
@@ -344,13 +342,13 @@ describe("J object", function () {
     });
 
     //TODO: test also with an object which is not J._starter
-    it("should have a private id property", function (done) {
+    it("should have a private dbId property (dbId in the db)", function (done) {
       var self = this;
-      verifyPropertiesTypes(self.JayuanaElts[0], "_id", String);
-      verifyPropertiesTypes(self.JayuanaElts[1], "_id", String);
+      verifyPropertiesTypes(self.JayuanaElts[0], "dbId", String);
+      verifyPropertiesTypes(self.JayuanaElts[1], "dbId", String);
       done();
     });
-    it("should have a private name property", function (done) {
+    it("should have a private dbName property", function (done) {
       var self = this;
       verifyPropertiesTypes(self.JayuanaElts[0], "_name", String);
       verifyPropertiesTypes(self.JayuanaElts[1], "_name", String);
@@ -393,7 +391,7 @@ describe("J object", function () {
     xit("should have at least one reference if it is not the start element");
   });
 
-  xdescribe("id value handle between server and client", function () {
+  xdescribe("dbId value handle between server and client", function () {
 
   });
 

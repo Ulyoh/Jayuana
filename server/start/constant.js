@@ -21,7 +21,7 @@ RefType = {
 
 /**
  *
- * @type {{idInDb: string, localName: string, activeElt: J}}
+ * @type {{dbId: string, localName: string, activeElt: J}}
  */
 RefInfo = {
   idInDb: "sth",
@@ -30,11 +30,11 @@ RefInfo = {
 };
 
 /**
- * Used as param to look for either by id or name
- * @type {{id: string, name: string}}
+ * Used as param to look for either by dbId or dbName
+ * @type {{dbId: string, dbName: string}}
  */
 ObjInfo = {
-  idInDb: "sth",
+  dbId: "sth",
   nameInDb: "sth"
 };
 

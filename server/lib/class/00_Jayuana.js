@@ -1,13 +1,12 @@
 //var fs = Npm.require('fs');
-//TODO: replace all this by self in all files
 //TODO: replace all *getBy* by *getBy*InDb
-//TODO: create _getActiveBy, getActiveByName and getActiveById
+//TODO: create _getActiveBy, getActiveByName and getActiveByDbId
 //TODO: create prototype.getId and .getName
 
 /*TODO: create test for:
 *   J.
 *   _getActiveBy
-*   getActiveById
+*   getActiveByDbId
 *   getActiveByName
 *
 *   J.proto.
@@ -27,7 +26,7 @@ J = (function(){
   var J = function (element) {
     var self = this;
     if (self instanceof J){
-      utils.v("+ start create new instance of J, name :" + element.name);
+      utils.v("+ start create new instance of J, name :" + element.dbName);
 
       self.objType = "Jayuana";
 
@@ -41,18 +40,18 @@ J = (function(){
         element.refsTo = null;
       }
 
-      //J[element._id] = self;
+      //J[element.dbId] = self;
 
       self._element = element;
-      self._id = element._id;
-      self._name = element.name;
+      self.dbId = element.dbId;
+      self._name = element.dbName;
       self._refsFrom = new J.References(element.refsFrom);
       self._refsTo = new J.References(element.refsTo);
       eval("element.obj =" + element.objToEval);  //jshint ignore: line
       self._obj = element.obj;
 
       J._activated.push(self);
-      utils.v("+ end create new instance of J, name :" + element.name);
+      utils.v("+ end create new instance of J, name :" + element.dbName);
     }
     else{
       throw new J.Error("J", "must be called with the 'new' keyword");
@@ -76,32 +75,32 @@ J = (function(){
    * Add references with an other object
    * @param {Object} options
    * @param {RefType} options.refType
-   * @param {ObjInfo} options.otherObj must contain idInDb or nameInDb property,
-   * nameInDb is ignored if idInDb is found
+   * @param {ObjInfo} options.otherObj must contain dbId or nameInDb property,
+   *                  nameInDb is ignored if dbId is found
    * @param {string} [options.nameRef = options.otherObj._name]
    * @param {string} [options.nameSelfForOtherRef = self._name]
    */
   J.prototype.addRef = function(options){
     J._addingRef = true;
     utils.v("+ start addRef of ( " + this._name + " )");
-    var id, name, otherJayuana, refInfo;
+    var dbId, name, otherJayuana, refInfo;
     var self = this;
-    if (Match.test(options.otherObj.idInDb, String)){
-      id = options.otherObj.idInDb;
-      otherJayuana = J.getActiveById(id);
+    if (Match.test(options.otherObj.dbId, String)){
+      dbId = options.otherObj.dbId;
+      otherJayuana = J.getActiveByDbId(dbId);
       name = options.nameRef || otherJayuana._name;
     }
     else if (Match.test(options.otherObj.nameInDb, String)){
       name = options.otherObj.nameInDb;
       otherJayuana = J.getActiveByName(name);
-      id = otherJayuana._id;
+      dbId = otherJayuana.dbId;
     }
     else{
       throw new J.Error("J.addRef", "no valid Id neither name");
     }
 
     refInfo = {
-      idInDb: id,
+      idInDb: dbId,
       localName: name,
       activeElt: otherJayuana
     };
@@ -122,15 +121,15 @@ J = (function(){
    *
    * @param {RefInfo} refInfo of the other Jayuana object
    * @param {RefType} refType
-   * @param {string} [nameSelfForOtherRef = refInfo.element._id]
+   * @param {string} [nameSelfForOtherRef = refInfo.element.dbId]
    * @private
    */
   J.prototype._addRef = function(refInfo, refType, nameSelfForOtherRef){
     var self = this;
     var otherJayuana = refInfo.element;
     var refToSelf = {
-      id: self._id,
-      name: nameSelfForOtherRef || self._name,
+      dbId: self.dbId,
+      dbName: nameSelfForOtherRef || self._name,
       element: self._element
     };
     switch(refType){
@@ -210,19 +209,19 @@ J = (function(){
     }
     callbackOnce = _.after(eltsDef.length, callback);
     eltsDef.forEach(function (eltDef) {
-      J._addOne(eltDef.obj, eltDef.type, eltDef.name, eltDef.start,
+      J._addOne(eltDef.obj, eltDef.type, eltDef.dbName, eltDef.start,
         callbackOnce);
     });
   };
 
   J._addOne = function(obj, type, name, start, callback){
     utils.v("+ start J._addOne( " + name + " )");
-    var objUnderTest, element, id, data, filePath;
+    var objUnderTest, element, dbId, data, filePath;
 
     name = name || '';
     start = start || false;
     element = {
-      name: name,
+      dbName: name,
       type: type,
       start: start,
       available: false,
@@ -270,27 +269,27 @@ J = (function(){
 
     utils.v("+ ++++4 J._addOne( " + name + " )");
 
-    id = J.db.insert(element);
-    filePath = J._rootPath + J._folderName + id;
+    dbId = J.db.insert(element);
+    filePath = J._rootPath + J._folderName + dbId;
 
     utils.v("+ ready to writeFile of " + name);
 
     utils.fs.writeFile(filePath, data, Meteor.bindEnvironment(function (e) {
       utils.v("+ start writeFile of " + name);
       if (e) {
-        J.db.remove(id);
+        J.db.remove(dbId);
         //TODO : should not throw an Error but pass the Error to callback(e, id)
         //TODO : save it in a log
         throw new J.Error("J.addInDb", "writeFile: " + e.message);
       }
       else{
         utils.v("- end J.addInDb( " + name + " )");
-        J.db.update({_id: id},{$set: {
+        J.db.update({_id: dbId},{$set: {
           available: true,
           path: filePath}});
 
         if (callback){
-          callback(id);
+          callback(dbId);
         }
         utils.v("+ end writeFile of " + name);
       }
@@ -328,16 +327,16 @@ J = (function(){
     return J._activated[index];
   };
 
-  J.getById = function (id, callback) {
-    J._getBy({_id: id }, callback);
+  J.getByDbId = function (dbId, callback) {
+    J._getBy({dbId: dbId }, callback);
   };
 
-  J.getByName = function(name, callback) {
-    J._getBy({name: name}, callback);
+  J.getByDbName = function(name, callback) {
+    J._getBy({dbName: name}, callback);
   };
 
-  J.getActiveById = function (id) {
-    J._getActiveBy({id:id});
+  J.getActiveByDbId = function (dbId) {
+    J._getActiveBy({dbId:dbId});
   };
 
   J.getActiveByName = function (name) {

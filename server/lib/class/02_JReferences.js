@@ -2,7 +2,7 @@
   * Created by yoh on 15-3-24.
   */
 
-  //TODO: replace id in each reference by idInDb
+  //TODO: replace id in each reference by dbId
   //TODO: replace name in each reference by localName
   //TODO: create a reference constructor
 
@@ -35,9 +35,9 @@ J.References = (function () {
   References.prototype.add = function(ref){
     var cleanRef = {};
     var self = this;
-    if (Match.test(ref, Object) && ref.name && ref.id &&
-       Match.test(ref.name, String) && Match.test(ref.id, String)) {
-       cleanRef.id = ref.id;
+    if (Match.test(ref, Object) && ref.name && ref.dbId &&
+       Match.test(ref.name, String) && Match.test(ref.dbId, String)) {
+       cleanRef.dbId = ref.dbId;
        cleanRef.name = ref.name;
       self._list.push(cleanRef);
     }
@@ -47,17 +47,17 @@ J.References = (function () {
     }
   };
 
-  References.prototype.removeById = function (id) {
+  References.prototype.removeByDbId = function (dbId) {
     var index;
     var self = this;
-    if (!Match.test(id, String)){
-       throw new J.Error("References", "method removeById: id argument is " +
-       "not a string");
+    if (!Match.test(dbId, String)){
+       throw new J.Error("References", "method removeByDbId: dbId argument is" +
+         " not a string");
     }
 
-    index = self._getIndexById(id);
+    index = self._getIndexByDbId(dbId);
     if (index === -1){
-       throw new J.Error("References", "method removeById: id not found");
+       throw new J.Error("References", "method removeByDbId: dbId not found");
     }
     self._list[index] = undefined;
   };
@@ -77,30 +77,30 @@ J.References = (function () {
     self._list[index] = undefined;
   };
 
-  References.prototype.getIdByName = function(name){
+  References.prototype.getDbIdByName = function(name){
     var index;
     var self = this;
     if (!Match.test(name, String)){
-       throw new J.Error("References", "method getIdByName: argument is " +
+       throw new J.Error("References", "method getDbIdByName: argument is " +
        "not a string");
     }
     index = self._getIndexByName(name);
     if (index === -1){
-       throw new J.Error("References", "method getIdByName: name not found");
+       throw new J.Error("References", "method getDbIdByName: name not found");
     }
-    return self._list[index].id;
+    return self._list[index].dbId;
   };
 
-  References.prototype.getNameById = function (id) {
+  References.prototype.getNameById = function (dbId) {
     var index;
     var self = this;
-    if (!Match.test(id, String)){
+    if (!Match.test(dbId, String)){
        throw new J.Error("References", "method getNameById: argument is " +
        "not a string");
     }
-    index = self._getIndexById(id);
+    index = self._getIndexByDbId(dbId);
     if (index === -1){
-       throw new J.Error("References", "method getNameById: id not found");
+       throw new J.Error("References", "method getNameById: dbId not found");
     }
     return self._list[index].name;
   };
@@ -110,9 +110,9 @@ J.References = (function () {
     return self._getIndexByName(name) >= 0;
   };
 
-  References.prototype.isIdIn = function (id) {
+  References.prototype.isIdIn = function (dbId) {
     var self = this;
-    return self._getIndexById(id) >= 0;
+    return self._getIndexByDbId(dbId) >= 0;
   };
 
   /////////////////////////////////
@@ -128,9 +128,9 @@ J.References = (function () {
     return -1;
   };
 
-  References.prototype._getIndexById = function (id) {
+  References.prototype._getIndexByDbId = function (dbId) {
     var self = this;
-    return self._getIndexBy("id", id);
+    return self._getIndexBy("dbId", dbId);
   };
 
   References.prototype._getIndexByName = function (name) {
@@ -143,10 +143,10 @@ J.References = (function () {
   ////////////////////////////////
   References.patternOneRef = function(oneRef) {
     /*return (Match.test(oneRef, Object) && oneRef.name &&
-    oneRef.id && Match.test(oneRef.name, String) &&
-    Match.test(oneRef.id, String));*/
+    oneRef.dbId && Match.test(oneRef.name, String) &&
+    Match.test(oneRef.dbId, String));*/
     return Match.test(oneRef, Match.ObjectIncluding(
-       {id: String, name: String}));
+       {dbId: String, name: String}));
   };
 
   References.patternArg = function (arrayOrOneRef){
