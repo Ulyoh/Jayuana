@@ -82,6 +82,7 @@ J = (function(){
    * @param {string} [options.nameSelfForOtherRef = self._name]
    */
   J.prototype.addRef = function(options){
+    J._addingRef = true;
     utils.v("+ start addRef of ( " + this._name + " )");
     var id, name, otherJayuana, refInfo;
     var self = this;
@@ -108,6 +109,7 @@ J = (function(){
     self._addRef(refInfo, options.refType,
       options.nameSelfForOtherRef || self._name);
 
+    J._addingRef = false;
     utils.v("+ end addRef of ( " + this._name + " )");
   };
 
@@ -158,22 +160,9 @@ J = (function(){
 
   // STATICS PROPERTIES:
   J._activated = [];
-  J._addingElt = false;
+  J._addingRef = false;
 
   // STATICS METHODS:
-  J._addingEltEndDelayed = function(bool){
-    var self = this;
-    if (bool) {
-      self.refDelay && (Meteor.setTimeout(self.refDelay,100));
-      J._addingRef = true;
-    }
-    else{
-      self.refDelay = Meteor.setTimeout(function () {
-        J._addingRef = false;
-      },100);
-    }
-
-  };
 
   J._starter = function(){};
 
