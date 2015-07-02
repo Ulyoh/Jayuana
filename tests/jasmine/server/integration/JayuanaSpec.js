@@ -31,7 +31,8 @@ describe("J", function () {
     //from fs API :
     //expect(utils.fs.accessSync(process.env.PWD + "/" + directoryName)).not
     //.toThrow();
-    expect(utils.fs.existsSync(process.env.PWD + "/" + directoryName)).toBeTruthy();
+    expect(utils.fs.existsSync(process.env.PWD + "/" + directoryName))
+      .toBeTruthy();
   });
 
   xit("it should create a _rootPath property");
@@ -122,7 +123,7 @@ describe("J", function () {
         "'use strict';" +
         "return 'code executed';" +
         "};";
-      it("should add a new element to the db as code", testAdd("code", code));
+      //it("should add a new element to the db as code", testAdd("code", code));
 
       it("should be able to set the start flag to true, and verify if the " +
       "code generate a function", function (done) {
@@ -145,7 +146,8 @@ describe("J", function () {
             start: true
           };
           J.addInDb(eltDef);})
-          .toThrowError("start flag true and object is not a function [J.addInDb]");
+          .toThrowError("start flag true and object is not a function " +
+          "[J.addInDb]");
       });
 
       xit("should accept an array of elements");
