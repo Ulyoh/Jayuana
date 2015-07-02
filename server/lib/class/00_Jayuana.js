@@ -360,7 +360,8 @@ J = (function(){
 
   //TODO if necesary:
   J._addRef = function (element1, element2, relation){
-    if((element1.objType !== "Jayuana") || ((!(element1.objType)) !=="Jayuana")){
+    if(! Match.test(element1.objType,"Jayuana") ||
+      ! Match.test(element2.objType,"Jayuana") ){
       throw new J.Error("J._addRef", "at least one element is not a Jayuana " +
         "object");
     }
