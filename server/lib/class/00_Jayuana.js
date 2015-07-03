@@ -1,13 +1,14 @@
 //var fs = Npm.require('fs');
 //TODO: replace all *getBy* by *getBy*InDb
-//TODO: create _getActiveBy, getActiveByName and getActiveByDbId
+//TODO: create _getActiveBy, getActiveByDbName and getActiveByDbId
 //TODO: create prototype.getId and .getName
+//TODO: getName. getRefName in Reference
 
 /*TODO: create test for:
 *   J.
 *   _getActiveBy
 *   getActiveByDbId
-*   getActiveByName
+*   getActiveByDbName
 *
 *   J.proto.
 *   _addRef
@@ -26,7 +27,7 @@ J = (function(){
   var J = function (element) {
     var self = this;
     if (self instanceof J){
-      utils.v("+ start create new instance of J, name :" + element.dbName);
+      utils.v("+ start create new instance of J, dbName :" + element.dbName);
 
       self.objType = "Jayuana";
 
@@ -43,7 +44,7 @@ J = (function(){
       //J[element.dbId] = self;
 
       self._element = element;
-      self.dbId = element.dbId;
+      self._dbId = element.dbId;
       self._dbName = element.dbName;
       self._refsFrom = new J.References(element.refsFrom);
       self._refsTo = new J.References(element.refsTo);
@@ -51,7 +52,7 @@ J = (function(){
       self._obj = element.obj;
 
       J._activated.push(self);
-      utils.v("+ end create new instance of J, name :" + element.dbName);
+      utils.v("+ end create new instance of J, dbName :" + element.dbName);
     }
     else{
       throw new J.Error("J", "must be called with the 'new' keyword");
@@ -75,24 +76,24 @@ J = (function(){
    * Add references with an other object
    * @param {Object} options
    * @param {RefType} options.refType
-   * @param {ObjInfo} options.otherObj must contain dbId or nameInDb property,
-   *                  nameInDb is ignored if dbId is found
-   * @param {string} [options.nameRef = options.otherObj._dbName]
-   * @param {string} [options.nameSelfForOtherRef = self._dbName]
+   * @param {ObjInfo} options.otherObj must contain dbId or dbName property,
+   *                  dbName is ignored if dbId is found
+   * @param {string} [options.refName = options.otherObj._dbName]
+   * @param {string} [options.refNameFromOtherObj = self._dbName]
    */
   J.prototype.addRef = function(options){
     J._addingRef = true;
     utils.v("+ start addRef of ( " + this._dbName + " )");
-    var dbId, name, otherJayuana, refInfo;
+    var dbId, refName, otherJayuana, refInfo;
     var self = this;
     if (Match.test(options.otherObj.dbId, String)){
       dbId = options.otherObj.dbId;
       otherJayuana = J.getActiveByDbId(dbId);
-      name = options.nameRef || otherJayuana._dbName;
+      refName = options.refName || otherJayuana._dbName;
     }
-    else if (Match.test(options.otherObj.nameInDb, String)){
-      name = options.otherObj.nameInDb;
-      otherJayuana = J.getActiveByName(name);
+    else if (Match.test(options.otherObj.dbName, String)){
+      refName = options.otherObj.dbName;
+      otherJayuana = J.getActiveByDbName(refName);
       dbId = otherJayuana.dbId;
     }
     else{
@@ -100,13 +101,13 @@ J = (function(){
     }
 
     refInfo = {
-      idInDb: dbId,
-      localName: name,
+      dbId: dbId,
+      refName: refName,
       activeElt: otherJayuana
     };
 
     self._addRef(refInfo, options.refType,
-      options.nameSelfForOtherRef || self._dbName);
+      options.refNameFromOtherObj || self._dbName);
 
     J._addingRef = false;
     utils.v("+ end addRef of ( " + this._dbName + " )");
@@ -121,15 +122,15 @@ J = (function(){
    *
    * @param {RefInfo} refInfo of the other Jayuana object
    * @param {RefType} refType
-   * @param {string} [nameSelfForOtherRef = refInfo.element.dbId]
+   * @param {string} [refNameFromOtherObj = refInfo.element.dbId]
    * @private
    */
-  J.prototype._addRef = function(refInfo, refType, nameSelfForOtherRef){
+  J.prototype._addRef = function(refInfo, refType, refNameFromOtherObj){
     var self = this;
     var otherJayuana = refInfo.element;
     var refToSelf = {
       dbId: self.dbId,
-      dbName: nameSelfForOtherRef || self._dbName,
+      refName: refNameFromOtherObj || self._dbName,
       element: self._element
     };
     switch(refType){
@@ -214,25 +215,25 @@ J = (function(){
     });
   };
 
-  J._addOne = function(obj, type, name, start, callback){
-    utils.v("+ start J._addOne( " + name + " )");
+  J._addOne = function(obj, type, dbName, start, callback){
+    utils.v("+ start J._addOne( " + dbName + " )");
     var objUnderTest, element, dbId, data, filePath;
 
-    name = name || '';
+    dbName = dbName || '';
     start = start || false;
     element = {
-      dbName: name,
+      dbName: dbName,
       type: type,
       start: start,
       available: false,
       path: 'unknown'
     };
-    utils.v("+ ++++1 J._addOne( " + name + " )");
+    utils.v("+ ++++1 J._addOne( " + dbName + " )");
     if((type !== "EJSON") && (type !== "code") && (type !== "file")){
       throw new J.Error("J.addInDb", "type not defined correctly");
     }
 
-    utils.v("+ ++++2 J._addOne( " + name + " )");
+    utils.v("+ ++++2 J._addOne( " + dbName + " )");
 
     switch (type){
       case "EJSON":
@@ -256,7 +257,7 @@ J = (function(){
         break;
     }
 
-    utils.v("+ ++++3 J._addOne( " + name + " )");
+    utils.v("+ ++++3 J._addOne( " + dbName + " )");
 
     if (objUnderTest === undefined){
       throw new J.Error("J.addInDb", "undefined object");
@@ -267,15 +268,15 @@ J = (function(){
         "start flag true and object is not a function");
     }
 
-    utils.v("+ ++++4 J._addOne( " + name + " )");
+    utils.v("+ ++++4 J._addOne( " + dbName + " )");
 
     dbId = J.db.insert(element);
     filePath = J._rootPath + J._folderName + dbId;
 
-    utils.v("+ ready to writeFile of " + name);
+    utils.v("+ ready to writeFile of " + dbName);
 
     utils.fs.writeFile(filePath, data, Meteor.bindEnvironment(function (e) {
-      utils.v("+ start writeFile of " + name);
+      utils.v("+ start writeFile of " + dbName);
       if (e) {
         J.db.remove(dbId);
         //TODO : should not throw an Error but pass the Error to callback(e, id)
@@ -283,7 +284,7 @@ J = (function(){
         throw new J.Error("J.addInDb", "writeFile: " + e.message);
       }
       else{
-        utils.v("- end J.addInDb( " + name + " )");
+        utils.v("- end J.addInDb( " + dbName + " )");
         J.db.update({_id: dbId},{$set: {
           available: true,
           path: filePath}});
@@ -291,7 +292,7 @@ J = (function(){
         if (callback){
           callback(dbId);
         }
-        utils.v("+ end writeFile of " + name);
+        utils.v("+ end writeFile of " + dbName);
       }
 
     }));
@@ -331,16 +332,16 @@ J = (function(){
     J._getBy({dbId: dbId }, callback);
   };
 
-  J.getByDbName = function(name, callback) {
-    J._getBy({dbName: name}, callback);
+  J.getByDbName = function(dbName, callback) {
+    J._getBy({dbName: dbName}, callback);
   };
 
   J.getActiveByDbId = function (dbId) {
     J._getActiveBy({dbId:dbId});
   };
 
-  J.getActiveByName = function (name) {
-    J._getActiveBy({_dbName:name});
+  J.getActiveByDbName = function (dbName) {
+    J._getActiveBy({_dbName:dbName});
   };
 
   J.start = function(){

@@ -299,10 +299,10 @@ describe("J object", function () {
           "   self = this;" +
           "   self.useElt({" +
           "     refType: RefType.TO," +
-          "     otherObj: {nameInDb: 'coucou_child'}" +
+          "     otherObj: {dbName: 'coucou_child'}" +
           "     }," +
           "     function(){" +
-          "       var idToCall = self.getDbIdByName('coucou_child');" +
+          "       var idToCall = self.getDbIdByRefName('coucou_child');" +
           "       J.getActiveByDbId(idToCall)();" +
       //TODO: replace two previous lines by:
           "       self.execRef({name:'coucou_child'})" +

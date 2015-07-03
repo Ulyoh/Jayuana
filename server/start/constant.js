@@ -21,11 +21,11 @@ RefType = {
 
 /**
  *
- * @type {{dbId: string, localName: string, activeElt: J}}
+ * @type {{dbId: string, refName: string, activeElt: J}}
  */
 RefInfo = {
-  idInDb: "sth",
-  localName: "sth",
+  dbId: "sth",
+  refName: "sth",
   activeElt: "Jayuana obj"
 };
 
@@ -35,7 +35,7 @@ RefInfo = {
  */
 ObjInfo = {
   dbId: "sth",
-  nameInDb: "sth"
+  dbName: "sth"
 };
 
 

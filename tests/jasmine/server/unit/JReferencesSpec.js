@@ -62,26 +62,26 @@ describe("J.References", function () {
           return pattern !== Array;
         });
 
-        var testRefs = new J.References({name: "name", dbId: "dbId"});
-        expect(testRefs._list[0]).toEqual({name: "name", dbId: "dbId"});
+        var testRefs = new J.References({refName: "refName", dbId: "dbId"});
+        expect(testRefs._list[0]).toEqual({refName: "refName", dbId: "dbId"});
       });
 
       it("should add an array of references to the reference list and" +
-        " have only dbId and name as properties",
+        " have only dbId and refName as properties",
         function () {
           self = this;
           spyOn(Match, "test").and.returnValue(true);
 
           var refsList = [
-            {name: "name1", dbId: "id1", somethingElse: "thing"},
-            {name: "name2", dbId: "id2"},
-            {name: "name3", dbId: "id3"}
+            {refName: "name1", dbId: "id1", somethingElse: "thing"},
+            {refName: "name2", dbId: "id2"},
+            {refName: "name3", dbId: "id3"}
           ];
           var testRefs = new J.References(refsList);
 
-          expect(testRefs._list[0]).toEqual({dbId: "id1", name: "name1"});
-          expect(testRefs._list[1]).toEqual({dbId: "id2", name: "name2"});
-          expect(testRefs._list[2]).toEqual({dbId: "id3", name: "name3"});
+          expect(testRefs._list[0]).toEqual({dbId: "id1", refName: "name1"});
+          expect(testRefs._list[1]).toEqual({dbId: "id2", refName: "name2"});
+          expect(testRefs._list[2]).toEqual({dbId: "id3", refName: "name3"});
         });
 
     });
@@ -95,9 +95,9 @@ describe("J.References", function () {
         return !value.noId;
       });
       var refsList = [
-        {name: "name1", dbId: "id1"},
-        {name: "name2", dbId: "id2"},
-        {name: "name3", dbId: "id3"}
+        {refName: "name1", dbId: "id1"},
+        {refName: "name2", dbId: "id2"},
+        {refName: "name3", dbId: "id3"}
       ];
       self.testRefs = new J.References(refsList);
     });
@@ -112,9 +112,9 @@ describe("J.References", function () {
           reason: "method removeByDbId: dbId argument is not a string",
           details: 'stub stack'
         });
-        expect(self.testRefs._list[0]).toEqual({dbId: "id1", name: "name1"});
-        expect(self.testRefs._list[1]).toEqual({dbId: "id2", name: "name2"});
-        expect(self.testRefs._list[2]).toEqual({dbId: "id3", name: "name3"});
+        expect(self.testRefs._list[0]).toEqual({dbId: "id1", refName: "name1"});
+        expect(self.testRefs._list[1]).toEqual({dbId: "id2", refName: "name2"});
+        expect(self.testRefs._list[2]).toEqual({dbId: "id3", refName: "name3"});
       });
 
     it("should throw an Error if dbId is not found",
@@ -128,9 +128,9 @@ describe("J.References", function () {
           reason: "method removeByDbId: dbId not found",
           details: 'stub stack'
         });
-        expect(self.testRefs._list[0]).toEqual({dbId: "id1", name: "name1"});
-        expect(self.testRefs._list[1]).toEqual({dbId: "id2", name: "name2"});
-        expect(self.testRefs._list[2]).toEqual({dbId: "id3", name: "name3"});
+        expect(self.testRefs._list[0]).toEqual({dbId: "id1", refName: "name1"});
+        expect(self.testRefs._list[1]).toEqual({dbId: "id2", refName: "name2"});
+        expect(self.testRefs._list[2]).toEqual({dbId: "id3", refName: "name3"});
       });
 
     it("should remove the reference corresponding to the given dbId",
@@ -139,26 +139,27 @@ describe("J.References", function () {
         spyOn(self.testRefs, "_getIndexByDbId").and.returnValue(1);
         self.testRefs.removeByDbId("id2");
 
-        expect(self.testRefs._list[0]).toEqual({dbId: "id1", name: "name1"});
+        expect(self.testRefs._list[0]).toEqual({dbId: "id1", refName: "name1"});
         expect(self.testRefs._list[1]).toBeUndefined();
-        expect(self.testRefs._list[2]).toEqual({dbId: "id3", name: "name3"});
+        expect(self.testRefs._list[2]).toEqual({dbId: "id3", refName: "name3"});
       });
   });
 
-  describe("removeByName", function () {
+  describe("removeByRefName", function () {
     beforeEach(function () {
       self = this;
       spyOn(Match, "test").and.callFake(function (value) {
         return !value.noName;
       });
       var refsList = [
-        {name: "name1", dbId: "id1"},
-        {name: "name2", dbId: "id2"},
-        {name: "name3", dbId: "id3"}
+        {refName: "name1", dbId: "id1"},
+        {refName: "name2", dbId: "id2"},
+        {refName: "name3", dbId: "id3"}
       ];
       self.testRefs = new J.References(refsList);
-      spyOn(self.testRefs, "_getIndexByName").and.callFake(function (name) {
-        switch (name) {
+      spyOn(self.testRefs, "_getIndexByRefName").and
+        .callFake(function (refName) {
+        switch (refName) {
           case "name1":
             return 0;
           case "name2":
@@ -172,57 +173,58 @@ describe("J.References", function () {
     });
     it("should throw an Error if argument is not a string",
       function () {
-        //   spyOn(self.testRefs, "_getIndexByName").and.returnValue(-1);
+        //   spyOn(self.testRefs, "_getIndexByRefName").and.returnValue(-1);
         self = this;
         expect(function () {
-          self.testRefs.removeByName({noName: "noName"});
+          self.testRefs.removeByRefName({obj: "this is an obj"});
         }).toThrow({
           Error: 'References',
-          reason: "method removeByName: argument is not a string",
+          reason: "method removeByRefName: argument is not a string",
           details: 'stub stack'
         });
-        expect(self.testRefs._list[0]).toEqual({dbId: "id1", name: "name1"});
-        expect(self.testRefs._list[1]).toEqual({dbId: "id2", name: "name2"});
-        expect(self.testRefs._list[2]).toEqual({dbId: "id3", name: "name3"});
+        expect(self.testRefs._list[0]).toEqual({dbId: "id1", refName: "name1"});
+        expect(self.testRefs._list[1]).toEqual({dbId: "id2", refName: "name2"});
+        expect(self.testRefs._list[2]).toEqual({dbId: "id3", refName: "name3"});
       });
 
-    it("should throw an Error if the name is not found", function () {
+    it("should throw an Error if the refName is not found", function () {
       self = this;
       expect(function () {
-        self.testRefs.removeByName("unknown");
+        self.testRefs.removeByRefName("unknown");
       }).toThrow({
         Error: 'References',
-        reason: "method removeByName: name not found",
+        reason: "method removeByRefName: refName not found",
         details: 'stub stack'
       });
-      expect(self.testRefs._list[0]).toEqual({dbId: "id1", name: "name1"});
-      expect(self.testRefs._list[1]).toEqual({dbId: "id2", name: "name2"});
-      expect(self.testRefs._list[2]).toEqual({dbId: "id3", name: "name3"});
+      expect(self.testRefs._list[0]).toEqual({dbId: "id1", refName: "name1"});
+      expect(self.testRefs._list[1]).toEqual({dbId: "id2", refName: "name2"});
+      expect(self.testRefs._list[2]).toEqual({dbId: "id3", refName: "name3"});
     });
 
     it("should remove the reference", function () {
       self = this;
-      self.testRefs.removeByName("name2");
-      expect(self.testRefs._list[0]).toEqual({dbId: "id1", name: "name1"});
+      self.testRefs.removeByRefName("name2");
+      expect(self.testRefs._list[0]).toEqual({dbId: "id1", refName: "name1"});
       expect(self.testRefs._list[1]).toBeUndefined();
-      expect(self.testRefs._list[2]).toEqual({dbId: "id3", name: "name3"});
+      expect(self.testRefs._list[2]).toEqual({dbId: "id3", refName: "name3"});
     });
   });
 
-  describe("getDbIdByName", function () {
+  describe("getDbIdByRefName", function () {
     beforeEach(function () {
       self = this;
       spyOn(Match, "test").and.callFake(function (value) {
         return !value.noName;
       });
       var refsList = [
-        {name: "name1", dbId: "id1"},
-        {name: "name2", dbId: "id2"},
-        {name: "name3", dbId: "id3"}
+        {refName: "name1", dbId: "id1"},
+        {refName: "name2", dbId: "id2"},
+        {refName: "name3", dbId: "id3"}
       ];
       self.testRefs = new J.References(refsList);
-      spyOn(self.testRefs, "_getIndexByName").and.callFake(function (name) {
-        switch (name) {
+      spyOn(self.testRefs, "_getIndexByRefName").and
+        .callFake(function (refName) {
+        switch (refName) {
           case "name1":
             return 0;
           case "name2":
@@ -239,10 +241,10 @@ describe("J.References", function () {
       function () {
         self = this;
         expect(function () {
-          self.testRefs.getDbIdByName({noName: "noName"});
+          self.testRefs.getDbIdByRefName({noName: "noName"});
         }).toThrow({
           Error: 'References',
-          reason: "method getDbIdByName: argument is not a string",
+          reason: "method getDbIdByRefName: argument is not a string",
           details: 'stub stack'
         });
       });
@@ -250,35 +252,35 @@ describe("J.References", function () {
     it("should throw an Error if the dbId is not found", function () {
       self = this;
       expect(function () {
-        self.testRefs.getDbIdByName("unknown");
+        self.testRefs.getDbIdByRefName("unknown");
       }).toThrow({
         Error: 'References',
-        reason: "method getDbIdByName: name not found",
+        reason: "method getDbIdByRefName: refName not found",
         details: 'stub stack'
       });
     });
 
-    it("should return the dbId if the name is found", function () {
+    it("should return the dbId if the refName is found", function () {
       self = this;
-      expect(self.testRefs.getDbIdByName("name1")).toEqual("id1");
-      expect(self.testRefs.getDbIdByName("name2")).toEqual("id2");
-      expect(self.testRefs.getDbIdByName("name3")).toEqual("id3");
+      expect(self.testRefs.getDbIdByRefName("name1")).toEqual("id1");
+      expect(self.testRefs.getDbIdByRefName("name2")).toEqual("id2");
+      expect(self.testRefs.getDbIdByRefName("name3")).toEqual("id3");
     });
   });
 
-  describe("getNameById", function () {
+  describe("getRefNameById", function () {
     beforeEach(function () {
       self = this;
       spyOn(Match, "test").and.callFake(function (value) {
         return !value.noId;
       });
       var refsList = [
-        {name: "name1", dbId: "id1"},
-        {name: "name2", dbId: "id2"},
-        {name: "name3", dbId: "id3"}
+        {refName: "name1", dbId: "id1"},
+        {refName: "name2", dbId: "id2"},
+        {refName: "name3", dbId: "id3"}
       ];
       self.testRefs = new J.References(refsList);
-      spyOn(self.testRefs, "_getIndexByDbId").and.callFake(function (id) {
+      spyOn(self.testRefs, "_getIndexByDbId").and.callFake(function (dbId) {
         switch (dbId) {
           case "id1":
             return 0;
@@ -296,10 +298,10 @@ describe("J.References", function () {
       function () {
         self = this;
         expect(function () {
-          self.testRefs.getNameById({noId: "noId"});
+          self.testRefs.getRefNameById({noId: "noId"});
         }).toThrow({
           Error: 'References',
-          reason: "method getNameById: argument is not a string",
+          reason: "method getRefNameById: argument is not a string",
           details: 'stub stack'
         });
       });
@@ -307,36 +309,37 @@ describe("J.References", function () {
     it("should throw an Error if the dbId is not found", function () {
       self = this;
       expect(function () {
-        self.testRefs.getNameById("unknown");
+        self.testRefs.getRefNameById("unknown");
       }).toThrow({
         Error: 'References',
-        reason: "method getNameById: dbId not found",
+        reason: "method getRefNameById: dbId not found",
         details: 'stub stack'
       });
     });
 
-    it("should return the dbId if the name is found", function () {
+    it("should return the dbId if the refName is found", function () {
       self = this;
-      expect(self.testRefs.getNameById("id1")).toEqual("name1");
-      expect(self.testRefs.getNameById("id2")).toEqual("name2");
-      expect(self.testRefs.getNameById("id3")).toEqual("name3");
+      expect(self.testRefs.getRefNameById("id1")).toEqual("name1");
+      expect(self.testRefs.getRefNameById("id2")).toEqual("name2");
+      expect(self.testRefs.getRefNameById("id3")).toEqual("name3");
     });
   });
 
-  describe("isNameIn", function () {
+  describe("isRefNameIn", function () {
     beforeEach(function () {
       self = this;
       spyOn(Match, "test").and.callFake(function (value) {
         return !value.noId;
       });
       var refsList = [
-        {name: "name1", dbId: "id1"},
-        {name: "name2", dbId: "id2"},
-        {name: "name3", dbId: "id3"}
+        {refName: "name1", dbId: "id1"},
+        {refName: "name2", dbId: "id2"},
+        {refName: "name3", dbId: "id3"}
       ];
       self.testRefs = new J.References(refsList);
-      spyOn(self.testRefs, "_getIndexByName").and.callFake(function (name) {
-        switch (name) {
+      spyOn(self.testRefs, "_getIndexByRefName")
+        .and.callFake(function (refName) {
+        switch (refName) {
           case "name1":
             return 0;
           case "name2":
@@ -348,15 +351,15 @@ describe("J.References", function () {
         }
       });
     });
-    it("should return false if the name is not found", function () {
+    it("should return false if the refName is not found", function () {
       self = this;
-      expect(self.testRefs.isNameIn("unknown")).toBeFalsy();
+      expect(self.testRefs.isRefNameIn("unknown")).toBeFalsy();
     });
-    it("should return true if the name is found", function () {
+    it("should return true if the refName is found", function () {
       self = this;
-      expect(self.testRefs.isNameIn("name1")).toBeTruthy();
-      expect(self.testRefs.isNameIn("name2")).toBeTruthy();
-      expect(self.testRefs.isNameIn("name3")).toBeTruthy();
+      expect(self.testRefs.isRefNameIn("name1")).toBeTruthy();
+      expect(self.testRefs.isRefNameIn("name2")).toBeTruthy();
+      expect(self.testRefs.isRefNameIn("name3")).toBeTruthy();
     });
   });
 
@@ -367,12 +370,12 @@ describe("J.References", function () {
         return !value.noId;
       });
       var refsList = [
-        {name: "name1", dbId: "id1"},
-        {name: "name2", dbId: "id2"},
-        {name: "name3", dbId: "id3"}
+        {refName: "name1", dbId: "id1"},
+        {refName: "name2", dbId: "id2"},
+        {refName: "name3", dbId: "id3"}
       ];
       self.testRefs = new J.References(refsList);
-      spyOn(self.testRefs, "_getIndexByDbId").and.callFake(function (id) {
+      spyOn(self.testRefs, "_getIndexByDbId").and.callFake(function (dbId) {
         switch (dbId) {
           case "id1":
             return 0;
@@ -406,9 +409,9 @@ describe("J.References", function () {
       });
       spyOn(_, "indexOf").and.callThrough();
       var refsList = [
-        {name: "name1", dbId: "id1"},
-        {name: "name2", dbId: "id2"},
-        {name: "name3", dbId: "id3"}
+        {refName: "name1", dbId: "id1"},
+        {refName: "name2", dbId: "id2"},
+        {refName: "name3", dbId: "id3"}
       ];
       self.testRefs = new J.References(refsList);
     });
@@ -427,29 +430,29 @@ describe("J.References", function () {
       });
   });
 
-  describe("_getIndexByName", function () {
+  describe("_getIndexByRefName", function () {
     beforeEach(function () {
       self = this;
       spyOn(Match, "test").and.callFake(function (value) {
         return !value.noId;
       });
       var refsList = [
-        {name: "name1", dbId: "id1"},
-        {name: "name2", dbId: "id2"},
-        {name: "name3", dbId: "id3"}
+        {refName: "name1", dbId: "id1"},
+        {refName: "name2", dbId: "id2"},
+        {refName: "name3", dbId: "id3"}
       ];
       self.testRefs = new J.References(refsList);
     });
-    it("should return the corresponding index to the given name",
+    it("should return the corresponding index to the given refName",
       function () {
         self = this;
-        expect(self.testRefs._getIndexByName("unknown")).toEqual(-1);
+        expect(self.testRefs._getIndexByRefName("unknown")).toEqual(-1);
       });
-    it("should return -1 if the given name is not found", function () {
+    it("should return -1 if the given refName is not found", function () {
       self = this;
-      expect(self.testRefs._getIndexByName("name1")).toEqual(0);
-      expect(self.testRefs._getIndexByName("name2")).toEqual(1);
-      expect(self.testRefs._getIndexByName("name3")).toEqual(2);
+      expect(self.testRefs._getIndexByRefName("name1")).toEqual(0);
+      expect(self.testRefs._getIndexByRefName("name2")).toEqual(1);
+      expect(self.testRefs._getIndexByRefName("name3")).toEqual(2);
 
     });
   });
@@ -457,13 +460,13 @@ describe("J.References", function () {
   xdescribe("patternOneRef", function () {
     self = this;
     spyOn(Match, "test").and.callThrough();
-    it("should match an object with dbId and name key", function () {
+    it("should match an object with dbId and refName key", function () {
 
     });
-    xit("should match an object with dbId and name key and other(s) key(s)");
-    xit("should not match an object without dbId key or without name key");
+    xit("should match an object with dbId and refName key and other(s) key(s)");
+    xit("should not match an object without dbId key or without refName key");
   });
 
-  xdescribe("patternArg");
+  xdescribe("patternArg", function(){});
 
 });
