@@ -329,7 +329,7 @@ J = (function(){
   };
 
   J.getByDbId = function (dbId, callback) {
-    J._getBy({dbId: dbId }, callback);
+    J._getBy({_id: dbId }, callback);
   };
 
   J.getByDbName = function(dbName, callback) {

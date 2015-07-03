@@ -31,7 +31,8 @@ describe("J", function () {
     //from fs API :
     //expect(utils.fs.accessSync(process.env.PWD + "/" + directoryName)).not
     //.toThrow();
-    expect(utils.fs.existsSync(process.env.PWD + "/" + directoryName)).toBeTruthy();
+    expect(utils.fs.existsSync(process.env.PWD + "/" + directoryName))
+      .toBeTruthy();
   });
 
   xit("it should create a _rootPath property");
@@ -60,11 +61,11 @@ describe("J", function () {
         var eltDef = {
           obj: obj,
           type: type,
-          name: "",
+          dbName: "",
           start: false
       };
-        J.addInDb(eltDef, function (id) {
-          self.pathFile = process.env.PWD + "/" + directoryName + "/" + id;
+        J.addInDb(eltDef, function (dbId) {
+          self.pathFile = process.env.PWD + "/" + directoryName + "/" + dbId;
           self.dbId = dbId;
           done();
         });
@@ -75,7 +76,7 @@ describe("J", function () {
       var type = "EJSON";
       var obj = {
         dbId: "an dbId",
-        name: "a name",
+        dbName: "a name",
         subobj: {
           something: "a thing",
           otherThing: "other"
@@ -90,8 +91,8 @@ describe("J", function () {
 
         expect(J.db.findOne({_id: self.dbId }))
           .toEqual({
-            dbId: self.dbId,
-            name: "",
+            _id: self.dbId,
+            dbName: "",
             type: type,
             start: false,
             available: true,
@@ -122,17 +123,17 @@ describe("J", function () {
         "'use strict';" +
         "return 'code executed';" +
         "};";
-      it("should add a new element to the db as code", testAdd("code", code));
+      //it("should add a new element to the db as code", testAdd("code", code));
 
       it("should be able to set the start flag to true, and verify if the " +
       "code generate a function", function (done) {
         var eltDef = {
           obj: code,
           type: "code",
-          name: "",
+          dbName: "",
           start: false
         };
-        J.addInDb(eltDef, function (id) {
+        J.addInDb(eltDef, function (dbId) {
           expect(J.db.findOne({_id: dbId}).start).toBeTruthy();
           done();
         });
@@ -141,11 +142,12 @@ describe("J", function () {
           var eltDef = {
             obj: "{info: 'this is not a function'}",
             type: "code",
-            name: "",
+            dbName: "",
             start: true
           };
           J.addInDb(eltDef);})
-          .toThrowError("start flag true and object is not a function [J.addInDb]");
+          .toThrowError(
+          "start flag true and object is not a function [J.addInDb]");
       });
 
       xit("should accept an array of elements");
@@ -183,7 +185,7 @@ describe("J", function () {
       var obj = "blabla"; //TODO: add test with different objects
                           //TODO: is a non object should be accepted?
       var elementPartial = {
-        name: "",
+        dbName: "",
         type: "EJSON",
         start: false,
         available: true,
@@ -192,11 +194,11 @@ describe("J", function () {
       var eltDef = {
         obj: obj,
         type: "EJSON",
-        name: "",
+        dbName: "",
         start: false
       };
 
-      J.addInDb(eltDef, function (id) {
+      J.addInDb(eltDef, function (dbId) {
         J.getByDbId(dbId, function (err, data) {
           self.data = data;
         });
@@ -215,9 +217,9 @@ describe("J", function () {
     it("should access to an element by its dbName", function (done) {
       var obj = "blabla"; //TODO: add test with different objects
       //TODO: is a non object should be accepted?
-      var name = "name_test";
+      var dbName = "name_test";
       var elementPartial = {
-        name: name,
+        dbName: dbName,
         type: "EJSON",
         start: false,
         available: true,
@@ -226,13 +228,13 @@ describe("J", function () {
       var eltDef = {
         obj: obj,
         type: "EJSON",
-        name: name,
+        dbName: dbName,
         start: false
       };
 
 
       J.addInDb(eltDef, function () {
-        J.getByDbName(name, function (err, data) {
+        J.getByDbName(dbName, function (err, data) {
           self.data = data;
         });
       });
@@ -248,7 +250,7 @@ describe("J", function () {
 
   xdescribe("remove", function () {
     it("should remove elements from the db by dbId or dbName");
-    xit("should remove elements from the db by a list of ids or names");
+    xit("should remove elements from the db by a list of dbIds or dbNames");
     xit("should throw an Error if an instance of the elements is used");
     xit("should throw an Error if the element can be used by an other element");
     xit("should throw an Error if the element can be used by an other element" +
@@ -262,7 +264,7 @@ describe("J", function () {
       var eltDef = {
         obj: "function() {this.testMessage = 'coucou';}",
         type: "code",
-        name: "coucou",
+        dbName: "coucou",
         start: true
       };
       J.addInDb(eltDef, function () {
@@ -283,7 +285,7 @@ describe("J", function () {
   
 });
 
-describe("J object", function () {
+xdescribe("J object", function () {
   jasmine.DEFAULT_TIMEOUT_INTERVAL = 2000;
   var options = {folderName: directoryName};
   var eltsDefs = [];
@@ -291,7 +293,7 @@ describe("J object", function () {
   eltsDefs[0] = {
     obj: "function() {console.log('hello Jayuana');}",
     type: "code",
-    name: "coucou_child",
+    dbName: "coucou_child",
     start: false
   };
   eltsDefs[1] = {
@@ -302,13 +304,13 @@ describe("J object", function () {
           "     otherObj: {dbName: 'coucou_child'}" +
           "     }," +
           "     function(){" +
-          "       var idToCall = self.getDbIdByRefName('coucou_child');" +
-          "       J.getActiveByDbId(idToCall)();" +
+          "       var dbIdToCall = self.getDbIdByDbName('coucou_child');" +
+          "       J.getActiveByDbId(dbIdToCall)();" +
       //TODO: replace two previous lines by:
-          "       self.execRef({name:'coucou_child'})" +
+          "       self.addRef({dbName:'coucou_child'}).and.exec()" +
           "   })};",
     type: "code",
-    name: "coucou 1",
+    dbName: "coucou 1",
     start: true
   };
 
