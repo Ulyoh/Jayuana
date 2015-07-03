@@ -149,7 +149,7 @@ describe("J.References", function () {
     beforeEach(function () {
       self = this;
       spyOn(Match, "test").and.callFake(function (value) {
-        return !value.noName;
+        return !value.obj;
       });
       var refsList = [
         {refName: "name1", dbId: "id1"},
