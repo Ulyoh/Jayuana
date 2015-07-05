@@ -32,10 +32,14 @@ utils = {
   },
 
   //todo: check parameters
-  evolvedPush: function (array, elt, propertyName) {
+  evolvedPush: function (array, elt, propertyName, callback) {
+    var self = this;
     __.debounce(function () {
       elt[propertyName] = array.length;
       array.push(elt);
+      if (callback){
+        callback.apply(self);
+      }
     });
   }
 

@@ -9,7 +9,7 @@
 "use strict";
 
 J.References = (function () {
-  var References = function (refArrayOrOne) {
+  var References = function (refArrayOrOne, callback) {
     var self = this;
     var refArray = [];
 
@@ -28,18 +28,21 @@ J.References = (function () {
       else {
         refArray = refArrayOrOne;
       }
-      refArray.forEach(self.add, self);
+      refArray.forEach(self.add, self, callback);
     }
   };
 
-  References.prototype.add = function (ref) {
+  References.prototype.add = function (ref, callback) {
     var cleanRef = {};
     var self = this;
     if (Match.test(ref, Object) && ref.refName && ref.dbId &&
       Match.test(ref.refName, String) && Match.test(ref.dbId, String)) {
       cleanRef.dbId = ref.dbId;
       cleanRef.refName = ref.refName;
-      self._list.push(cleanRef);
+
+      //TODO create test for refIndex
+      utils.evolvedPush.apply
+      (self, [self._list, cleanRef, "refIndex", callback]);
     }
     else {
       throw new J.Error("References add", "invalid or not object " +
