@@ -76,8 +76,10 @@ J = (function(){
    * Add references with an other object
    * @param {Object} options
    * @param {RefType} options.refType
-   * @param {ObjInfo} options.otherObj must contain dbId or dbName property,
-   *                  dbName is ignored if dbId is found
+   * @param {ObjInfo} options.otherObj
+   * @param {ObjInfo} options.otherObj.dbId optional if dbName exist
+   * @param {ObjInfo} [options.otherObj.dbname = null]
+   * @param {ObjInfo} options.otherObj.toActivate
    * @param {string} [options.refName = options.otherObj._dbName]
    * @param {string} [options.refNameFromOtherObj = self._dbName]
    */
@@ -113,6 +115,22 @@ J = (function(){
     utils.v("+ end addRef of ( " + this._dbName + " )");
   };
 
+  /**
+   * Add references with an other object
+   * @param {ObjInfo} otherObj
+   * @param {ObjInfo} otherObj.dbId optional if dbName exist
+   * @param {ObjInfo} [otherObj.dbname = null]
+   * @param {ObjInfo} otherObj.toActivate
+   * @param {Object} options
+   * @param {string} [options.refName = options.otherObj._dbName]
+   * @param {string} [options.refNameFromOtherObj = self._dbName]
+   */
+  J.prototype.addRefTo = function (otherObj, options) {
+    var self = this;
+    options.refType = RefType.TO;
+    options.otherObj = otherObj;
+    self.addRef();
+  };
   /**#@-*/
   /**#@+
    * @private

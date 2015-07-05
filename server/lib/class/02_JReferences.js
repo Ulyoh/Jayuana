@@ -102,7 +102,8 @@ J.References = (function () {
     }
     index = self._getIndexByDbId(dbId);
     if (index === -1){
-       throw new J.Error("References", "method getRefNameByDbId: dbId not found");
+       throw new J.Error("References",
+         "method getRefNameByDbId: dbId not found");
     }
     return self._list[index].refName;
   };

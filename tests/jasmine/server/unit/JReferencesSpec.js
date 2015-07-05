@@ -1,4 +1,6 @@
 var self;
+//TODO: test addRef(options.otherObj.toActivate)
+
 describe("J.References", function () {
   beforeEach(function () {
     self = this;
