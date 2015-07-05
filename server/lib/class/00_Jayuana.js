@@ -72,34 +72,55 @@ J = (function(){
     utils.v("- end J.prototype.run");
   };
 
+
+  //todo: how to write properly ObjInfo Parameters in  JSDoc probably remove
+  //todo:ObjInfo from constant.js and declare it in an other way
+
+  //
   /**
    * Add references with an other object
    * @param {Object} options
    * @param {RefType} options.refType
-   * @param {ObjInfo} options.otherObj
-   * @param {ObjInfo} options.otherObj.dbId optional if dbName exist
-   * @param {ObjInfo} [options.otherObj.dbname = null]
-   * @param {ObjInfo} options.otherObj.toActivate
+   * @param {ObjInfo} options.otherJayuana
+   * @param {string} options.otherJayuana.dbId optional if dbName exist
+   * @param {string} [options.otherJayuana.dbname = null]
+   * @param {bool} [options.otherJayuana.doNotActivate = false]
    * @param {string} [options.refName = options.otherObj._dbName]
    * @param {string} [options.refNameFromOtherObj = self._dbName]
    */
-  J.prototype.addRef = function(options){
+  J.prototype.addRef = function(otherJayuana, options){
     J._addingRef = true;
     utils.v("+ start addRef of ( " + this._dbName + " )");
-    var dbId, refName, otherJayuana, refInfo;
+    var dbId, refName, refInfo;
     var self = this;
-    if (Match.test(options.otherObj.dbId, String)){
-      dbId = options.otherObj.dbId;
+    if (Match.test(options.otherJayuana.dbId, String)){
+      dbId = options.otherJayuana.dbId;
       otherJayuana = J.getActiveByDbId(dbId);
       refName = options.refName || otherJayuana._dbName;
     }
-    else if (Match.test(options.otherObj.dbName, String)){
+    else if (Match.test(options.otherJayuana.dbName, String)){
       refName = options.otherObj.dbName;
       otherJayuana = J.getActiveByDbName(refName);
       dbId = otherJayuana.dbId;
     }
     else{
       throw new J.Error("J.addRef", "no valid Id neither name");
+    }
+
+      options.otherJayuana.doNotActivate =
+        options.otherJayuana.doNotActivate || false;
+    if (Match.test(options.otherJayuana.doNotActivate, Boolean)){
+      throw new J.Error("J.addRef",
+        "no valid options.otherJayuana.doNotActivate parameter");
+    }
+
+    if( options.otherJayuana.doNotActivate !== false){
+      //must be find out by the activated index
+    }
+
+    //create the other object
+    else{
+
     }
 
     refInfo = {
@@ -117,19 +138,18 @@ J = (function(){
 
   /**
    * Add references with an other object
-   * @param {ObjInfo} otherObj
-   * @param {ObjInfo} otherObj.dbId optional if dbName exist
-   * @param {ObjInfo} [otherObj.dbname = null]
-   * @param {ObjInfo} otherObj.toActivate
+   * @param {ObjInfo} otherJayuana
+   * @param {ObjInfo} otherJayuana.dbId optional if dbName exist
+   * @param {ObjInfo} [otherJayuana.dbname = null]
+   * @param {ObjInfo} otherJayuana.toActivate
    * @param {Object} options
    * @param {string} [options.refName = options.otherObj._dbName]
    * @param {string} [options.refNameFromOtherObj = self._dbName]
    */
-  J.prototype.addRefTo = function (otherObj, options) {
+  J.prototype.addRefTo = function (otherJayuana, options) {
     var self = this;
     options.refType = RefType.TO;
-    options.otherObj = otherObj;
-    self.addRef();
+    self.addRef(otherJayuana, options);
   };
   /**#@-*/
   /**#@+
@@ -316,7 +336,7 @@ J = (function(){
     }));
   };
 
-  J._getBy = function(condition, callback){
+  J._getPassiveBy = function(condition, callback){
     //var fs = Npm.require('fs');
     var element = J.db.findOne(condition);
 
@@ -346,12 +366,12 @@ J = (function(){
     return J._activated[index];
   };
 
-  J.getByDbId = function (dbId, callback) {
-    J._getBy({_id: dbId }, callback);
+  J.getPassiveByDbId = function (dbId, callback) {
+    J._getPassiveBy({_id: dbId }, callback);
   };
 
-  J.getByDbName = function(dbName, callback) {
-    J._getBy({dbName: dbName}, callback);
+  J.getPassiveByDbName = function(dbName, callback) {
+    J._getPassiveBy({dbName: dbName}, callback);
   };
 
   J.getActiveByDbId = function (dbId) {
@@ -364,7 +384,7 @@ J = (function(){
 
   J.start = function(){
     utils.v("+ start J.start()");
-    J._getBy({start: true}, function (err, element) {
+    J._getPassiveBy({start: true}, function (err, element) {
       if(err){
         throw err;
       }

@@ -180,7 +180,7 @@ describe("J", function () {
 
   
 
-  describe("getByDbId", function () {
+  describe("getPassiveByDbId", function () {
     it("should access to an element by its dbId", function (done) {
       var obj = "blabla"; //TODO: add test with different objects
                           //TODO: is a non object should be accepted?
@@ -199,7 +199,7 @@ describe("J", function () {
       };
 
       J.addInDb(eltDef, function (dbId) {
-        J.getByDbId(dbId, function (err, data) {
+        J.getPassiveByDbId(dbId, function (err, data) {
           self.data = data;
         });
       });
@@ -213,7 +213,7 @@ describe("J", function () {
     xit("should throw an Error if the argument is not a string");
   });
 
-  describe("getByDbName", function () {
+  describe("getPassiveByDbName", function () {
     it("should access to an element by its dbName", function (done) {
       var obj = "blabla"; //TODO: add test with different objects
       //TODO: is a non object should be accepted?
@@ -234,7 +234,7 @@ describe("J", function () {
 
 
       J.addInDb(eltDef, function () {
-        J.getByDbName(dbName, function (err, data) {
+        J.getPassiveByDbName(dbName, function (err, data) {
           self.data = data;
         });
       });
