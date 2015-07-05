@@ -51,7 +51,7 @@ J = (function(){
       eval("element.obj =" + element.objToEval);  //jshint ignore: line
       self._obj = element.obj;
 
-      J._activated.push(self);
+      J._activate(self);
       utils.v("+ end create new instance of J, dbName :" + element.dbName);
     }
     else{
@@ -116,6 +116,9 @@ J = (function(){
 
     if( options.otherJayuana.doNotActivate !== false){
       //must be find out by the activated index
+
+      //TODO
+
     }
 
     //create the other object
@@ -235,6 +238,10 @@ J = (function(){
 
     J._wipe();
     utils.v("- end J.init()");
+  };
+
+  J._activate = function (elt) {
+    utils.evolvedPush(J._activated, elt, "activatedIndex");
   };
 
   J.addInDb = function(oneOreMoreElts, callback){

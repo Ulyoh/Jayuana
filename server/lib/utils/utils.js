@@ -19,13 +19,24 @@ utils = {
       utils.fs.unlinkSync(target);
     }
   },
+
   verbose: function(text) {
     if (C.VERBOSE) {
       console.log(text);
     }
   },
+
   v: function(text){
     var self = this;
     return self.verbose(text);
+  },
+
+  //todo: check parameters
+  evolvedPush: function (array, elt, propertyName) {
+    __.debounce(function () {
+      elt[propertyName] = array.length;
+      array.push(elt);
+    });
   }
+
 };
