@@ -93,16 +93,16 @@ J.References = (function () {
     return self._list[index].dbId;
   };
 
-  References.prototype.getRefNameById = function (dbId) {
+  References.prototype.getRefNameByDbId = function (dbId) {
     var index;
     var self = this;
     if (!Match.test(dbId, String)){
-       throw new J.Error("References", "method getRefNameById: argument is " +
+       throw new J.Error("References", "method getRefNameByDbId: argument is " +
        "not a string");
     }
     index = self._getIndexByDbId(dbId);
     if (index === -1){
-       throw new J.Error("References", "method getRefNameById: dbId not found");
+       throw new J.Error("References", "method getRefNameByDbId: dbId not found");
     }
     return self._list[index].refName;
   };
@@ -112,7 +112,7 @@ J.References = (function () {
     return self._getIndexByRefName(refName) >= 0;
   };
 
-  References.prototype.isIdIn = function (dbId) {
+  References.prototype.isDbIdIn = function (dbId) {
     var self = this;
     return self._getIndexByDbId(dbId) >= 0;
   };

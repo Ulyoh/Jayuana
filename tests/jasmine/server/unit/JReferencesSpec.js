@@ -268,7 +268,7 @@ describe("J.References", function () {
     });
   });
 
-  describe("getRefNameById", function () {
+  describe("getRefNameByDbId", function () {
     beforeEach(function () {
       self = this;
       spyOn(Match, "test").and.callFake(function (value) {
@@ -298,10 +298,10 @@ describe("J.References", function () {
       function () {
         self = this;
         expect(function () {
-          self.testRefs.getRefNameById({noId: "noId"});
+          self.testRefs.getRefNameByDbId({noId: "noId"});
         }).toThrow({
           Error: 'References',
-          reason: "method getRefNameById: argument is not a string",
+          reason: "method getRefNameByDbId: argument is not a string",
           details: 'stub stack'
         });
       });
@@ -309,19 +309,19 @@ describe("J.References", function () {
     it("should throw an Error if the dbId is not found", function () {
       self = this;
       expect(function () {
-        self.testRefs.getRefNameById("unknown");
+        self.testRefs.getRefNameByDbId("unknown");
       }).toThrow({
         Error: 'References',
-        reason: "method getRefNameById: dbId not found",
+        reason: "method getRefNameByDbId: dbId not found",
         details: 'stub stack'
       });
     });
 
     it("should return the dbId if the refName is found", function () {
       self = this;
-      expect(self.testRefs.getRefNameById("id1")).toEqual("name1");
-      expect(self.testRefs.getRefNameById("id2")).toEqual("name2");
-      expect(self.testRefs.getRefNameById("id3")).toEqual("name3");
+      expect(self.testRefs.getRefNameByDbId("id1")).toEqual("name1");
+      expect(self.testRefs.getRefNameByDbId("id2")).toEqual("name2");
+      expect(self.testRefs.getRefNameByDbId("id3")).toEqual("name3");
     });
   });
 
@@ -363,7 +363,7 @@ describe("J.References", function () {
     });
   });
 
-  describe("isIdIn", function () {
+  describe("isDbIdIn", function () {
     beforeEach(function () {
       self = this;
       spyOn(Match, "test").and.callFake(function (value) {
@@ -391,13 +391,13 @@ describe("J.References", function () {
     });
     it("should return false if dbId is not found", function () {
       self = this;
-      expect(self.testRefs.isIdIn("unknown")).toBeFalsy();
+      expect(self.testRefs.isDbIdIn("unknown")).toBeFalsy();
     });
     it("should return true if dbId is found", function () {
       self = this;
-      expect(self.testRefs.isIdIn("id1")).toBeTruthy();
-      expect(self.testRefs.isIdIn("id2")).toBeTruthy();
-      expect(self.testRefs.isIdIn("id3")).toBeTruthy();
+      expect(self.testRefs.isDbIdIn("id1")).toBeTruthy();
+      expect(self.testRefs.isDbIdIn("id2")).toBeTruthy();
+      expect(self.testRefs.isDbIdIn("id3")).toBeTruthy();
     });
   });
 
