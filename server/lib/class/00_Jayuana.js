@@ -65,14 +65,6 @@ J = (function(){
 
   J.prototype = {};
 
-  J.prototype.run = function(){
-    var self = this;
-    utils.v("+ start J.prototype.run");
-    self._obj();
-    utils.v("- end J.prototype.run");
-  };
-
-
   //todo: how to write properly ObjInfo Parameters in  JSDoc probably remove
   //todo:ObjInfo from constant.js and declare it in an other way
 
@@ -154,6 +146,14 @@ J = (function(){
     options.refType = RefType.TO;
     self.addRef(otherJayuana, options);
   };
+
+  J.prototype.run = function(){
+    var self = this;
+    utils.v("+ start J.prototype.run");
+    self._obj();
+    utils.v("- end J.prototype.run");
+  };
+
   /**#@-*/
   /**#@+
    * @private
@@ -194,18 +194,16 @@ J = (function(){
     }
   };
 
-
   /**#@-*/
-
-
 
   // STATICS PROPERTIES:
   J._activated = [];
   J._addingRef = false;
 
   // STATICS METHODS:
-
-  J._starter = function(){};
+  /**#@+
+   * @public
+   */
 
   J.init = function (options) {
     utils.v("+ start J.init()");
@@ -240,10 +238,6 @@ J = (function(){
     utils.v("- end J.init()");
   };
 
-  J._activate = function (elt) {
-    utils.evolvedPush(J._activated, elt, "activatedIndex");
-  };
-
   J.addInDb = function(oneOreMoreElts, callback){
     var eltsDef = [];
     var callbackOnce;
@@ -258,6 +252,43 @@ J = (function(){
       J._addOne(eltDef.obj, eltDef.type, eltDef.dbName, eltDef.start,
         callbackOnce);
     });
+  };
+
+  J.getPassiveByDbId = function (dbId, callback) {
+    J._getPassiveBy({_id: dbId }, callback);
+  };
+
+  J.getPassiveByDbName = function(dbName, callback) {
+    J._getPassiveBy({dbName: dbName}, callback);
+  };
+
+  J.getActiveByDbId = function (dbId) {
+    J._getActiveBy({dbId:dbId});
+  };
+
+  J.getActiveByDbName = function (dbName) {
+    J._getActiveBy({_dbName:dbName});
+  };
+
+  J.start = function(){
+    utils.v("+ start J.start()");
+    J._getPassiveBy({start: true}, function (err, element) {
+      if(err){
+        throw err;
+      }
+      else{
+        J._starter = new J(element);
+        J._starter.run();
+        utils.v("- end J.start()");
+      }
+    });
+  };
+
+  /**#@+
+   * @private
+   */
+  J._activate = function (elt) {
+    utils.evolvedPush(J._activated, elt, "activatedIndex");
   };
 
   J._addOne = function(obj, type, dbName, start, callback){
@@ -343,20 +374,6 @@ J = (function(){
     }));
   };
 
-  J._getPassiveBy = function(condition, callback){
-    //var fs = Npm.require('fs');
-    var element = J.db.findOne(condition);
-
-    utils.fs.readFile(element.path, {encoding: 'utf8'}, function (err, data){
-      if(!err){
-        element.objToEval = data;
-      }
-      if (callback){
-        callback(err, element);
-      }
-    });
-  };
-
   J._getActiveBy = function(condition){
     utils.v("+ start J._getActiveBy( " + EJSON.stringify(condition) + " ), " +
       "J._activated.length: " + J._activated.length + "/n J._activated: " +
@@ -373,35 +390,23 @@ J = (function(){
     return J._activated[index];
   };
 
-  J.getPassiveByDbId = function (dbId, callback) {
-    J._getPassiveBy({_id: dbId }, callback);
-  };
+  J._getPassiveBy = function(condition, callback){
+    //var fs = Npm.require('fs');
+    var element = J.db.findOne(condition);
 
-  J.getPassiveByDbName = function(dbName, callback) {
-    J._getPassiveBy({dbName: dbName}, callback);
-  };
-
-  J.getActiveByDbId = function (dbId) {
-    J._getActiveBy({dbId:dbId});
-  };
-
-  J.getActiveByDbName = function (dbName) {
-    J._getActiveBy({_dbName:dbName});
-  };
-
-  J.start = function(){
-    utils.v("+ start J.start()");
-    J._getPassiveBy({start: true}, function (err, element) {
-      if(err){
-        throw err;
+    utils.fs.readFile(element.path, {encoding: 'utf8'}, function (err, data){
+      if(!err){
+        element.objToEval = data;
       }
-      else{
-        J._starter = new J(element);
-        J._starter.run();
-        utils.v("- end J.start()");
+      if (callback){
+        callback(err, element);
       }
     });
   };
+
+  J._starter = function(){};
+
+  /**#@-*/
 
   //TODO if necesary:
   J._addRef = function (element1, element2, relation){

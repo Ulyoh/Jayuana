@@ -62,37 +62,6 @@ J.References = (function () {
     }
   };
 
-  References.prototype.removeByDbId = function (dbId) {
-    var index;
-    var self = this;
-    if (!Match.test(dbId, String)) {
-      throw new J.Error("References", "method removeByDbId: dbId argument is" +
-        " not a string");
-    }
-
-    index = self._getIndexByDbId(dbId);
-    if (index === -1) {
-      throw new J.Error("References", "method removeByDbId: dbId not found");
-    }
-    self._list[index] = undefined;
-  };
-
-  References.prototype.removeByRefName = function (refName) {
-    var index;
-    var self = this;
-    if (!Match.test(refName, String)) {
-      throw new J.Error(
-        "References", "method removeByRefName: argument is not a string");
-    }
-
-    index = self._getIndexByRefName(refName);
-    if (index === -1) {
-      throw new J.Error(
-        "References", "method removeByRefName: refName not found");
-    }
-    self._list[index] = undefined;
-  };
-
   References.prototype.getDbIdByRefName = function (refName) {
     var index;
     var self = this;
@@ -131,6 +100,37 @@ J.References = (function () {
   References.prototype.isDbIdIn = function (dbId) {
     var self = this;
     return self._getIndexByDbId(dbId) >= 0;
+  };
+
+  References.prototype.removeByDbId = function (dbId) {
+    var index;
+    var self = this;
+    if (!Match.test(dbId, String)) {
+      throw new J.Error("References", "method removeByDbId: dbId argument is" +
+        " not a string");
+    }
+
+    index = self._getIndexByDbId(dbId);
+    if (index === -1) {
+      throw new J.Error("References", "method removeByDbId: dbId not found");
+    }
+    self._list[index] = undefined;
+  };
+
+  References.prototype.removeByRefName = function (refName) {
+    var index;
+    var self = this;
+    if (!Match.test(refName, String)) {
+      throw new J.Error(
+        "References", "method removeByRefName: argument is not a string");
+    }
+
+    index = self._getIndexByRefName(refName);
+    if (index === -1) {
+      throw new J.Error(
+        "References", "method removeByRefName: refName not found");
+    }
+    self._list[index] = undefined;
   };
 
   /////////////////////////////////
