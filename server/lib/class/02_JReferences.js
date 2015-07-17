@@ -51,11 +51,11 @@ J.References = (function () {
 
   References.prototype.add = function (ref, callback) {
     var self = this;
-    var cleanRef;
+    var cleanRefs = [];
 
-    cleanRef = References._cleanRef(ref);
+    cleanRefs[0] = References._cleanRef(ref);
 
-    self._stackNewRefs.push({ref: cleanRef, callback: callback});
+    self._stackNewRefs.push({ref: cleanRefs, callback: callback});
     self._stackTreatment();
   };
 
