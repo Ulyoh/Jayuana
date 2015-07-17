@@ -19,6 +19,12 @@ J.References = (function () {
       throw new J.Error("References constructor", "missing argument");
     }
 
+    // if the callback provided is not a Function, throw an error
+    //TODO: related test
+    if((callback !== undefined) && (!Match.test(callback, Function))){
+      throw new J.Error("References constructor", "invalid callback");
+    }
+
     self._list = [];
 
     if (refArrayOrOne !== null) {
@@ -28,7 +34,9 @@ J.References = (function () {
       else {
         refArray = refArrayOrOne;
       }
-      refArray.forEach(self.add, self, callback);
+      refArray.forEach(function (element) {
+        self.add(element, callback);
+      });
     }
   };
 
@@ -41,8 +49,12 @@ J.References = (function () {
       cleanRef.refName = ref.refName;
 
       //TODO create test for refIndex
-      utils.evolvedPush.apply
+      /*utils.evolvedPush.apply
       (self, [self._list, cleanRef, "refIndex", callback]);
+      */
+
+      self._list.pushAnd(cleanRef, "refIndex", callback, self);
+
     }
     else {
       throw new J.Error("References add", "invalid or not object " +

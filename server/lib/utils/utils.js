@@ -33,14 +33,28 @@ utils = {
 
   //todo: check parameters
   evolvedPush: function (array, elt, propertyName, callback) {
-    var self = this;
+    //var self = this;
     __.debounce(function () {
       elt[propertyName] = array.length;
       array.push(elt);
-      if (callback){
-        callback.apply(self);
-      }
+      callback();
     });
   }
 
+};
+
+Array.prototype.pushAnd =
+  function(elt, propertyName, callback, callbackContext){
+  var self = this;
+  elt[propertyName] = self.length;
+  self.push(elt);
+  if (Match.test(callback, Function)){
+    if(!callbackContext){
+      callbackContext = self;
+    }
+    callback.call(callbackContext);
+  }
+  else if (!callback){
+    throw new J.Error("Array.prototype.pushAnd", "invalid callback passed");
+  }
 };

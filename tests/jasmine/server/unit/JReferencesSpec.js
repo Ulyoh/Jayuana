@@ -16,12 +16,12 @@ describe("J.References", function () {
       error.details = c;
       return error;
     });
-
   });
 
   describe("constructor", function () {
 
     it("should throw an Error if no argument passed", function () {
+      utils.v("+ Ref.constr.add throw Error no arg");
       self = this;
       expect(function () {
         new J.References();
@@ -30,6 +30,7 @@ describe("J.References", function () {
         reason: 'missing argument',
         details: 'stub stack'
       });
+      utils.v("- Ref.constr.add throw Error no arg");
     });
 
     it("should create an empty Reference object if argument is null",
@@ -37,10 +38,7 @@ describe("J.References", function () {
       self = this;
       var refNull = new J.References(null);
       expect(refNull._list.length).toEqual(0);
-    }
-
-    )
-    ;
+    });
 
     xit("should throw an Error if not called with the new keyword");
 
@@ -60,21 +58,27 @@ describe("J.References", function () {
         });
       });
 
-      it("should add a reference to the reference list", function () {
+      it("should add a reference to the reference list", function (done) {
+        utils.v("+ Ref.constr.add add ref to ref list");
         self = this;
         spyOn(Match, "test").and.callFake(function (value, pattern) {
           return pattern !== Array;
         });
 
         new J.References({refName: "refName", dbId: "dbId"},
-          function (testRefs) {
-          expect(testRefs._list[0]).toEqual({refName: "refName", dbId: "dbId"});
+          function () {
+            self = this;
+            expect(self._list[0]).toEqual(
+              {refName: "refName", dbId: "dbId", refIndex: 0});
+            done();
         });
+        utils.v("+ Ref.constr.add add array to ref list");
       });
 
-      it("should add an array of references to the reference list and" +
+      xit("should add an array of references to the reference list and" +
         " have only dbId and refName as properties",
-        function () {
+        function (done) {
+          utils.v("+ Ref.constr.add add ref to ref list");
           self = this;
           spyOn(Match, "test").and.returnValue(true);
 
@@ -83,10 +87,13 @@ describe("J.References", function () {
             {refName: "name2", dbId: "id2"},
             {refName: "name3", dbId: "id3"}
           ];
-          new J.References(refsList, function (testRefs) {
-            expect(testRefs._list[0]).toEqual({dbId: "id1", refName: "name1"});
-            expect(testRefs._list[1]).toEqual({dbId: "id2", refName: "name2"});
-            expect(testRefs._list[2]).toEqual({dbId: "id3", refName: "name3"});
+          new J.References(refsList, function () {
+            self = this;
+            expect(self._list[0]).toEqual({dbId: "id1", refName: "name1"});
+            expect(self._list[1]).toEqual({dbId: "id2", refName: "name2"});
+            expect(self._list[2]).toEqual({dbId: "id3", refName: "name3"});
+            utils.v("- Ref.constr.add add array to ref list");
+            done();
           });
 
         });
@@ -95,7 +102,7 @@ describe("J.References", function () {
 
   });
 
-  describe("removeByDbId", function () {
+  xdescribe("removeByDbId", function () {
     beforeEach(function (done) {
       self = this;
       spyOn(Match, "test").and.callFake(function (value) {
@@ -109,7 +116,6 @@ describe("J.References", function () {
       self.testRefs = new J.References(refsList, function () {
         done();
       });
-
     });
 
     it("should throw an Error if argument is not a string",
@@ -158,7 +164,7 @@ describe("J.References", function () {
       });
   });
 
-  describe("removeByRefName", function () {
+  xdescribe("removeByRefName", function () {
     beforeEach(function (done) {
       self = this;
       spyOn(Match, "test").and.callFake(function (value) {
@@ -227,7 +233,7 @@ describe("J.References", function () {
     });
   });
 
-  describe("getDbIdByRefName", function () {
+  xdescribe("getDbIdByRefName", function () {
     beforeEach(function (done) {
       self = this;
       spyOn(Match, "test").and.callFake(function (value) {
@@ -289,7 +295,7 @@ describe("J.References", function () {
     });
   });
 
-  describe("getRefNameByDbId", function () {
+  xdescribe("getRefNameByDbId", function () {
     beforeEach(function (done) {
       self = this;
       spyOn(Match, "test").and.callFake(function (value) {
@@ -350,7 +356,7 @@ describe("J.References", function () {
     });
   });
 
-  describe("isRefNameIn", function () {
+  xdescribe("isRefNameIn", function () {
     beforeEach(function (done) {
       self = this;
       spyOn(Match, "test").and.callFake(function (value) {
@@ -391,7 +397,7 @@ describe("J.References", function () {
     });
   });
 
-  describe("isDbIdIn", function () {
+  xdescribe("isDbIdIn", function () {
     beforeEach(function (done) {
       self = this;
       spyOn(Match, "test").and.callFake(function (value) {
@@ -431,7 +437,7 @@ describe("J.References", function () {
     });
   });
 
-  describe("_getIndexByDbId", function () {
+  xdescribe("_getIndexByDbId", function () {
     beforeEach(function (done) {
       self = this;
       spyOn(Match, "test").and.callFake(function (value) {
@@ -463,7 +469,7 @@ describe("J.References", function () {
       });
   });
 
-  describe("_getIndexByRefName", function () {
+  xdescribe("_getIndexByRefName", function () {
     beforeEach(function (done) {
       self = this;
       spyOn(Match, "test").and.callFake(function (value) {
