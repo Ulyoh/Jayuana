@@ -12,6 +12,9 @@ J.References = (function () {
   var References = function (refArrayOrOne, callback) {
     var self = this;
     var refArray = [];
+    var length = -1;
+    var last = -1;
+    var cleanRefs;
 
     self.objType = "J.References";
 
@@ -26,6 +29,7 @@ J.References = (function () {
     }
 
     self._list = [];
+    self._stackNewRefs = []; //TODO: add test for the use of it
 
     if (refArrayOrOne !== null) {
       if (!Match.test(refArrayOrOne, Array)) {
@@ -34,33 +38,61 @@ J.References = (function () {
       else {
         refArray = refArrayOrOne;
       }
-      refArray.forEach(function (element) {
-        self.add(element, callback);
+      last = refArray.length - 1;
+
+      refArray.forEach(function (element, index) {
+        cleanRefs.push(References._cleanRef(element));
       });
+
+      self._stackNewRefs.push({ref: cleanRefs, callback: callback});
+      self._stackTreatment();
     }
   };
 
   References.prototype.add = function (ref, callback) {
-    var cleanRef = {};
     var self = this;
+    var cleanRef;
+
+    cleanRef = References._cleanRef(ref);
+
+    self._stackNewRefs.push({ref: cleanRef, callback: callback});
+    self._stackTreatment();
+  };
+
+  //TODO: create specifics test for cleanRef
+  References._cleanRef = function (ref) {
+    var cleanRef = {};
+    //var self = this;
     if (Match.test(ref, Object) && ref.refName && ref.dbId &&
       Match.test(ref.refName, String) && Match.test(ref.dbId, String)) {
       cleanRef.dbId = ref.dbId;
       cleanRef.refName = ref.refName;
 
-      //TODO create test for refIndex
-      /*utils.evolvedPush.apply
-      (self, [self._list, cleanRef, "refIndex", callback]);
-      */
-
-      self._list.pushAnd(cleanRef, "refIndex", callback, self);
-
+      return cleanRef; //TODO create test for refIndex
     }
     else {
       throw new J.Error("References add", "invalid or not object " +
         "passed to add method");
     }
   };
+
+  References.prototype._stackTreatment = __.debounce(function () {
+    var self = this;
+    var newRefs, newRefInfos;
+    var callback = function(){};
+    while(newRefs = self._stackNewRefs[0]){
+      callback = function(){};
+      while(newRefInfos = newRefs[0]){
+        newRefInfos.refIndex = self._list.length;
+        self._list.push(newRefInfos.ref);
+        callback = newRefInfos.callback;
+        newRefs.shift();
+      }
+      callback(); //to have the callback called just after the related ref are
+      //added and before other are added;
+      self._stackNewRefs.shift();
+    }
+  });
 
   References.prototype.getDbIdByRefName = function (refName) {
     var index;
