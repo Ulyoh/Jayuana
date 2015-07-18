@@ -12,9 +12,8 @@ J.References = (function () {
   var References = function (refArrayOrOne, callback) {
     var self = this;
     var refArray = [];
-    var length = -1;
     var last = -1;
-    var cleanRefs;
+    var cleanRefs =[];
 
     self.objType = "J.References";
 
@@ -40,11 +39,11 @@ J.References = (function () {
       }
       last = refArray.length - 1;
 
-      refArray.forEach(function (element, index) {
+      refArray.forEach(function (element) {
         cleanRefs.push(References._cleanRef(element));
       });
 
-      self._stackNewRefs.push({ref: cleanRefs, callback: callback});
+      self._stackNewRefs.push({refs: cleanRefs, callback: callback});
       self._stackTreatment();
     }
   };
@@ -78,20 +77,29 @@ J.References = (function () {
 
   References.prototype._stackTreatment = __.debounce(function () {
     var self = this;
-    var newRefs, newRefInfos;
-    var callback = function(){};
+    var newRefs, newRef;
+    var callback;
+    self._stackTreatmentRunning = true;
     while(newRefs = self._stackNewRefs[0]){
-      callback = function(){};
-      while(newRefInfos = newRefs[0]){
-        newRefInfos.refIndex = self._list.length;
-        self._list.push(newRefInfos.ref);
-        callback = newRefInfos.callback;
-        newRefs.shift();
+      callback = null;
+      while(/*newRefs.refs.length > 0*/ newRef = newRefs.refs[0]){
+
+        newRef.refIndex = self._list.length;
+        self._list.push(newRef);
+        if (newRefs.callback){
+          callback = newRefs.callback.bind(self);
+        }
+        newRefs.refs.shift();
       }
-      callback(); //to have the callback called just after the related ref are
-      //added and before other are added;
+
+      if (callback){
+        callback(); //to have the callback called just after the related ref are
+        //added and before other are added;
+      }
+
       self._stackNewRefs.shift();
     }
+    self._stackTreatmentRunning = false;
   });
 
   References.prototype.getDbIdByRefName = function (refName) {
