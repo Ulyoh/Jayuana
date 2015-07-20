@@ -69,7 +69,7 @@ describe("J.References", function () {
           return pattern !== Array;
         });
         
-        new J.References({rRefName: "rRefName", rActiveElt: Jtest1},
+        new J.References({newRefName: "rRefName", newActiveElt: Jtest1},
           function () {
             self = this;
             expect(self._rList[0]).toEqual({
@@ -90,9 +90,9 @@ describe("J.References", function () {
           spyOn(Match, "test").and.returnValue(true);
 
           var refsList = [
-            {rRefName: "name1", rActiveElt: Jtest1, somethingElse: "thing"},
-            {rRefName: "name2", rActiveElt: Jtest2},
-            {rRefName: "name3", rActiveElt: Jtest3}
+            {newRefName: "name1", newActiveElt: Jtest1, somethingElse: "thing"},
+            {newRefName: "name2", newActiveElt: Jtest2},
+            {newRefName: "name3", newActiveElt: Jtest3}
           ];
           new J.References(refsList, function () {
             self = this;
@@ -128,9 +128,9 @@ describe("J.References", function () {
         return !value.noId;
       });
       var refsList = [
-        {rRefName: "name1", rActiveElt: Jtest1},
-        {rRefName: "name2", rActiveElt: Jtest2},
-        {rRefName: "name3", rActiveElt: Jtest3}
+        {newRefName: "name1", newActiveElt: Jtest1},
+        {newRefName: "name2", newActiveElt: Jtest2},
+        {newRefName: "name3", newActiveElt: Jtest3}
       ];
       self.testRefs = new J.References(refsList, function () {
         done();
@@ -198,9 +198,9 @@ describe("J.References", function () {
         return !value.obj;
       });
       var refsList = [
-        {rRefName: "name1", rActiveElt: Jtest1},
-        {rRefName: "name2", rActiveElt: Jtest2},
-        {rRefName: "name3", rActiveElt: Jtest3}
+        {newRefName: "name1", newActiveElt: Jtest1},
+        {newRefName: "name2", newActiveElt: Jtest2},
+        {newRefName: "name3", newActiveElt: Jtest3}
       ];
       self.testRefs = new J.References(refsList, function () {
         spyOn(self.testRefs, "_rGetIndexByRefName").and
@@ -277,9 +277,9 @@ describe("J.References", function () {
         return !value.noName;
       });
       var refsList = [
-        {rRefName: "name1", rActiveElt: Jtest1},
-        {rRefName: "name2", rActiveElt: Jtest2},
-        {rRefName: "name3", rActiveElt: Jtest3}
+        {newRefName: "name1", newActiveElt: Jtest1},
+        {newRefName: "name2", newActiveElt: Jtest2},
+        {newRefName: "name3", newActiveElt: Jtest3}
       ];
       self.testRefs = new J.References(refsList, function () {
         spyOn(self.testRefs, "_rGetIndexByRefName").and
@@ -340,9 +340,9 @@ describe("J.References", function () {
         return !value.noId;
       });
       var refsList = [
-        {rRefName: "name1", rActiveElt: Jtest1},
-        {rRefName: "name2", rActiveElt: Jtest2},
-        {rRefName: "name3", rActiveElt: Jtest3}
+        {newRefName: "name1", newActiveElt: Jtest1},
+        {newRefName: "name2", newActiveElt: Jtest2},
+        {newRefName: "name3", newActiveElt: Jtest3}
       ];
       self.testRefs = new J.References(refsList, function () {
         spyOn(self.testRefs, "_rGetIndexByActiveId").
@@ -403,9 +403,9 @@ describe("J.References", function () {
         return !value.noId;
       });
       var refsList = [
-        {rRefName: "name1", rActiveElt: Jtest1},
-        {rRefName: "name2", rActiveElt: Jtest2},
-        {rRefName: "name3", rActiveElt: Jtest3}
+        {newRefName: "name1", newActiveElt: Jtest1},
+        {newRefName: "name2", newActiveElt: Jtest2},
+        {newRefName: "name3", newActiveElt: Jtest3}
       ];
       self.testRefs = new J.References(refsList);
       spyOn(self.testRefs, "_rGetIndexByRefName")
@@ -444,9 +444,9 @@ describe("J.References", function () {
         return !value.noId;
       });
       var refsList = [
-        {rRefName: "name1", rActiveElt: Jtest1},
-        {rRefName: "name2", rActiveElt: Jtest2},
-        {rRefName: "name3", rActiveElt: Jtest3}
+        {newRefName: "name1", newActiveElt: Jtest1},
+        {newRefName: "name2", newActiveElt: Jtest2},
+        {newRefName: "name3", newActiveElt: Jtest3}
       ];
       self.testRefs = new J.References(refsList);
       spyOn(self.testRefs, "_rGetIndexByActiveId")
@@ -486,9 +486,9 @@ describe("J.References", function () {
       });
       spyOn(_, "indexOf").and.callThrough();
       var refsList = [
-        {rRefName: "name1", rActiveElt: Jtest1},
-        {rRefName: "name2", rActiveElt: Jtest2},
-        {rRefName: "name3", rActiveElt: Jtest3}
+        {newRefName: "name1", newActiveElt: Jtest1},
+        {newRefName: "name2", newActiveElt: Jtest2},
+        {newRefName: "name3", newActiveElt: Jtest3}
       ];
       self.testRefs = new J.References(refsList, function () {
         done();
@@ -518,9 +518,9 @@ describe("J.References", function () {
         return !value.noId;
       });
       var refsList = [
-        {rRefName: "name1", rActiveElt: Jtest1},
-        {rRefName: "name2", rActiveElt: Jtest2},
-        {rRefName: "name3", rActiveElt: Jtest3}
+        {newRefName: "name1", newActiveElt: Jtest1},
+        {newRefName: "name2", newActiveElt: Jtest2},
+        {newRefName: "name3", newActiveElt: Jtest3}
       ];
       self.testRefs = new J.References(refsList, function () {
         done();

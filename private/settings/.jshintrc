@@ -168,7 +168,8 @@
     "C"         : true,
     "utils"     : true,
     "RefType"   : true,
-    "RefInfo"   : true,
+    "Ref"       : true,
+    "NewRef"    : true,
     "ObjInfo"   : true,
     "__"        : true,
     "lodash"    : true

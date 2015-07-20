@@ -24,11 +24,20 @@ RefType = {
  * @type {{rRefName: String, activeElt: J, _rActiveId, _rRefId: Number,
   _rActiveId: String}}
  */
-RefInfo = {
+Ref = {
   rRefName: "String",
   rActiveElt: "Jayuana obj",
   _rRefId: "Number",
   _rActiveId: "String"
+};
+
+/**
+ *
+ * @type {{rRefName: String, activeElt: J}}
+ */
+NewRef = {
+  newRefName: "String",
+  newActiveElt: "Jayuana obj"
 };
 
 /**

@@ -200,11 +200,11 @@ J.References = (function () {
   References._rCleanRef = function (ref) {
     var cleanRef = {};
     //var self = this;
-    if (Match.test(ref, Object) && ref.rRefName && ref.rActiveElt &&
-      Match.test(ref.rRefName, String) && Match.test(ref.rActiveElt, J)) {
-      cleanRef.rRefName = ref.rRefName;
-      cleanRef.rActiveElt = ref.rActiveElt;
-      cleanRef._rActiveId = ref.rActiveElt._jActiveId;
+    if (Match.test(ref, Object) && ref.newRefName && ref.newActiveElt &&
+      Match.test(ref.newRefName, String) && Match.test(ref.newActiveElt, J)) {
+      cleanRef.rRefName = ref.newRefName; //rename ref.rRefName by ref.rNewRefName
+      cleanRef.rActiveElt = ref.newActiveElt; //same as above
+      cleanRef._rActiveId = ref.newActiveElt._jActiveId;
 
       return cleanRef;
     }
