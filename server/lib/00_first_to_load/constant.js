@@ -24,9 +24,9 @@ RefType = {
  * @type {{dbId: string, refName: string, activeElt: J}}
  */
 RefInfo = {
-  dbId: "sth",
-  refName: "sth",
-  activeElt: "Jayuana obj"
+  refName: "string",
+  activeElt: "Jayuana obj",
+  _activeId: "string"
 };
 
 /**
@@ -34,8 +34,8 @@ RefInfo = {
  * @type {{dbId: string, dbName: string}}
  */
 ObjInfo = {
-  dbId: "sth",
-  dbName: "sth"
+  dbId: "string",
+  dbName: "string"
 };
 
 
