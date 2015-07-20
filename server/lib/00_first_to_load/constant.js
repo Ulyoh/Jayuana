@@ -11,7 +11,7 @@ C = {  // jshint ignore:line
 
 /**
  * Define a type of reference
- * @type {{TO: string, FROM: string, BOTH: string}}
+ * @type {{TO: String, FROM: String, BOTH: String}}
  */
 RefType = {
   TO: "to",
@@ -21,21 +21,23 @@ RefType = {
 
 /**
  *
- * @type {{dbId: string, refName: string, activeElt: J}}
+ * @type {{rRefName: String, activeElt: J, _rActiveId, _rRefId: Number,
+  _rActiveId: String}}
  */
 RefInfo = {
-  refName: "string",
-  activeElt: "Jayuana obj",
-  _activeId: "string"
+  rRefName: "String",
+  rActiveElt: "Jayuana obj",
+  _rRefId: "Number",
+  _rActiveId: "String"
 };
 
 /**
  * Used as param to look for either by dbId or dbName
- * @type {{dbId: string, dbName: string}}
+ * @type {{dbId: String, dbName: String}}
  */
 ObjInfo = {
-  dbId: "string",
-  dbName: "string"
+  dbId: "String",
+  dbName: "String"
 };
 
 
