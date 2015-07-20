@@ -31,16 +31,6 @@ utils = {
     return self.verbose(text);
   },
 
-  //TODO: remove if not used
-  evolvedPush: function (array, elt, propertyName, callback) {
-    //var self = this;
-    __.debounce(function () {
-      elt[propertyName] = array.length;
-      array.push(elt);
-      callback();
-    });
-  },
-
   addStackToArray: function (thisObj, array, stack, idPropertyName,
                              generateIdFunc) {
     var newValues, newValue;

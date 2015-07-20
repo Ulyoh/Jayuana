@@ -203,7 +203,9 @@ J = (function(){
   /**#@-*/
 
   // STATICS PROPERTIES:
+  J._jStackJayuanasToAdd = [];
   J._jActivated = [];
+  J._jNextJActiveId = 0;
   J._jAddingRef = false; //TODO: removed if unused
 
   // STATICS METHODS:
@@ -295,9 +297,15 @@ J = (function(){
   /**#@+
    * @private
    */
-  J._jActivate = function (elt) {
-    utils.evolvedPush(J._jActivated, elt, "_jActiveId");
-  };
+
+  J._jActivate = __.debounce(function () {
+
+    utils.addStackToArray(J, J._jActivated, J._jStackJayuanasToAdd,
+      "_jActiveId",
+      function () {
+        return J._jNextJActiveId++;
+      });
+  });
 
   J._jsAddRef = function (Jayuana1, Jayuana2, refType,
                         nameFrom1to2, nameFrom2to1) {
