@@ -27,7 +27,7 @@ J.References = (function () {
     }
 
     self._rList = [];
-    self._rStackNewRefs = []; //TODO: add test for the use of it
+    self._rStackRefsToAdd = []; //TODO: add test for the use of it
     self.rNextRefId = 0;  //TODO: create tests of refId
 
     if (refArrayOrOne !== null) {
@@ -43,7 +43,7 @@ J.References = (function () {
         cleanRefs.push(References._rCleanRef(element));
       });
 
-      self._rStackNewRefs.push({refs: cleanRefs, callback: callback});
+      self._rStackRefsToAdd.push({refs: cleanRefs, callback: callback});
       self._rStackTreatment();
     }
   };
@@ -58,7 +58,7 @@ J.References = (function () {
 
     cleanRefs[0] = References._rCleanRef(ref);
 
-    self._rStackNewRefs.push({ref: cleanRefs, callback: callback});
+    self._rStackRefsToAdd.push({ref: cleanRefs, callback: callback});
     self._rStackTreatment();
   };
 
@@ -161,28 +161,11 @@ J.References = (function () {
 
   References.prototype._rStackTreatment = __.debounce(function () {
     var self = this;
-    var newRefs, newRef;
-    var callback;
-    var refId;
-    while(newRefs = self._rStackNewRefs[0]){
-      callback = null;
-      while( newRef = newRefs.refs[0]){
-        refId = self.rNextRefId++;
-        newRef._rRefId = refId;
-        self._rList[refId] = newRef; //TODO create test for refId
-        if (newRefs.callback){
-          callback = newRefs.callback.bind(self);
-        }
-        newRefs.refs.shift();
-      }
 
-      if (callback){
-        callback(); //to have the callback called just after the related ref are
-        //added and before other are added;
-      }
-
-      self._rStackNewRefs.shift();
-    }
+    utils.addStackToArray(self, self._rList, self._rStackRefsToAdd, "_rRefId",
+      function () {
+        return self.rNextRefId++;
+      });
   });
 
   //////////// STATICS METHODS  /////////////////////
