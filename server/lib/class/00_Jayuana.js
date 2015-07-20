@@ -1,18 +1,18 @@
 //var fs = Npm.require('fs');
 //TODO: replace all *getBy* by *getBy*InDb
-//TODO: create _getActiveBy, getActiveByDbName and getActiveByDbId
+//TODO: create _jGetActiveBy, jGetActiveByDbName and jGetActiveByDbId
 //TODO: create prototype.getId and .getName
 //TODO: getName. getRefName in Reference
 
 /*TODO: create test for:
 *   J.
-*   _getActiveBy
-*   getActiveByDbId
-*   getActiveByDbName
+*   _jGetActiveBy
+*   jGetActiveByDbId
+*   jGetActiveByDbName
 *
 *   J.proto.
-*   _addRef
-*   addRef
+*   _jAddRef
+*   jAddRef
 *   write doc for each method
 *
 * */
@@ -27,13 +27,15 @@ J = (function(){
   var J = function (element) {
     var self = this;
     if (self instanceof J){
-      utils.v("+ start create new instance of J, dbName :" + element.dbName);
 
       self.objType = "Jayuana";
 
       if (!element){
         throw J.Error("J.constructor", "no element passed");
       }
+
+      utils.v("+ jStart create new instance of J, dbName :" + element.dbName);
+
       if (!element.refsFrom){
         element.refsFrom = null;
       }
@@ -43,19 +45,19 @@ J = (function(){
 
       //J[element.dbId] = self;
 
-      //TODO : add _JIndex
-      //TODO : add _JName
-      //TODO: reuse the _stackTreatment of References
+      //TODO : add _activeId => do in ._add
+      //TODO: reuse the _rStackTreatment of References
 
       self._element = element;
       self._dbId = element.dbId;
       self._dbName = element.dbName;
+      self._jActiveId = -1;
       self._refsFrom = new J.References(element.refsFrom);
       self._refsTo = new J.References(element.refsTo);
       eval("element.obj =" + element.objToEval);  //jshint ignore: line
       self._obj = element.obj;
 
-      J._activate(self);
+      J._jActivate(self);
       utils.v("+ end create new instance of J, dbName :" + element.dbName);
     }
     else{
@@ -84,29 +86,29 @@ J = (function(){
    * @param {string} [options.refName = options.otherObj._dbName]
    * @param {string} [options.refNameFromOtherObj = self._dbName]
    */
-  J.prototype.addRef = function(otherJayuana, options){
-    J._addingRef = true;
-    utils.v("+ start addRef of ( " + this._dbName + " )");
+  J.prototype.jAddRef = function(otherJayuana, options){
+    J._jAddingRef = true;
+    utils.v("+ jStart jAddRef of ( " + this._dbName + " )");
     var dbId, refName, refInfo;
     var self = this;
     if (Match.test(otherJayuana.dbId, String)){
       dbId = otherJayuana.dbId;
-      otherJayuana = J.getActiveByDbId(dbId);
+      otherJayuana = J.jGetActiveByDbId(dbId);
       refName = options.refName || otherJayuana._dbName;
     }
     else if (Match.test(otherJayuana.dbName, String)){
       refName = options.otherObj.dbName;
-      otherJayuana = J.getActiveByDbName(refName);
+      otherJayuana = J.jGetActiveByDbName(refName);
       dbId = otherJayuana.dbId;
     }
     else{
-      throw new J.Error("J.addRef", "no valid Id neither name");
+      throw new J.Error("J.jAddRef", "no valid Id neither name");
     }
 
     otherJayuana.doNotActivate =
         otherJayuana.doNotActivate || false;
     if (Match.test(otherJayuana.doNotActivate, Boolean)){
-      throw new J.Error("J.addRef",
+      throw new J.Error("J.jAddRef",
         "no valid otherJayuana.doNotActivate parameter");
     }
 
@@ -124,15 +126,15 @@ J = (function(){
 
     refInfo = {
       dbId: dbId,
-      refName: refName,
+      rRefName: refName,
       activeElt: otherJayuana
     };
 
-    self._addRef(refInfo, options.refType,
+    self._jAddRef(refInfo, options.refType,
       options.refNameFromOtherObj || self._dbName);
 
-    J._addingRef = false;
-    utils.v("+ end addRef of ( " + this._dbName + " )");
+    J._jAddingRef = false;
+    utils.v("+ end jAddRef of ( " + this._dbName + " )");
   };
 
   /**
@@ -145,17 +147,17 @@ J = (function(){
    * @param {string} [options.refName = options.otherObj._dbName]
    * @param {string} [options.refNameFromOtherObj = self._dbName]
    */
-  J.prototype.addRefTo = function (otherJayuana, options) {
+  J.prototype.jAddRefTo = function (otherJayuana, options) {
     var self = this;
     options.refType = RefType.TO;
-    self.addRef(otherJayuana, options);
+    self.jAddRef(otherJayuana, options);
   };
 
-  J.prototype.run = function(){
+  J.prototype.jRun = function(){
     var self = this;
-    utils.v("+ start J.prototype.run");
+    utils.v("+ jStart J.prototype.jRun");
     self._obj();
-    utils.v("- end J.prototype.run");
+    utils.v("- end J.prototype.jRun");
   };
 
   /**#@-*/
@@ -170,7 +172,7 @@ J = (function(){
    * @param {string} [refNameFromOtherObj = refInfo.element.dbId]
    * @private
    */
-  J.prototype._addRef = function(refInfo, refType, refNameFromOtherObj){
+  J.prototype._jAddRef = function(refInfo, refType, refNameFromOtherObj){
     var self = this;
     var otherJayuana = refInfo.element;
     var refToSelf = {
@@ -194,23 +196,23 @@ J = (function(){
         otherJayuana._refsFrom.add(refToSelf);
         break;
       default :
-        throw new J.error("Jobj.addRef");
+        throw new J.error("Jobj.jAddRef");
     }
   };
 
   /**#@-*/
 
   // STATICS PROPERTIES:
-  J._activated = [];
-  J._addingRef = false;
+  J._jActivated = [];
+  J._jAddingRef = false; //TODO: removed if unused
 
   // STATICS METHODS:
   /**#@+
    * @public
    */
 
-  J.init = function (options) {
-    utils.v("+ start J.init()");
+  J.jInit = function (options) {
+    utils.v("+ jStart J.jInit()");
     //var fs = Npm.require('fs');
 
     if (J.db === undefined) {
@@ -238,11 +240,11 @@ J = (function(){
       //TODO : restart the server (path must begin with a dot)
     }
 
-    J._wipe();
-    utils.v("- end J.init()");
+    J._jWipe();
+    utils.v("- end J.jInit()");
   };
 
-  J.addInDb = function(oneOreMoreElts, callback){
+  J.jAddInDb = function(oneOreMoreElts, callback){
     var eltsDef = [];
     var callbackOnce;
     if (_.isArray(oneOreMoreElts)){
@@ -253,37 +255,39 @@ J = (function(){
     }
     callbackOnce = _.after(eltsDef.length, callback);
     eltsDef.forEach(function (eltDef) {
-      J._addOne(eltDef.obj, eltDef.type, eltDef.dbName, eltDef.start,
+      J._jAddOne(eltDef.obj, eltDef.type, eltDef.dbName, eltDef.jStart,
         callbackOnce);
     });
   };
 
-  J.getPassiveByDbId = function (dbId, callback) {
-    J._getPassiveBy({_id: dbId }, callback);
+  J.jGetPassiveByDbId = function (dbId, callback) {
+    J._jGetPassiveBy({_id: dbId }, callback);
   };
 
-  J.getPassiveByDbName = function(dbName, callback) {
-    J._getPassiveBy({dbName: dbName}, callback);
+  J.jGetPassiveByDbName = function(dbName, callback) {
+    J._jGetPassiveBy({dbName: dbName}, callback);
   };
 
-  J.getActiveByDbId = function (dbId) {
-    J._getActiveBy({dbId:dbId});
+  //TODO: should return an array:
+  J.jGetActiveByDbId = function (dbId) {
+    J._jGetActiveBy({dbId:dbId});
   };
 
-  J.getActiveByDbName = function (dbName) {
-    J._getActiveBy({_dbName:dbName});
+  //TODO: should return an array:
+  J.jGetActiveByDbName = function (dbName) {
+    J._jGetActiveBy({_dbName:dbName});
   };
 
-  J.start = function(){
-    utils.v("+ start J.start()");
-    J._getPassiveBy({start: true}, function (err, element) {
+  J.jStart = function(){
+    utils.v("+ jStart J.jStart()");
+    J._jGetPassiveBy({jStart: true}, function (err, element) {
       if(err){
         throw err;
       }
       else{
-        J._starter = new J(element);
-        J._starter.run();
-        utils.v("- end J.start()");
+        J._jStarter = new J(element);
+        J._jStarter.jRun();
+        utils.v("- end J.jStart()");
       }
     });
   };
@@ -291,12 +295,39 @@ J = (function(){
   /**#@+
    * @private
    */
-  J._activate = function (elt) {
-    utils.evolvedPush(J._activated, elt, "activatedIndex");
+  J._jActivate = function (elt) {
+    utils.evolvedPush(J._jActivated, elt, "_jActiveId");
   };
 
-  J._addOne = function(obj, type, dbName, start, callback){
-    utils.v("+ start J._addOne( " + dbName + " )");
+  J._jsAddRef = function (Jayuana1, Jayuana2, refType,
+                        nameFrom1to2, nameFrom2to1) {
+    var self = this;
+    if(! Match.test(Jayuana1.objType,"Jayuana") ||
+      ! Match.test(Jayuana2.objType,"Jayuana") ){
+      throw new J.Error("J._jAddRef", "at least one element is not a Jayuana " +
+        "object");
+    }
+
+    switch(refType){
+      case 'both':
+        self._refsFrom.add();
+        self._refsTo.add();
+
+        break;
+
+      case 'from':
+
+      case 'to':
+
+        break;
+
+      default:
+        throw new J.Error("J._jAddRef", "relation type not valid");
+    }
+  };
+
+  J._jAddOne = function(obj, type, dbName, start, callback){
+    utils.v("+ jStart J._jAddOne( " + dbName + " )");
     var objUnderTest, element, dbId, data, filePath;
 
     dbName = dbName || '';
@@ -304,16 +335,16 @@ J = (function(){
     element = {
       dbName: dbName,
       type: type,
-      start: start,
+      jStart: start,
       available: false,
       path: 'unknown'
     };
-    utils.v("+ ++++1 J._addOne( " + dbName + " )");
+    utils.v("+ ++++1 J._jAddOne( " + dbName + " )");
     if((type !== "EJSON") && (type !== "code") && (type !== "file")){
-      throw new J.Error("J.addInDb", "type not defined correctly");
+      throw new J.Error("J.jAddInDb", "type not defined correctly");
     }
 
-    utils.v("+ ++++2 J._addOne( " + dbName + " )");
+    utils.v("+ ++++2 J._jAddOne( " + dbName + " )");
 
     switch (type){
       case "EJSON":
@@ -326,7 +357,7 @@ J = (function(){
           eval('objUnderTest = ' + obj); //jshint ignore:line
         }
         catch (e){
-          throw new J.Error("J.addInDb", "eval(): " + e.message);
+          throw new J.Error("J.jAddInDb", "eval(): " + e.message);
         }
         data = obj;
 
@@ -337,18 +368,18 @@ J = (function(){
         break;
     }
 
-    utils.v("+ ++++3 J._addOne( " + dbName + " )");
+    utils.v("+ ++++3 J._jAddOne( " + dbName + " )");
 
     if (objUnderTest === undefined){
-      throw new J.Error("J.addInDb", "undefined object");
+      throw new J.Error("J.jAddInDb", "undefined object");
     }
 
-    if ((element.start === true) && !(_.isFunction(objUnderTest))){
-      throw new J.Error("J.addInDb",
-        "start flag true and object is not a function");
+    if ((element.jStart === true) && !(_.isFunction(objUnderTest))){
+      throw new J.Error("J.jAddInDb",
+        "jStart flag true and object is not a function");
     }
 
-    utils.v("+ ++++4 J._addOne( " + dbName + " )");
+    utils.v("+ ++++4 J._jAddOne( " + dbName + " )");
 
     dbId = J.db.insert(element);
     filePath = J._rootPath + J._folderName + dbId;
@@ -356,15 +387,15 @@ J = (function(){
     utils.v("+ ready to writeFile of " + dbName);
 
     utils.fs.writeFile(filePath, data, Meteor.bindEnvironment(function (e) {
-      utils.v("+ start writeFile of " + dbName);
+      utils.v("+ jStart writeFile of " + dbName);
       if (e) {
         J.db.remove(dbId);
         //TODO : should not throw an Error but pass the Error to callback(e, id)
         //TODO : save it in a log
-        throw new J.Error("J.addInDb", "writeFile: " + e.message);
+        throw new J.Error("J.jAddInDb", "writeFile: " + e.message);
       }
       else{
-        utils.v("- end J.addInDb( " + dbName + " )");
+        utils.v("- end J.jAddInDb( " + dbName + " )");
         J.db.update({_id: dbId},{$set: {
           available: true,
           path: filePath}});
@@ -378,23 +409,23 @@ J = (function(){
     }));
   };
 
-  J._getActiveBy = function(condition){
-    utils.v("+ start J._getActiveBy( " + EJSON.stringify(condition) + " ), " +
-      "J._activated.length: " + J._activated.length + "/n J._activated: " +
-      EJSON.stringify(J._activated));
-    var index = __.findIndex(J._activated, function (value) {
+  J._jGetActiveBy = function(condition){
+    utils.v("+ jStart J._jGetActiveBy( " + EJSON.stringify(condition) + " ), " +
+      "J._jActivated.length: " + J._jActivated.length + "/n J._jActivated: " +
+      EJSON.stringify(J._jActivated));
+    var index = __.findIndex(J._jActivated, function (value) {
       var pattern = Match.ObjectIncluding(condition);
       Match.test(value, pattern);
     });
     if (index === -1){
-      throw J.Error(  J._getActiveBy, "index not found, index: " + index);
+      throw J.Error(  J._jGetActiveBy, "index not found, index: " + index);
     }
-    utils.v("+ end J._getActiveBy( " +  EJSON.stringify(condition)  +
+    utils.v("+ end J._jGetActiveBy( " +  EJSON.stringify(condition)  +
       " ), index: " + index);
-    return J._activated[index];
+    return J._jActivated[index];
   };
 
-  J._getPassiveBy = function(condition, callback){
+  J._jGetPassiveBy = function(condition, callback){
     //var fs = Npm.require('fs');
     var element = J.db.findOne(condition);
 
@@ -408,29 +439,14 @@ J = (function(){
     });
   };
 
-  J._starter = function(){};
+  J._jStarter = function(){};
 
   /**#@-*/
 
   //TODO if necesary:
-  J._addRef = function (element1, element2, relation){
-    if(! Match.test(element1.objType,"Jayuana") ||
-      ! Match.test(element2.objType,"Jayuana") ){
-      throw new J.Error("J._addRef", "at least one element is not a Jayuana " +
-        "object");
-    }
-    if (relation === 'both'){
 
-    }
-    else if (relation === 'fromTo'){
 
-    }
-    else{
-      throw new J.Error("J._addRef", "relation type wrong");
-    }
-  };
-
-  J._wipe = function () {
+  J._jWipe = function () {
     //remove all files within the folder:
     utils._emptyDirectory(process.env.PWD + "/" + J._folderName);
 
@@ -438,7 +454,7 @@ J = (function(){
     J.db.remove({});
 
     //clean the activated elts:
-    J._activated = [];
+    J._jActivated = [];
   };
 
   return J;

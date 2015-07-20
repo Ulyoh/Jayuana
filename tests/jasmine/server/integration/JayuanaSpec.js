@@ -13,7 +13,7 @@ describe("J", function () {
   var options = {folderName: directoryName};
 
   beforeEach(function () {
-    J.init(options);
+    J.jInit(options);
   });
 
   it("should create a db", function () {
@@ -24,7 +24,7 @@ describe("J", function () {
     expect(J._folderName).toEqual(directoryName + "/");
   });
 
-  it("should create a folder with the named passed to J.init()", function () {
+  it("should create a folder with the named passed to J.jInit()", function () {
 
     //var fs = Npm.require('fs');
     //utils.fs.accessSync not working yet, use it when existsSync is removed
@@ -42,12 +42,12 @@ describe("J", function () {
   xit("it should throw an Error if called twice" );
   xit("should create a folder on the server named 'jayuana_db_files'");
 
-  xdescribe("init", function () {
+  xdescribe("jInit", function () {
     xit("it should clean all trace of previous elts from the folder given," +
       "the db and J");
   });
 
-  xdescribe("_wipe");
+  xdescribe("_jWipe");
 
   describe("add", function () {
 
@@ -62,9 +62,9 @@ describe("J", function () {
           obj: obj,
           type: type,
           dbName: "",
-          start: false
+          jStart: false
       };
-        J.addInDb(eltDef, function (dbId) {
+        J.jAddInDb(eltDef, function (dbId) {
           self.pathFile = process.env.PWD + "/" + directoryName + "/" + dbId;
           self.dbId = dbId;
           done();
@@ -94,7 +94,7 @@ describe("J", function () {
             _id: self.dbId,
             dbName: "",
             type: type,
-            start: false,
+            jStart: false,
             available: true,
             path: self.pathFile
           });
@@ -113,7 +113,7 @@ describe("J", function () {
 
       xit("should verify self the new element(s) has(ve) been tested");
       xit("should throw an Error if EJSON.parse give a different result");
-      xit("should throw an Error if the start flag is set to true");
+      xit("should throw an Error if the jStart flag is set to true");
       xit("should throw an Error if the argument do not match");
       xit("should throw an Error if the dbName already exists");
     });
@@ -125,16 +125,16 @@ describe("J", function () {
         "};";
       //it("should add a new element to the db as code", testAdd("code", code));
 
-      it("should be able to set the start flag to true, and verify if the " +
+      it("should be able to set the jStart flag to true, and verify if the " +
       "code generate a function", function (done) {
         var eltDef = {
           obj: code,
           type: "code",
           dbName: "",
-          start: false
+          jStart: false
         };
-        J.addInDb(eltDef, function (dbId) {
-          expect(J.db.findOne({_id: dbId}).start).toBeTruthy();
+        J.jAddInDb(eltDef, function (dbId) {
+          expect(J.db.findOne({_id: dbId}).jStart).toBeTruthy();
           done();
         });
         expect(function(){
@@ -143,16 +143,16 @@ describe("J", function () {
             obj: "{info: 'this is not a function'}",
             type: "code",
             dbName: "",
-            start: true
+            jStart: true
           };
-          J.addInDb(eltDef);})
+          J.jAddInDb(eltDef);})
           .toThrowError(
-          "start flag true and object is not a function [J.addInDb]");
+          "jStart flag true and object is not a function [J.jAddInDb]");
       });
 
       xit("should accept an array of elements");
       xit("should verify self the new element(s) has(ve) been tested");
-      xit("should throw an Error if try to set the start flag to true for a " +
+      xit("should throw an Error if try to set the jStart flag to true for a " +
       "2nd element");
       xit("should throw an Error if code do note return an object");
       xit("should throw an Error if the argument do not match");
@@ -164,11 +164,11 @@ describe("J", function () {
     xdescribe("using a file", function () {
     //TODO for client : use https://github.com/CollectionFS/Meteor-CollectionFS
       xit("should add a new element to the db from a file");
-      xit("should be able to set the start flag to true and verify the object" +
+      xit("should be able to set the jStart flag to true and verify the object" +
       "is a function", function () {
 
       });
-      xit("should throw an Error if try to set the start flag to true for a " +
+      xit("should throw an Error if try to set the jStart flag to true for a " +
       "2nd element");
       xit("should throw an Error if the argument do not match");
       xit("should throw an Error if the dbName already exists");
@@ -180,14 +180,14 @@ describe("J", function () {
 
   
 
-  describe("getPassiveByDbId", function () {
+  describe("jGetPassiveByDbId", function () {
     it("should access to an element by its dbId", function (done) {
       var obj = "blabla"; //TODO: add test with different objects
                           //TODO: is a non object should be accepted?
       var elementPartial = {
         dbName: "",
         type: "EJSON",
-        start: false,
+        jStart: false,
         available: true,
         objToEval: EJSON.stringify(obj)
       };
@@ -195,11 +195,11 @@ describe("J", function () {
         obj: obj,
         type: "EJSON",
         dbName: "",
-        start: false
+        jStart: false
       };
 
-      J.addInDb(eltDef, function (dbId) {
-        J.getPassiveByDbId(dbId, function (err, data) {
+      J.jAddInDb(eltDef, function (dbId) {
+        J.jGetPassiveByDbId(dbId, function (err, data) {
           self.data = data;
         });
       });
@@ -213,7 +213,7 @@ describe("J", function () {
     xit("should throw an Error if the argument is not a string");
   });
 
-  describe("getPassiveByDbName", function () {
+  describe("jGetPassiveByDbName", function () {
     it("should access to an element by its dbName", function (done) {
       var obj = "blabla"; //TODO: add test with different objects
       //TODO: is a non object should be accepted?
@@ -221,7 +221,7 @@ describe("J", function () {
       var elementPartial = {
         dbName: dbName,
         type: "EJSON",
-        start: false,
+        jStart: false,
         available: true,
         objToEval: EJSON.stringify(obj)
       };
@@ -229,12 +229,12 @@ describe("J", function () {
         obj: obj,
         type: "EJSON",
         dbName: dbName,
-        start: false
+        jStart: false
       };
 
 
-      J.addInDb(eltDef, function () {
-        J.getPassiveByDbName(dbName, function (err, data) {
+      J.jAddInDb(eltDef, function () {
+        J.jGetPassiveByDbName(dbName, function (err, data) {
           self.data = data;
         });
       });
@@ -258,27 +258,27 @@ describe("J", function () {
     xit("should return the list of elements in RefsTo");
   });
 
-  describe("start", function () {
+  describe("jStart", function () {
     it("should execute new J with the element which has " +
-    "the start flag = true", function (done) {
+    "the jStart flag = true", function (done) {
       var eltDef = {
         obj: "function() {this.testMessage = 'coucou';}",
         type: "code",
         dbName: "coucou",
-        start: true
+        jStart: true
       };
-      J.addInDb(eltDef, function () {
-        J.start();
+      J.jAddInDb(eltDef, function () {
+        J.jStart();
       });
 
       Meteor.setTimeout(function () {
-        expect(J._starter.testMessage).toEqual('coucou');
+        expect(J._jStarter.testMessage).toEqual('coucou');
         done();
       }, 200);
 
     });
     xit("J.starter should have a reference to its element root");
-    xit("should throw an error if none element found with start flag = true");
+    xit("should throw an error if none element found with jStart flag = true");
     xit("should throw an error if more than one found");
   });
 
@@ -294,24 +294,24 @@ xdescribe("J object", function () {
     obj: "function() {console.log('hello Jayuana');}",
     type: "code",
     dbName: "coucou_child",
-    start: false
+    jStart: false
   };
   eltsDefs[1] = {
     obj:  "function() {" +
           "   self = this;" +
-          "   self.addRef({" +
+          "   self.jAddRef({" +
           "     refType: RefType.TO," +
           "     otherObj: {dbName: 'coucou_child'}" +
           "     }," +
           "     function(){" +
           "       var dbIdToCall = self.getDbIdByDbName('coucou_child');" +
-          "       J.getActiveByDbId(dbIdToCall)();" +
+          "       J.jGetActiveByDbId(dbIdToCall)();" +
       //TODO: replace two previous lines by:
-          "       self.addRef({dbName:'coucou_child'}).and.exec()" +
+          "       self.jAddRef({dbName:'coucou_child'}).and.exec()" +
           "   })};",
     type: "code",
     dbName: "coucou 1",
-    start: true
+    jStart: true
   };
 
   describe("private properties created", function () {
@@ -324,16 +324,16 @@ xdescribe("J object", function () {
       expect(elt[property].objType).toEqual(type);
     };
 
-    utils.v("beforeAll should start:");
+    utils.v("beforeAll should jStart:");
     beforeAll(function (done) {
       utils.v("beforeAll started");
       var self = this;
       self.JayuanaElts = [];
-      J.init(options);
-      J.addInDb(eltsDefs, function () {
-        J.start();
-        self.JayuanaElts = J._activated;
-        utils.v("****************start self.JayuanaElts ***************");
+      J.jInit(options);
+      J.jAddInDb(eltsDefs, function () {
+        J.jStart();
+        self.JayuanaElts = J._jActivated;
+        utils.v("****************jStart self.JayuanaElts ***************");
         utils.v(self.JayuanaElts);
 
         utils.v("****************end self.JayuanaElts ***************");
@@ -343,7 +343,7 @@ xdescribe("J object", function () {
       });
     });
 
-    //TODO: test also with an object which is not J._starter
+    //TODO: test also with an object which is not J._jStarter
     it("should have a private dbId property (dbId in the db)", function (done) {
       var self = this;
       verifyPropertiesTypes(self.JayuanaElts[0], "dbId", String);
@@ -383,14 +383,14 @@ xdescribe("J object", function () {
   });
 
   xdescribe("private method", function () {
-    xdescribe("run", function () {
+    xdescribe("jRun", function () {
       xit("should execute the code in the code property ,with this = instance" +
       " object ");
     });
   });
 
   xdescribe("refsFrom and refsTo access", function () {
-    xit("should have at least one reference if it is not the start element");
+    xit("should have at least one reference if it is not the jStart element");
   });
 
   xdescribe("dbId value handle between server and client", function () {
