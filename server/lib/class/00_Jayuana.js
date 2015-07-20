@@ -48,14 +48,14 @@ J = (function(){
       //TODO : add _activeId => do in ._add
       //TODO: reuse the _rStackTreatment of References
 
-      self._element = element;
-      self._dbId = element.dbId;
-      self._dbName = element.dbName;
+      self._jElement = element;
+      self._jDbId = element.dbId;
+      self._jDbName = element.dbName;
       self._jActiveId = -1;
-      self._refsFrom = new J.References(element.refsFrom);
-      self._refsTo = new J.References(element.refsTo);
+      self._jRefsFrom = new J.References(element.refsFrom);
+      self._jRefsTo = new J.References(element.refsTo);
       eval("element.obj =" + element.objToEval);  //jshint ignore: line
-      self._obj = element.obj;
+      self._jObj = element.obj;
 
       J._jActivate(self);
       utils.v("+ end create new instance of J, dbName :" + element.dbName);
@@ -83,18 +83,18 @@ J = (function(){
    * @param {bool} [otherJayuana.doNotActivate = false]
    * @param {Object} options
    * @param {RefType} options.refType
-   * @param {string} [options.refName = options.otherObj._dbName]
-   * @param {string} [options.refNameFromOtherObj = self._dbName]
+   * @param {string} [options.refName = options.otherObj._jDbName]
+   * @param {string} [options.refNameFromOtherObj = self._jDbName]
    */
   J.prototype.jAddRef = function(otherJayuana, options){
     J._jAddingRef = true;
-    utils.v("+ jStart jAddRef of ( " + this._dbName + " )");
+    utils.v("+ jStart jAddRef of ( " + this._jDbName + " )");
     var dbId, refName, refInfo;
     var self = this;
     if (Match.test(otherJayuana.dbId, String)){
       dbId = otherJayuana.dbId;
       otherJayuana = J.jGetActiveByDbId(dbId);
-      refName = options.refName || otherJayuana._dbName;
+      refName = options.refName || otherJayuana._jDbName;
     }
     else if (Match.test(otherJayuana.dbName, String)){
       refName = options.otherObj.dbName;
@@ -131,10 +131,10 @@ J = (function(){
     };
 
     self._jAddRef(refInfo, options.refType,
-      options.refNameFromOtherObj || self._dbName);
+      options.refNameFromOtherObj || self._jDbName);
 
     J._jAddingRef = false;
-    utils.v("+ end jAddRef of ( " + this._dbName + " )");
+    utils.v("+ end jAddRef of ( " + this._jDbName + " )");
   };
 
   /**
@@ -144,8 +144,8 @@ J = (function(){
    * @param {ObjInfo} [otherJayuana.dbname = null]
    * @param {ObjInfo} otherJayuana.toActivate
    * @param {Object} options
-   * @param {string} [options.refName = options.otherObj._dbName]
-   * @param {string} [options.refNameFromOtherObj = self._dbName]
+   * @param {string} [options.refName = options.otherObj._jDbName]
+   * @param {string} [options.refNameFromOtherObj = self._jDbName]
    */
   J.prototype.jAddRefTo = function (otherJayuana, options) {
     var self = this;
@@ -156,7 +156,7 @@ J = (function(){
   J.prototype.jRun = function(){
     var self = this;
     utils.v("+ jStart J.prototype.jRun");
-    self._obj();
+    self._jObj();
     utils.v("- end J.prototype.jRun");
   };
 
@@ -177,23 +177,23 @@ J = (function(){
     var otherJayuana = refInfo.element;
     var refToSelf = {
       dbId: self.dbId,
-      refName: refNameFromOtherObj || self._dbName,
-      element: self._element
+      refName: refNameFromOtherObj || self._jDbName,
+      element: self._jElement
     };
     switch(refType){
       case 'to':
-        self._refsTo.add(refInfo);
-        otherJayuana._refsFrom.add(refToSelf);
+        self._jRefsTo.add(refInfo);
+        otherJayuana._jRefsFrom.add(refToSelf);
         break;
       case 'from':
-        otherJayuana._refsTo.add(refToSelf);
-        self._refsFrom.add(refInfo);
+        otherJayuana._jRefsTo.add(refToSelf);
+        self._jRefsFrom.add(refInfo);
         break;
       case 'both':
-        self._refsTo.add(refInfo);
-        self._refsFrom.add(refInfo);
-        otherJayuana._refsTo.add(refToSelf);
-        otherJayuana._refsFrom.add(refToSelf);
+        self._jRefsTo.add(refInfo);
+        self._jRefsFrom.add(refInfo);
+        otherJayuana._jRefsTo.add(refToSelf);
+        otherJayuana._jRefsFrom.add(refToSelf);
         break;
       default :
         throw new J.error("Jobj.jAddRef");
@@ -275,7 +275,7 @@ J = (function(){
 
   //TODO: should return an array:
   J.jGetActiveByDbName = function (dbName) {
-    J._jGetActiveBy({_dbName:dbName});
+    J._jGetActiveBy({_jDbName:dbName});
   };
 
   J.jStart = function(){
@@ -310,8 +310,8 @@ J = (function(){
 
     switch(refType){
       case 'both':
-        self._refsFrom.add();
-        self._refsTo.add();
+        self._jRefsFrom.add();
+        self._jRefsTo.add();
 
         break;
 

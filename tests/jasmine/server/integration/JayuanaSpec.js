@@ -352,27 +352,27 @@ xdescribe("J object", function () {
     });
     it("should have a private dbName property", function (done) {
       var self = this;
-      verifyPropertiesTypes(self.JayuanaElts[0], "_dbName", String);
-      verifyPropertiesTypes(self.JayuanaElts[1], "_dbName", String);
+      verifyPropertiesTypes(self.JayuanaElts[0], "_jDbName", String);
+      verifyPropertiesTypes(self.JayuanaElts[1], "_jDbName", String);
       done();
     });
     it("should have a private refsFrom property", function (done) {
       var self = this;
-      verifyPropertiesMyTypes(self.JayuanaElts[0], "_refsFrom", "J.References");
-      verifyPropertiesMyTypes(self.JayuanaElts[1], "_refsFrom", "J.References");
+      verifyPropertiesMyTypes(self.JayuanaElts[0], "_jRefsFrom", "J.References");
+      verifyPropertiesMyTypes(self.JayuanaElts[1], "_jRefsFrom", "J.References");
       done();
     });
     it("should have a private refsTo property", function (done) {
       var self = this;
-      verifyPropertiesMyTypes(self.JayuanaElts[0], "_refsTo", "J.References");
-      verifyPropertiesMyTypes(self.JayuanaElts[1], "_refsTo", "J.References");
+      verifyPropertiesMyTypes(self.JayuanaElts[0], "_jRefsTo", "J.References");
+      verifyPropertiesMyTypes(self.JayuanaElts[1], "_jRefsTo", "J.References");
       done();
     });
     it("should have a private object property which is a Function",
       function(done){
         var self = this;
-        verifyPropertiesTypes(self.JayuanaElts[0], "_obj", Function);
-        verifyPropertiesTypes(self.JayuanaElts[1], "_obj", Function);
+        verifyPropertiesTypes(self.JayuanaElts[0], "_jObj", Function);
+        verifyPropertiesTypes(self.JayuanaElts[1], "_jObj", Function);
         done();
       //TODO: test either a regular object or a Function
     });
