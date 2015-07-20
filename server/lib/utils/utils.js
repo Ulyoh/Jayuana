@@ -31,7 +31,7 @@ utils = {
     return self.verbose(text);
   },
 
-  //todo: check parameters
+  //TODO: remove if not used
   evolvedPush: function (array, elt, propertyName, callback) {
     //var self = this;
     __.debounce(function () {
@@ -42,6 +42,8 @@ utils = {
   }
 
 };
+
+//TODO: remove if not used
 
 Array.prototype.pushAnd =
   function(elt, propertyName, callback, callbackContext){

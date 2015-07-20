@@ -29,6 +29,7 @@ J.References = (function () {
 
     self._list = [];
     self._stackNewRefs = []; //TODO: add test for the use of it
+    self.nextRefId = 0;  //TODO: create tests of refId
 
     if (refArrayOrOne !== null) {
       if (!Match.test(refArrayOrOne, Array)) {
@@ -67,7 +68,7 @@ J.References = (function () {
       cleanRef.dbId = ref.dbId;
       cleanRef.refName = ref.refName;
 
-      return cleanRef; //TODO create test for refIndex
+      return cleanRef;
     }
     else {
       throw new J.Error("References add", "invalid or not object " +
@@ -79,13 +80,13 @@ J.References = (function () {
     var self = this;
     var newRefs, newRef;
     var callback;
-    self._stackTreatmentRunning = true;
+    var refId;
     while(newRefs = self._stackNewRefs[0]){
       callback = null;
-      while(/*newRefs.refs.length > 0*/ newRef = newRefs.refs[0]){
-
-        newRef.refIndex = self._list.length;
-        self._list.push(newRef);
+      while( newRef = newRefs.refs[0]){
+        refId = self.nextRefId++;
+        newRef.refId = refId;
+        self._list.push(newRef); //TODO create test for refId
         if (newRefs.callback){
           callback = newRefs.callback.bind(self);
         }
@@ -99,7 +100,6 @@ J.References = (function () {
 
       self._stackNewRefs.shift();
     }
-    self._stackTreatmentRunning = false;
   });
 
   References.prototype.getDbIdByRefName = function (refName) {

@@ -43,6 +43,10 @@ J = (function(){
 
       //J[element.dbId] = self;
 
+      //TODO : add _JIndex
+      //TODO : add _JName
+      //TODO: reuse the _stackTreatment of References
+
       self._element = element;
       self._dbId = element.dbId;
       self._dbName = element.dbName;
@@ -71,12 +75,12 @@ J = (function(){
   //
   /**
    * Add references with an other object
+   * @param {ObjInfo} otherJayuana
+   * @param {string} otherJayuana.dbId optional if dbName exist
+   * @param {string} [otherJayuana.dbname = null]
+   * @param {bool} [otherJayuana.doNotActivate = false]
    * @param {Object} options
    * @param {RefType} options.refType
-   * @param {ObjInfo} options.otherJayuana
-   * @param {string} options.otherJayuana.dbId optional if dbName exist
-   * @param {string} [options.otherJayuana.dbname = null]
-   * @param {bool} [options.otherJayuana.doNotActivate = false]
    * @param {string} [options.refName = options.otherObj._dbName]
    * @param {string} [options.refNameFromOtherObj = self._dbName]
    */
@@ -85,12 +89,12 @@ J = (function(){
     utils.v("+ start addRef of ( " + this._dbName + " )");
     var dbId, refName, refInfo;
     var self = this;
-    if (Match.test(options.otherJayuana.dbId, String)){
-      dbId = options.otherJayuana.dbId;
+    if (Match.test(otherJayuana.dbId, String)){
+      dbId = otherJayuana.dbId;
       otherJayuana = J.getActiveByDbId(dbId);
       refName = options.refName || otherJayuana._dbName;
     }
-    else if (Match.test(options.otherJayuana.dbName, String)){
+    else if (Match.test(otherJayuana.dbName, String)){
       refName = options.otherObj.dbName;
       otherJayuana = J.getActiveByDbName(refName);
       dbId = otherJayuana.dbId;
@@ -99,14 +103,14 @@ J = (function(){
       throw new J.Error("J.addRef", "no valid Id neither name");
     }
 
-      options.otherJayuana.doNotActivate =
-        options.otherJayuana.doNotActivate || false;
-    if (Match.test(options.otherJayuana.doNotActivate, Boolean)){
+    otherJayuana.doNotActivate =
+        otherJayuana.doNotActivate || false;
+    if (Match.test(otherJayuana.doNotActivate, Boolean)){
       throw new J.Error("J.addRef",
-        "no valid options.otherJayuana.doNotActivate parameter");
+        "no valid otherJayuana.doNotActivate parameter");
     }
 
-    if( options.otherJayuana.doNotActivate !== false){
+    if( otherJayuana.doNotActivate !== false){
       //must be find out by the activated index
 
       //TODO

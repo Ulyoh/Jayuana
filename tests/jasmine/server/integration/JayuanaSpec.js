@@ -299,7 +299,7 @@ xdescribe("J object", function () {
   eltsDefs[1] = {
     obj:  "function() {" +
           "   self = this;" +
-          "   self.useElt({" +
+          "   self.addRef({" +
           "     refType: RefType.TO," +
           "     otherObj: {dbName: 'coucou_child'}" +
           "     }," +

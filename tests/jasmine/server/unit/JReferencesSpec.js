@@ -69,7 +69,7 @@ describe("J.References", function () {
           function () {
             self = this;
             expect(self._list[0]).toEqual(
-              {refName: "refName", dbId: "dbId", refIndex: 0});
+              {refName: "refName", dbId: "dbId", refId: 0});
             utils.v("- Ref.constr.add add ref to ref list");
             done();
         });
@@ -90,11 +90,11 @@ describe("J.References", function () {
           new J.References(refsList, function () {
             self = this;
             expect(self._list[0])
-              .toEqual({dbId: "id1", refName: "name1", refIndex: 0});
+              .toEqual({dbId: "id1", refName: "name1", refId: 0});
             expect(self._list[1])
-              .toEqual({dbId: "id2", refName: "name2", refIndex: 1});
+              .toEqual({dbId: "id2", refName: "name2", refId: 1});
             expect(self._list[2])
-              .toEqual({dbId: "id3", refName: "name3", refIndex: 2});
+              .toEqual({dbId: "id3", refName: "name3", refId: 2});
             utils.v("- Ref.constr.add add ref array to ref list");
             done();
           });
@@ -132,11 +132,11 @@ describe("J.References", function () {
           details: 'stub stack'
         });
         expect(self.testRefs._list[0])
-          .toEqual({dbId: "id1", refName: "name1", refIndex: 0});
+          .toEqual({dbId: "id1", refName: "name1", refId: 0});
         expect(self.testRefs._list[1])
-          .toEqual({dbId: "id2", refName: "name2", refIndex: 1});
+          .toEqual({dbId: "id2", refName: "name2", refId: 1});
         expect(self.testRefs._list[2])
-          .toEqual({dbId: "id3", refName: "name3", refIndex: 2});
+          .toEqual({dbId: "id3", refName: "name3", refId: 2});
         done();
       });
 
@@ -152,11 +152,11 @@ describe("J.References", function () {
           details: 'stub stack'
         });
         expect(self.testRefs._list[0])
-          .toEqual({dbId: "id1", refName: "name1", refIndex: 0});
+          .toEqual({dbId: "id1", refName: "name1", refId: 0});
         expect(self.testRefs._list[1])
-          .toEqual({dbId: "id2", refName: "name2", refIndex: 1});
+          .toEqual({dbId: "id2", refName: "name2", refId: 1});
         expect(self.testRefs._list[2])
-          .toEqual({dbId: "id3", refName: "name3", refIndex: 2});
+          .toEqual({dbId: "id3", refName: "name3", refId: 2});
         done();
       });
 
@@ -167,11 +167,11 @@ describe("J.References", function () {
         self.testRefs.removeByDbId("id2");
 
         expect(self.testRefs._list[0])
-          .toEqual({dbId: "id1", refName: "name1", refIndex: 0});
+          .toEqual({dbId: "id1", refName: "name1", refId: 0});
         expect(self.testRefs._list[1])
           .toBeUndefined();
         expect(self.testRefs._list[2])
-          .toEqual({dbId: "id3", refName: "name3", refIndex: 2});
+          .toEqual({dbId: "id3", refName: "name3", refId: 2});
         done();
       });
   });
@@ -217,11 +217,11 @@ describe("J.References", function () {
           details: 'stub stack'
         });
         expect(self.testRefs._list[0])
-          .toEqual({dbId: "id1", refName: "name1", refIndex: 0});
+          .toEqual({dbId: "id1", refName: "name1", refId: 0});
         expect(self.testRefs._list[1])
-          .toEqual({dbId: "id2", refName: "name2", refIndex: 1});
+          .toEqual({dbId: "id2", refName: "name2", refId: 1});
         expect(self.testRefs._list[2])
-          .toEqual({dbId: "id3", refName: "name3", refIndex: 2});
+          .toEqual({dbId: "id3", refName: "name3", refId: 2});
         done();
       });
 
@@ -235,11 +235,11 @@ describe("J.References", function () {
         details: 'stub stack'
       });
       expect(self.testRefs._list[0])
-        .toEqual({dbId: "id1", refName: "name1", refIndex: 0});
+        .toEqual({dbId: "id1", refName: "name1", refId: 0});
       expect(self.testRefs._list[1])
-        .toEqual({dbId: "id2", refName: "name2", refIndex: 1});
+        .toEqual({dbId: "id2", refName: "name2", refId: 1});
       expect(self.testRefs._list[2])
-        .toEqual({dbId: "id3", refName: "name3", refIndex: 2});
+        .toEqual({dbId: "id3", refName: "name3", refId: 2});
       done();
     });
 
@@ -247,11 +247,11 @@ describe("J.References", function () {
       self = this;
       self.testRefs.removeByRefName("name2");
       expect(self.testRefs._list[0])
-        .toEqual({dbId: "id1", refName: "name1", refIndex: 0});
+        .toEqual({dbId: "id1", refName: "name1", refId: 0});
       expect(self.testRefs._list[1])
         .toBeUndefined();
       expect(self.testRefs._list[2])
-        .toEqual({dbId: "id3", refName: "name3", refIndex: 2});
+        .toEqual({dbId: "id3", refName: "name3", refId: 2});
       done();
     });
   });
