@@ -20,15 +20,15 @@ utils = {
     }
   },
 
-  verbose: function(text) {
-    if (C.VERBOSE) {
+  verbose: function(text, force) {
+    if ((C.VERBOSE === true && force === undefined ) || force === true) {
       console.log(text);
     }
   },
 
-  v: function(text){
+  v: function(text, force){
     var self = this;
-    return self.verbose(text);
+    return self.verbose(text, force);
   },
 
   addStackToArray: function (thisObj, array, stack, idPropertyName,
