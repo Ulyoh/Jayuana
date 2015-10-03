@@ -164,8 +164,8 @@ describe("J", function () {
     xdescribe("using a file", function () {
     //TODO for client : use https://github.com/CollectionFS/Meteor-CollectionFS
       xit("should add a new element to the db from a file");
-      xit("should be able to set the jStart flag to true and verify the object" +
-      "is a function", function () {
+      xit("should be able to set the jStart flag to true and verify the " +
+        "object is a function", function () {
 
       });
       xit("should throw an Error if try to set the jStart flag to true for a " +
@@ -267,6 +267,7 @@ describe("J", function () {
         dbName: "coucou",
         jStart: true
       };
+      C.VERBOSE = true;
       J.jAddInDb(eltDef, function () {
         J.jStart();
       });
@@ -358,14 +359,18 @@ xdescribe("J object", function () {
     });
     it("should have a private refsFrom property", function (done) {
       var self = this;
-      verifyPropertiesMyTypes(self.JayuanaElts[0], "_jRefsFrom", "J.References");
-      verifyPropertiesMyTypes(self.JayuanaElts[1], "_jRefsFrom", "J.References");
+      verifyPropertiesMyTypes(
+        self.JayuanaElts[0], "_jRefsFrom", "J.References");
+      verifyPropertiesMyTypes(
+        self.JayuanaElts[1], "_jRefsFrom", "J.References");
       done();
     });
     it("should have a private refsTo property", function (done) {
       var self = this;
-      verifyPropertiesMyTypes(self.JayuanaElts[0], "_jRefsTo", "J.References");
-      verifyPropertiesMyTypes(self.JayuanaElts[1], "_jRefsTo", "J.References");
+      verifyPropertiesMyTypes(
+        self.JayuanaElts[0], "_jRefsTo", "J.References");
+      verifyPropertiesMyTypes(
+        self.JayuanaElts[1], "_jRefsTo", "J.References");
       done();
     });
     it("should have a private object property which is a Function",

@@ -6,12 +6,13 @@ __ = lodash;
 
 C = {  // jshint ignore:line
   DEFAULT_FOLDER: ".packagesFiles",
-  VERBOSE: true
+  VERBOSE: false
 };
 
 /**
- * Define a type of reference
- * @type {{TO: String, FROM: String, BOTH: String}}
+ * Define the 3 references types
+ * @readonly
+ * @enum {string}
  */
 RefType = {
   TO: "to",
@@ -48,6 +49,7 @@ ObjInfo = {
   dbId: "String",
   dbName: "String"
 };
+
 
 
 

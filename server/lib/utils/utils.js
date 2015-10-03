@@ -1,8 +1,10 @@
 /**
  * Created by yoh on 5/10/15.
  */
+
+var fs = Npm.require('fs');
 utils = {
-  fs: Npm.require('fs'),
+  fs: fs,
 
   _emptyDirectory: function (target) {
     utils.fs.readdirSync(target).forEach(function (element) {
