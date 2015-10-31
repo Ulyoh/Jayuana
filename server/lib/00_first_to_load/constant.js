@@ -10,6 +10,25 @@ C = {  // jshint ignore:line
 };
 
 /**
+ * @typedef {Object}  newJ
+ * @type {Object}
+ * @property {String} newJDbName
+ * @property {Function | JSON} newJObj
+ * @property {Boolean} newJStart
+ * @property {Array.<newJRef>} newJInitRefInput
+ * @property {Array.<newJRef>} newJInitRefOutput
+ */
+
+/**
+ * @typedef {Object} newJRef
+ * @property {Boolean} DbIdOrDbName
+ * @property {String} value
+ *
+ */
+
+
+
+/**
  * Define the 3 references types
  * @readonly
  * @enum {string}
