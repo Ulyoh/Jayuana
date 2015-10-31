@@ -172,7 +172,9 @@
     "NewRef"    : true,
     "ObjInfo"   : true,
     "__"        : true,
-    "lodash"    : true
+    "lodash"    : true,
+    "process.env.PWD": true,
+    "utils.fs.mkdirSync": true
   }
 }
 

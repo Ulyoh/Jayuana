@@ -21,7 +21,7 @@
 
 //TODO: replace all 'J' by Jayuana
 
-//TODO: replace 'active' ocurences by 'loaded'
+//TODO: replace 'active' occurrences by 'loaded'
 
 J = (function () {
   "use strict";
@@ -30,6 +30,8 @@ J = (function () {
    * @param {Object} options  one of the two next possibility is necessary
    * @param {String} options.dbId
    * @param {String} options.dbName
+   * @param {Boolean} options.jStart
+   * @param {Function} [callback]
    *
    */
   var J = function (options, callback) {
@@ -40,7 +42,6 @@ J = (function () {
       utils.v(" J called with 'new'");
       self.objType = "Jayuana";
       self._loaded = false;
-      debugger;
       cb = function (err, element) {
         if (err) {
           //TODO
@@ -74,7 +75,7 @@ J = (function () {
       }
       else {
         C.VERBOSE = true;
-        utils.v("options: " + options.stringify);
+        utils.v("options: " + JSON.stringify(options));
         throw J.Error("J.constructor", "argument error");
       }
 
@@ -138,7 +139,7 @@ J = (function () {
 
   /**
    * @param {RefType} refType
-   * @param {J / String} otherJayuana : Jobj or Jobj.ActiveName
+   * @param {J|String} otherJayuana
    * @param {Object} [options]
    * @param {String} [options.nameFromThisToOther = this.jGetActiveName()]
    * @param {String} [options.nameFromOtherToThis =
