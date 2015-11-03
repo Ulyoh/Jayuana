@@ -28,9 +28,9 @@ J = (function () {
   /**
    * @constructor
    * @param {Object} options  one of the two next possibility is necessary
-   * @param {String} options.dbId
-   * @param {String} options.dbName
-   * @param {Boolean} options.jStart
+   * @param {string} options.dbId
+   * @param {string} options.dbName
+   * @param {boolean} options.jStart
    * @param {Function} [callback]
    *
    */
@@ -139,10 +139,10 @@ J = (function () {
 
   /**
    * @param {RefType} refType
-   * @param {J|String} otherJayuana
+   * @param {J|string} otherJayuana
    * @param {Object} [options]
-   * @param {String} [options.nameFromThisToOther = this.jGetActiveName()]
-   * @param {String} [options.nameFromOtherToThis =
+   * @param {string} [options.nameFromThisToOther = this.jGetActiveName()]
+   * @param {string} [options.nameFromOtherToThis =
    *                  otherJayuana.jGetActiveName()]
    * @private
    */
