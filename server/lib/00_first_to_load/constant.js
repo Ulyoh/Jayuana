@@ -23,7 +23,7 @@ C = {  // jshint ignore:line
  */
 
 /**
- * new Jayuana Reference to add in Db
+ * new Jayuana Reference to use in newJ
  *
  * @typedef {Object} newJRefForDb
  *
@@ -37,16 +37,17 @@ C = {  // jshint ignore:line
  * @typedef {Object} newJRefForActiveJ
  *
  * @property {string} [newRefName]
- * @property {DbIdOrDbName / ActiveIdOrActiveName} JInDb
+ * @property {ActiveIdOrActiveName} JIdOrName
  */
 
 /**
- * reference created in an active Jayuana
+ * reference created to an active Jayuana
  *
  * @typedef {Object} cleanJRef
+ * @constant
  *
  * @property  {string} rRefName
- * @property  {string} rActiveId
+ * @property  {string} _rActiveId
  * @property  {string} rActiveName
  * @property  {string} rDbId
  * @property  {string} rDbName

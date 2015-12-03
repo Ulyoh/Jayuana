@@ -27,7 +27,6 @@ J.References = (function () {
 
     var self = this;
     var refArray = [];
-    var last = -1;
     var cleanRefs = [];
 
     self.objType = "J.References";
@@ -259,7 +258,12 @@ J.References = (function () {
   /**#@+
    * @public
    */
-
+  /**
+   *
+   * @param oneRef
+   * @returns {boolean}
+   * @static
+   */
   References.rPatternOneRef = function (oneRef) {
     /*return (Match.test(oneRef, Object) && oneRef.rRefName &&
      oneRef.refActiveId && Match.test(oneRef.rRefName, String) &&
@@ -283,21 +287,44 @@ J.References = (function () {
    * @private
    */
   //TODO: create specifics test for cleanRef
+  /**
+   *
+   * @param {newJRefForActiveJ} ref
+   * @returns {cleanJRef}
+   * @static
+   * @private
+   *
+   */
   References._rCleanRef = function (ref) {
-    var cleanRef = {};
-    //var self = this;
-    if (Match.test(ref, Object) && ref.newRefName && ref.newActiveElt &&
-      Match.test(ref.newRefName, String) && Match.test(ref.newActiveElt, J)) {
-      cleanRef.rRefName = ref.newRefName; //rename ref.rRefName by ref.rNewRefName
-      cleanRef.rActiveElt = ref.newActiveElt; //same as above
-      cleanRef._rActiveId = ref.newActiveElt._jActiveId;
+    /** @type {cleanJRef} */
+    var cleanRef;
 
-      return cleanRef;
+    /** @type {J} */
+    var elt;
+
+    //looking for the Jayuana object
+
+    if (ref.JIdOrName.ActiveId) {
+      elt = J._jActivated[ref.JIdOrName.ActiveId];
     }
-    else {
-      throw new J.Error("References rAdd", "invalid or not object " +
-        "passed to rAdd method");
+    else if (ref.JIdOrName.ActiveName ){
+      elt = J.jGetActiveByActiveName(ref.JIdOrName.ActiveName);
     }
+    else{
+      throw new J.Error("References _rCleanRef", "invalid or not object " +
+        "passed to _rCleanRef method");
+    }
+
+    cleanRef = {
+      rRefName: ref.newRefName || elt.jGetActiveName(),
+      _rActiveId: elt.jGetActiveId(),
+      rActiveName: elt.jGetActiveName(),
+      rDbId: elt.jGetDbId(),
+      rDbName:  elt.jGetDbName(),
+      rActiveElt: elt
+    };
+
+    return cleanRef;
   };
 
   /**#@-*/
