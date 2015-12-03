@@ -10,27 +10,73 @@ C = {  // jshint ignore:line
 };
 
 /**
- * @typedef {Object}  newJ
- * @type {Object}
- * @property {String} newJDbName
- * @property {Function | JSON} newJObj
- * @property {Boolean} newJStart
- * @property {Array.<newJRef>} newJInitRefInput
- * @property {Array.<newJRef>} newJInitRefOutput
+ * Object to add a new Jayuana element to the database
+ *
+ * @typedef {Object} newJ
+ *
+ * @property {string} newJDbName
+ * @property {StrOrJSON} type
+ * @property {string | JSON} newJObj
+ * @property {boolean} newJStart
+ * @property {Array.<newJRefForDb>} [newJInitRefInput]
+ * @property {Array.<newJRefForDb>} [newJInitRefOutput]
  */
 
 /**
- * @typedef {Object} newJRef
- * @property {Boolean} DbIdOrDbName
- * @property {String} value
+ * new Jayuana Reference to add in Db
  *
+ * @typedef {Object} newJRefForDb
+ *
+ * @property {string} [newRefName]
+ * @property {DbIdOrDbName} JInDb
  */
 
+/**
+ * new Jayuana Reference to add to a References Object
+ *
+ * @typedef {Object} newJRefForActiveJJ
+ *
+ * @property {string} [newRefName]
+ * @property {DbIdOrDbName / ActiveIdOrActiveName} JInDb
+ */
 
+/**
+ * reference created in an active Jayuana
+ *
+ *
+ * @typedef {Object} cleanJRef
+ *
+ * @property  {string} rRefName
+ * @property  {string} rActiveId
+ * @property  {string} rActiveName
+ * @property  {string} rDbId
+ * @property  {string} rDbName
+ * @property  {J} rActiveElt
+ */
+
+/**
+ * DbId or DbName
+ *
+ * @typedef {Object} DbIdOrDbName
+ * @readonly
+ * @parameter {string} [DbId]
+ * @parameter {string} [DbName]
+ */
+
+/**
+ * ActiveId or ActiveName
+ *
+ * @typedef {Object} ActiveIdOrActiveName
+ * @readonly
+ * @parameter {string} [ActiveId]
+ * @parameter {string} [ActiveName]
+ */
+
+//TODO : vérifier si enum defini
 
 /**
  * Define the 3 references types
- * @readonly
+ *
  * @enum {string}
  */
 RefType = {
@@ -40,33 +86,14 @@ RefType = {
 };
 
 /**
+ * string or JSON
  *
- * @type {{rRefName: String, activeElt: J, _rActiveId, _rRefId: Number,
-  _rActiveId: String}}
+ * @enum {string}
  */
-Ref = {
-  rRefName: "String",
-  rActiveElt: "Jayuana obj",
-  _rRefId: "Number",
-  _rActiveId: "String"
-};
 
-/**
- *
- * @type {{rRefName: String, activeElt: J}}
- */
-NewRef = {
-  newRefName: "String",
-  newActiveElt: "Jayuana obj"
-};
-
-/**
- * Used as param to look for either by dbId or dbName
- * @type {{dbId: String, dbName: String}}
- */
-ObjInfo = {
-  dbId: "String",
-  dbName: "String"
+StrOrJSON = {
+  str: "str",
+  JSON: "JSON"
 };
 
 
