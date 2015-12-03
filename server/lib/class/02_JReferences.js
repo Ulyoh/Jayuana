@@ -4,15 +4,31 @@
   //TODO: supprimer tout les activeId, remplacer par JId
   //TODO: ajouter une reference directe au Jayuana
   //TODO: create a reference constructor
+  //TODO: only one activeId allowed by References list
+  //TODO: add getByDbId and getByNameId, return an array or null
 
 "use strict";
 
 J.References = (function () {
-  var References = function (refArrayOrOne, callback) {
+  /**
+   *  To create the References list object
+   *  To create an empty one use null as refArrayOrOne
+   *
+   * @param {Array.<newJRefForActiveJ> | newJRefForActiveJ | null} refArrayOrOne
+   * @param {callback} [callback]
+   * @constructor
+   */
+  var References;
+  References = function (refArrayOrOne, callback) {
+
+    if (!(this instanceof References)){
+      throw new J.Error("References constructor", "called without new keyword");
+    }
+
     var self = this;
     var refArray = [];
     var last = -1;
-    var cleanRefs =[];
+    var cleanRefs = [];
 
     self.objType = "J.References";
 
@@ -22,7 +38,7 @@ J.References = (function () {
 
     // if the callback provided is not a Function, throw an error
     //TODO: related test
-    if((callback !== undefined) && (!Match.test(callback, Function))){
+    if ((callback !== undefined) && (!Match.test(callback, Function))) {
       throw new J.Error("References constructor", "invalid callback");
     }
 
@@ -31,13 +47,13 @@ J.References = (function () {
     self.rNextRefId = 0;  //TODO: create tests of refId
 
     if (refArrayOrOne !== null) {
+      //TODO: rAdd should be used here, no?
       if (!Match.test(refArrayOrOne, Array)) {
         refArray[0] = refArrayOrOne;
       }
       else {
         refArray = refArrayOrOne;
       }
-      last = refArray.length - 1;
 
       refArray.forEach(function (element) {
         cleanRefs.push(References._rCleanRef(element));
@@ -51,7 +67,14 @@ J.References = (function () {
   /**#@+
    * @public
    */
-
+  /**
+   * Add a reference
+   * return true if success
+   *
+   * @param {newJRefForActiveJ} ref
+   * @param {callback} callback
+   * @return {boolean}
+   */
   References.prototype.rAdd = function (ref, callback) {
     var self = this;
     var cleanRefs = [];
@@ -60,7 +83,15 @@ J.References = (function () {
 
     self._rStackRefsToAdd.push({ref: cleanRefs, callback: callback});
     self._rStackTreatment();
+    return true;
   };
+
+  /**
+   * Get activeId by reference name
+   *
+   * @param {string} refName
+   * @returns {string | null}
+   */
 
   References.prototype.rGetActiveIdByRefName = function (refName) {
     var index;
@@ -71,12 +102,17 @@ J.References = (function () {
     }
     index = self._rGetIndexByRefName(refName);
     if (index === -1) {
-      throw new J.Error(
-        "References", "method rGetActiveIdByRefName: refName not found");
+      return null;
     }
     return self._rList[index]._rActiveId;
   };
 
+  /**
+   * Get reference name by activeId
+   *
+   * @param {string} activeId
+   * @returns {string | null}
+   */
   References.prototype.rGetRefNameByActiveId = function (activeId) {
     var index;
     var self = this;
@@ -86,22 +122,41 @@ J.References = (function () {
     }
     index = self._rGetIndexByActiveId(activeId);
     if (index === -1) {
-      throw new J.Error("References",
-        "method rGetRefNameByActiveId: activeId not found");
+      return null;
     }
     return self._rList[index].rRefName;
   };
 
+  /**
+   * Is the string is a reference's name?
+   *
+   * @param {string} refName
+   * @returns {boolean}
+   */
   References.prototype.rIsRefNameIn = function (refName) {
     var self = this;
     return self._rGetIndexByRefName(refName) >= 0;
   };
+
+  /**
+   * Is the string is an activeId of one of the references
+   *
+   * @param {string} activeId
+   * @returns {boolean}
+   */
 
   References.prototype.rIsActiveIdIn = function (activeId) {
     var self = this;
     return self._rGetIndexByActiveId(activeId) >= 0;
   };
 
+  /**
+   * Remove a reference by activeId
+   * return false if not found
+   *
+   * @param {string} activeId
+   * @returns {boolean}
+   */
   References.prototype.rRemoveByActiveId = function (activeId) {
     var index;
     var self = this;
@@ -112,12 +167,19 @@ J.References = (function () {
 
     index = self._rGetIndexByActiveId(activeId);
     if (index === -1) {
-      throw new J.Error("References", "method rRemoveByActiveId: activeId not" +
-        " found");
+      return false;
     }
     self._rList[index] = undefined;
+    return true;
   };
 
+  /**
+   * Remove a reference by activeId
+   * return false if not found
+   *
+   * @param {string} refName
+   * @returns {boolean}
+   */
   References.prototype.rRemoveByRefName = function (refName) {
     var index;
     var self = this;
@@ -128,10 +190,10 @@ J.References = (function () {
 
     index = self._rGetIndexByRefName(refName);
     if (index === -1) {
-      throw new J.Error(
-        "References", "method rRemoveByRefName: refName not found");
+      return false;
     }
     self._rList[index] = undefined;
+    return true;
   };
 
   /**#@-*/
@@ -139,6 +201,13 @@ J.References = (function () {
    * @private
    */
 
+  /**
+   *
+   * @param {string} property
+   * @param {string} value
+   * @returns {number}
+   * @private
+   */
   References.prototype._rGetIndexBy = function (property, value) {
     var self = this;
     for (var i = self._rList.length - 1; i >= 0; i--) {
@@ -149,16 +218,33 @@ J.References = (function () {
     return -1;
   };
 
+  /**
+   *
+   * @param {string} activeId
+   * @returns {number}
+   * @private
+   */
   References.prototype._rGetIndexByActiveId = function (activeId) {
     var self = this;
     return self._rGetIndexBy("_rActiveId", activeId);
   };
 
+  /**
+   *
+   * @param {string} refName
+   * @returns {number}
+   * @private
+   */
   References.prototype._rGetIndexByRefName = function (refName) {
     var self = this;
     return self._rGetIndexBy("rRefName", refName);
   };
 
+  /**
+   *
+   * @type {Function}
+   * @private
+   */
   References.prototype._rStackTreatment = __.debounce(function () {
     var self = this;
 
