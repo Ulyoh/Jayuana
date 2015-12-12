@@ -26,12 +26,12 @@
 J = (function () {
   "use strict";
   /**
+   * @param {Object} options  one of the three next possibilities is necessary
+   * @param {string} [options.dbId]
+   * @param {string} [options.dbName]
+   * @param {boolean} [options.jStart]
+   * @param {callback} [callback]
    * @constructor
-   * @param {Object} options  one of the two next possibility is necessary
-   * @param {string} options.dbId
-   * @param {string} options.dbName
-   * @param {boolean} options.jStart
-   * @param {Function} [callback]
    *
    */
   var J = function (options, callback) {
@@ -42,6 +42,24 @@ J = (function () {
       utils.v(" J called with 'new'");
       self.objType = "Jayuana";
       self._loaded = false;
+
+      if (options.jStart && options.jStart === true){
+        J._jGetPassiveBy({jStart: true}, function (err, element) {
+          if (err) {
+            throw err;
+          }
+          else {
+            utils.v("   first element to run: " + EJSON.stringify(element));
+            J._JCreateJayuanaObj.call(self, element);
+            J._jStarter = self;
+            J._jStarter.jRun();
+            //callback(self);
+            utils.v("- end J.jStart()");
+          }
+        });
+        return;
+      }
+      //else:
       cb = function (err, element) {
         if (err) {
           //TODO
@@ -58,23 +76,8 @@ J = (function () {
       else if (Match.test(options.dbName, String)) {
         J.jGetPassiveByDbName(options.dbName, cb);
       }
-      else if (options.jStart && options.jStart === true){
-        J._jGetPassiveBy({jStart: true}, function (err, element) {
-          if (err) {
-            throw err;
-          }
-          else {
-            utils.v("   first element to run: " + EJSON.stringify(element));
-            J._JCreateJayuanaObj.call(self, element);
-            J._jStarter = self;
-            J._jStarter.jRun();
-            //callback(self);
-            utils.v("- end J.jStart()");
-          }
-        });
-      }
+
       else {
-        C.VERBOSE = true;
         utils.v("options: " + JSON.stringify(options));
         throw J.Error("J.constructor", "argument error");
       }
@@ -84,6 +87,13 @@ J = (function () {
       throw new J.Error("J", "must be called with the 'new' keyword");
     }
   };
+
+  /**
+   *
+   * @param element
+   * @static
+   * @private
+   */
   J._JCreateJayuanaObj = function (element) {
     var self = this;
     if (self instanceof J) {
@@ -271,18 +281,29 @@ J = (function () {
     });
   };
 
+  //TODO: should return an array
   J.jGetPassiveByDbId = function (dbId, callback) {
     J._jGetPassiveBy({_id: dbId}, callback);
   };
 
+  //TODO: should return an array
   J.jGetPassiveByDbName = function (dbName, callback) {
     utils.v("+ J.jGetPassiveByDbName()");
     J._jGetPassiveBy({dbName: dbName}, callback);
   };
 
   //TODO: create test for this method:
-  J.jGetActiveByActiveName = function (ActiveName) {
-    return J._jGetActiveBy({_jActiveName: ActiveName});
+  J.jGetActiveByActiveName = function (activeName) {
+    return J._jGetActiveBy({_jActiveName: activeName});
+  };
+
+  //TODO: create test for this method:
+  J.jGetActiveByActiveId = function (activeId) {
+    if (!J._jActivated[activeId]) {
+      throw new J.Error("J.jGetActiveByActiveId",
+        "not active Jayuana with this activeId");
+    }
+    return J._jActivated[activeId];
   };
 
   //TODO: create test for this method:
@@ -484,10 +505,10 @@ J = (function () {
       EJSON.stringify(J._jActivated));
     var index = __.findIndex(J._jActivated, function (value) {
       var pattern = Match.ObjectIncluding(condition);
-      Match.test(value, pattern);
+      return Match.test(value, pattern);
     });
     if (index === -1) {
-      throw J.Error(J._jGetActiveBy, "index not found, index: " + index);
+      throw new J.Error("J._jGetActiveBy", "index not found, index: " + index);
     }
     utils.v("+ end J._jGetActiveBy( " + EJSON.stringify(condition) +
       " ), index: " + index);

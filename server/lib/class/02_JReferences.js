@@ -54,6 +54,8 @@ J.References = (function () {
         refArray = refArrayOrOne;
       }
 
+      utils.v("refArray:" + EJSON.stringify(refArray));
+
       refArray.forEach(function (element) {
         cleanRefs.push(References._rCleanRef(element));
       });
@@ -75,6 +77,7 @@ J.References = (function () {
    * @return {boolean}
    */
   References.prototype.rAdd = function (ref, callback) {
+    utils.v(" + start rAdd");
     var self = this;
     var cleanRefs = [];
 
@@ -82,6 +85,7 @@ J.References = (function () {
 
     self._rStackRefsToAdd.push({ref: cleanRefs, callback: callback});
     self._rStackTreatment();
+    utils.v(" - end rAdd");
     return true;
   };
 
@@ -289,12 +293,20 @@ J.References = (function () {
   //TODO: create specifics test for cleanRef
   /**
    *
-   * @param {newJRefForActiveJ} ref
+   * @param {Object} ref
+   * @param {number} [ref.activeId]
+   * @param {activeName} [ref.activeName]
+   * @param {string} [ref.newRefName]
+   *
+   * activeId or activeName must be given
+   * activeId has the priority
+   *
    * @returns {cleanJRef}
    * @static
    * @private
    *
    */
+
   References._rCleanRef = function (ref) {
     /** @type {cleanJRef} */
     var cleanRef;
@@ -303,14 +315,16 @@ J.References = (function () {
     var elt;
 
     //looking for the Jayuana object
+    utils.v(EJSON.stringify(ref));
 
-    if (ref.JIdOrName.ActiveId) {
-      elt = J._jActivated[ref.JIdOrName.ActiveId];
+    if (ref.activeId !== undefined) {
+      elt = J.jGetActiveByActiveId(ref.activeId);
     }
-    else if (ref.JIdOrName.ActiveName ){
-      elt = J.jGetActiveByActiveName(ref.JIdOrName.ActiveName);
+    else if (ref.activeName !== undefined){
+      elt = J.jGetActiveByActiveName(ref.activeName);
     }
-    else{
+
+    if (elt === undefined){
       throw new J.Error("References _rCleanRef", "invalid or not object " +
         "passed to _rCleanRef method");
     }

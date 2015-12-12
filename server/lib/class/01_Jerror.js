@@ -4,7 +4,6 @@ J.Error = (function() {
 
   var e = function (error, reason, details) {
     var self = this, tmpStack, endFirstLine;
-    var self = this, tmpStack, endFirstLine;
 
     self.objType = "J.Error";
 

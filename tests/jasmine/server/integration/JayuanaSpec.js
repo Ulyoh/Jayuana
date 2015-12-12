@@ -267,7 +267,7 @@ describe("J", function () {
         dbName: "coucou",
         jStart: true
       };
-      C.VERBOSE = true;
+
       J.jAddInDb(eltDef, function () {
         J.jStart();
       });

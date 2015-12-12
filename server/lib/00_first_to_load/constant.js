@@ -15,30 +15,38 @@ C = {  // jshint ignore:line
  * @typedef {Object} newJ
  *
  * @property {string} newJDbName
- * @property {StrOrJSON} type
+ * @property {StrOrJSON} type //TODO: perhaps use JDataType
  * @property {string | JSON} newJObj
  * @property {boolean} newJStart
- * @property {Array.<newJRefForDb>} [newJInitRefInput]
- * @property {Array.<newJRefForDb>} [newJInitRefOutput]
+ * @property {Array.<JRefForDb>} [newJInitRefInput]
+ * @property {Array.<JRefForDb>} [newJInitRefOutput]
+ */
+
+/**
+ * Object extract from Db to pass to the Jayuana constructor
+ *
+ * @typedef {Object} JFromDb
+ *
+ * @property {string} dbId
+ * @property {string} dbName
+ * @property {JDataType} JDataType
+ * @property {boolean} jStart
+ * @property {boolean} available
+ * @property {Array.<JRefForDb>} [JInitRefInput]
+ * @property {Array.<JRefForDb>} [JInitRefOutput]
+ * @property {string} path
  */
 
 /**
  * new Jayuana Reference to use in newJ
  *
- * @typedef {Object} newJRefForDb
+ * @typedef {Object} JRefForDb
  *
  * @property {string} [newRefName]
  * @property {DbIdOrDbName} JInDb
  */
 
-/**
- * new Jayuana Reference to add to a References Object
- *
- * @typedef {Object} newJRefForActiveJ
- *
- * @property {string} [newRefName]
- * @property {ActiveIdOrActiveName} JIdOrName
- */
+
 
 /**
  * reference created to an active Jayuana
@@ -54,6 +62,20 @@ C = {  // jshint ignore:line
  * @property  {J} rActiveElt
  */
 
+/** @type  {cleanJRef} */
+var testCleanJRef = {
+  rRefName: 1, //should have a warning here
+  rActiveId: "0",
+  rActiveName: "Name",
+  rDbId: "0",
+  rDbName: "nom",
+  rActiveElt: "new Object()", //should have a warning here
+  incorrectProp: "false" //should have a warning here
+};
+
+
+testCleanJRef._rActiveId = 88;
+
 /**
  * DbId or DbName
  *
@@ -63,20 +85,12 @@ C = {  // jshint ignore:line
  * @parameter {string} [DbName]
  */
 
-/**
- * ActiveId or ActiveName
- *
- * @typedef {Object} ActiveIdOrActiveName
- * @readonly
- * @parameter {string} [ActiveId]
- * @parameter {string} [ActiveName]
- */
-
 //TODO : vérifier si enum defini
 
 /**
  * Define the 3 references types
  *
+ * @readonly
  * @enum {string}
  */
 RefType = {
@@ -88,6 +102,7 @@ RefType = {
 /**
  * string or JSON
  *
+ * @readonly
  * @enum {string}
  */
 
@@ -96,6 +111,18 @@ StrOrJSON = {
   JSON: "JSON"
 };
 
+/**
+ * Jayuana data type
+ *
+ * @readonly
+ * @enum  {string}
+ */
+
+JDataType = {
+  EJSON: "EJSON",
+  code: "code",
+  file: "file"
+};
 
 
 

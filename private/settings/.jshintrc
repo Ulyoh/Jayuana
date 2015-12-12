@@ -169,6 +169,7 @@
     "utils"     : true,
     "RefType"   : true,
     "StrOrJSON" : true,
+    "JDataType" : true,
     "Ref"       : true,
     "NewRef"    : true,
     "DbIdOrDbName": true,
