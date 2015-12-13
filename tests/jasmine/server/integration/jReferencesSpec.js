@@ -100,7 +100,6 @@ describe("J.References",function(){
 
     it("should return a cleanRef by activeName", function () {
       var j2 = this.j2;
-      debugger;
       expect(J.References._rCleanRef({activeName: "j2", newRefName:"ref2"}))
         .toEqual({
           rRefName: "ref2",

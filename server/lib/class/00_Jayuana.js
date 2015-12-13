@@ -21,8 +21,6 @@
 
 //TODO: replace all 'J' by Jayuana
 
-//TODO: replace 'active' occurrences by 'loaded'
-
 J = (function () {
   "use strict";
   /**
@@ -499,17 +497,35 @@ J = (function () {
     utils.v("- jStart J._jAddOne( " + dbName + " )");
   };
 
+  //TODO: write test for this method (must work with holes in the array)
   J._jGetActiveBy = function (condition) {
     utils.v("+ jStart J._jGetActiveBy( " + EJSON.stringify(condition) + " ), " +
       "J._jActivated.length: " + J._jActivated.length + "/n J._jActivated: " +
       EJSON.stringify(J._jActivated));
-    var index = __.findIndex(J._jActivated, function (value) {
-      var pattern = Match.ObjectIncluding(condition);
-      return Match.test(value, pattern);
-    });
+
+    var index = -1;
+    var cp = Object.getOwnPropertyNames(condition); //cp: conditionsProperties
+    var activeJ;
+
+    for(var i = J._jActivated.length - 1; i >= 0 ; i--){
+      activeJ = J._jActivated[i];
+      for(var j = cp.length - 1; j >= 0 ; j--){
+        if(activeJ[cp[j]] !== condition[cp[j]]) {
+          break;
+        }
+        if(j === 0){
+          index = i;
+        }
+      }
+      if(index !== -1){
+        break;
+      }
+    }
+
     if (index === -1) {
       throw new J.Error("J._jGetActiveBy", "index not found, index: " + index);
     }
+
     utils.v("+ end J._jGetActiveBy( " + EJSON.stringify(condition) +
       " ), index: " + index);
     return J._jActivated[index];

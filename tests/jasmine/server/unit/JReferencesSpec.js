@@ -3,9 +3,55 @@ var self;
 
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 5000;
 
-var Jtest1 = {fake: "Jayuana1", _jActiveId: 11};
-var Jtest2 = {fake: "Jayuana2", _jActiveId: 12};
-var Jtest3 = {fake: "Jayuana3", _jActiveId: 13};
+//create fakes Jayuana elts:
+var fakeJayuana = {
+  jGetActiveId: function () {
+    return this._jActiveId;
+  },
+  jGetActiveName: function () {
+    return this._jActiveName;
+  },
+  jGetDbId: function () {
+    return this._jDbId;
+  },
+  jGetDbName: function () {
+    return this._jDbName;
+  }
+};
+
+var Jtest0 = {
+  _jActiveId: 10,
+  _jActiveName: "j0",
+  _jDbId: 0,
+  _jDbName: "db0"
+};
+var Jtest1 = {
+  _jActiveId: 11,
+  _jActiveName: "j1",
+  _jDbId: 1,
+  _jDbName: "db1"
+};
+var Jtest2 = {
+  _jActiveId: 12,
+  _jActiveName: "j2",
+  _jDbId: 2,
+  _jDbName: "db2"
+};
+var Jtest3 = {
+  _jActiveId: 13,
+  _jActiveName: "j3",
+  _jDbId: 3,
+  _jDbName: "db3"
+};
+__.extend(Jtest0,fakeJayuana);
+__.extend(Jtest1,fakeJayuana);
+__.extend(Jtest2,fakeJayuana);
+__.extend(Jtest3,fakeJayuana);
+
+J._jActivated[10]=Jtest0;
+J._jActivated[11]=Jtest1;
+J._jActivated[12]=Jtest2;
+J._jActivated[13]=Jtest3;
 
 //TODO: stub for J._jActivated[ref.activeId]
 //TODO: stub for that :
@@ -84,15 +130,18 @@ describe("J.References", function () {
         spyOn(Match, "test").and.callFake(function (value, pattern) {
           return pattern !== Array;
         });
-        
+
         new J.References({newRefName: "rRefName", activeId: 11},
           function () {
             self = this;
             expect(self._rList[0]).toEqual({
               rRefName: "rRefName",
+              _rActiveId: 11,
+              rActiveName: 'j1',
+              rDbId: 1,
+              rDbName: 'db1',
               rActiveElt: Jtest1,
-              _rRefId: 0,
-              _rActiveId: 11});
+              _rRefId: 0});
             utils.v("- Ref.constr.rAdd add ref to ref list");
             done();
         });
@@ -106,27 +155,37 @@ describe("J.References", function () {
           spyOn(Match, "test").and.returnValue(true);
 
           var refsList = [
-            {newRefName: "name1", newActiveElt: Jtest1, somethingElse: "thing"},
-            {newRefName: "name2", newActiveElt: Jtest2},
-            {newRefName: "name3", newActiveElt: Jtest3}
+            {newRefName: "name1", activeId: 11, somethingElse: "thing"},
+            {newRefName: "name2", activeId: 12},
+            {newRefName: "name3", activeName: "j3"}
           ];
+          C.DEBUGGER = 1;
           new J.References(refsList, function () {
             self = this;
             expect(self._rList[0]).toEqual({
-              rActiveElt: Jtest1, 
               rRefName: "name1",
-              _rRefId: 0, 
-              _rActiveId: 11});
+              _rActiveId: 11,
+              rActiveName: 'j1',
+              rDbId: 1,
+              rDbName: 'db1',
+              rActiveElt: Jtest1,
+              _rRefId: 0});
             expect(self._rList[1]).toEqual({
-              rActiveElt: Jtest2, 
               rRefName: "name2",
-              _rRefId: 1, 
-              _rActiveId: 12});
+              _rActiveId: 12,
+              rActiveName: 'j2',
+              rDbId: 2,
+              rDbName: 'db2',
+              rActiveElt: Jtest2,
+              _rRefId: 1});
             expect(self._rList[2]).toEqual({
-              rActiveElt: Jtest3, 
               rRefName: "name3",
-              _rRefId: 2, 
-              _rActiveId: 13});
+              _rActiveId: 13,
+              rActiveName: 'j3',
+              rDbId: 3,
+              rDbName: 'db3',
+              rActiveElt: Jtest3,
+              _rRefId: 2});
             utils.v("- Ref.constr.rAdd add ref array to ref list");
             done();
           });
