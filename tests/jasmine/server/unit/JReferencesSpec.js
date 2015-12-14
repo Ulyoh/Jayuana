@@ -53,6 +53,36 @@ J._jActivated[11]=Jtest1;
 J._jActivated[12]=Jtest2;
 J._jActivated[13]=Jtest3;
 
+var ref1result = {
+  rRefName: "name1",
+  _rActiveId: 11,
+  rActiveName: 'j1',
+  rDbId: 1,
+  rDbName: 'db1',
+  rActiveElt: Jtest1,
+  _rRefId: 0};
+var ref2result = {
+  rRefName: "name2",
+  _rActiveId: 12,
+  rActiveName: 'j2',
+  rDbId: 2,
+  rDbName: 'db2',
+  rActiveElt: Jtest2,
+  _rRefId: 1};
+var ref3result = {
+  rRefName: "name3",
+  _rActiveId: 13,
+  rActiveName: 'j3',
+  rDbId: 3,
+  rDbName: 'db3',
+  rActiveElt: Jtest3,
+  _rRefId: 2};
+
+var refsList = [
+  {newRefName: "name1", activeId: 11, somethingElse: "thing"},
+  {newRefName: "name2", activeId: 12},
+  {newRefName: "name3", activeName: "j3"}
+];
 //TODO: stub for J._jActivated[ref.activeId]
 //TODO: stub for that :
 /*      rRefName: ref.newRefName || elt.jGetActiveName(),
@@ -122,9 +152,6 @@ describe("J.References", function () {
       });
 
       it("should add a reference to the reference list", function (done) {
-
-        C.VERBOSE = true;
-
         utils.v("+ Ref.constr.rAdd add ref to ref list");
         self = this;
         spyOn(Match, "test").and.callFake(function (value, pattern) {
@@ -154,12 +181,6 @@ describe("J.References", function () {
           self = this;
           spyOn(Match, "test").and.returnValue(true);
 
-          var refsList = [
-            {newRefName: "name1", activeId: 11, somethingElse: "thing"},
-            {newRefName: "name2", activeId: 12},
-            {newRefName: "name3", activeName: "j3"}
-          ];
-          C.DEBUGGER = 1;
           new J.References(refsList, function () {
             self = this;
             expect(self._rList[0]).toEqual({
@@ -196,19 +217,12 @@ describe("J.References", function () {
 
   });
 
-  C.VERBOSE = false;
-
-  xdescribe("rRemoveByActiveId", function () {
+  describe("rRemoveByActiveId", function () {
     beforeEach(function (done) {
       self = this;
       spyOn(Match, "test").and.callFake(function (value) {
         return !value.noId;
       });
-      var refsList = [
-        {newRefName: "name1", newActiveElt: Jtest1},
-        {newRefName: "name2", newActiveElt: Jtest2},
-        {newRefName: "name3", newActiveElt: Jtest3}
-      ];
       self.testRefs = new J.References(refsList, function () {
         done();
       });
@@ -224,32 +238,20 @@ describe("J.References", function () {
           reason: "method rRemoveByActiveId: activeId argument is not a string",
           details: 'stub stack'
         });
-        expect(self.testRefs._rList[0]).toEqual(
-          {rActiveElt: Jtest1, rRefName: "name1", _rRefId: 0, _rActiveId: 11});
-        expect(self.testRefs._rList[1]).toEqual(
-          {rActiveElt: Jtest2, rRefName: "name2", _rRefId: 1, _rActiveId: 12});
-        expect(self.testRefs._rList[2]).toEqual(
-          {rActiveElt: Jtest3, rRefName: "name3", _rRefId: 2, _rActiveId: 13});
+        expect(self.testRefs._rList[0]).toEqual(ref1result);
+        expect(self.testRefs._rList[1]).toEqual(ref2result);
+        expect(self.testRefs._rList[2]).toEqual(ref3result);
         done();
       });
 
-    it("should throw an Error if activeId is not found",
+    it("should return false if activeId is not found",
       function (done) {
         self = this;
         spyOn(self.testRefs, "_rGetIndexByActiveId").and.returnValue(-1);
-        expect(function () {
-          self.testRefs.rRemoveByActiveId("noId");
-        }).toThrow({
-          Error: 'References',
-          reason: "method rRemoveByActiveId: activeId not found",
-          details: 'stub stack'
-        });
-        expect(self.testRefs._rList[0]).toEqual(
-          {rActiveElt: Jtest1, rRefName: "name1", _rRefId: 0, _rActiveId: 11});
-        expect(self.testRefs._rList[1]).toEqual(
-          {rActiveElt: Jtest2, rRefName: "name2", _rRefId: 1, _rActiveId: 12});
-        expect(self.testRefs._rList[2]).toEqual(
-          {rActiveElt: Jtest3, rRefName: "name3", _rRefId: 2, _rActiveId: 13});
+        expect(self.testRefs.rRemoveByActiveId("noId")).toBeFalsy();
+        expect(self.testRefs._rList[0]).toEqual(ref1result);
+        expect(self.testRefs._rList[1]).toEqual(ref2result);
+        expect(self.testRefs._rList[2]).toEqual(ref3result);
         done();
       });
 
@@ -257,28 +259,21 @@ describe("J.References", function () {
       function (done) {
         self = this;
         spyOn(self.testRefs, "_rGetIndexByActiveId").and.returnValue(1);
-        self.testRefs.rRemoveByActiveId(12);
-
-        expect(self.testRefs._rList[0]).toEqual(
-          {rActiveElt: Jtest1, rRefName: "name1", _rRefId: 0, _rActiveId: 11});
+        expect(self.testRefs.rRemoveByActiveId(12)).toBeTruthy();
+        expect(self.testRefs._rList[0]).toEqual(ref1result);
         expect(self.testRefs._rList[1]).toBeUndefined();
-        expect(self.testRefs._rList[2]).toEqual(
-          {rActiveElt: Jtest3, rRefName: "name3", _rRefId: 2, _rActiveId: 13});
+        expect(self.testRefs._rList[2]).toEqual(ref3result);
         done();
       });
   });
 
-  xdescribe("rRemoveByRefName", function () {
+  describe("rRemoveByRefName", function () {
     beforeEach(function (done) {
       self = this;
       spyOn(Match, "test").and.callFake(function (value) {
         return !value.obj;
       });
-      var refsList = [
-        {newRefName: "name1", newActiveElt: Jtest1},
-        {newRefName: "name2", newActiveElt: Jtest2},
-        {newRefName: "name3", newActiveElt: Jtest3}
-      ];
+
       self.testRefs = new J.References(refsList, function () {
         spyOn(self.testRefs, "_rGetIndexByRefName").and
           .callFake(function (refName) {
@@ -308,56 +303,40 @@ describe("J.References", function () {
           reason: "method rRemoveByRefName: argument is not a string",
           details: 'stub stack'
         });
-        expect(self.testRefs._rList[0]).toEqual(
-          {rActiveElt: Jtest1, rRefName: "name1", _rRefId: 0, _rActiveId: 11});
-        expect(self.testRefs._rList[1]).toEqual(
-          {rActiveElt: Jtest2, rRefName: "name2", _rRefId: 1, _rActiveId: 12});
-        expect(self.testRefs._rList[2]).toEqual(
-          {rActiveElt: Jtest3, rRefName: "name3", _rRefId: 2, _rActiveId: 13});
+        expect(self.testRefs._rList[0]).toEqual(ref1result);
+        expect(self.testRefs._rList[1]).toEqual(ref2result);
+        expect(self.testRefs._rList[2]).toEqual(ref3result);
         done();
       });
 
-    it("should throw an Error if the refName is not found", function (done) {
+    it("should return false if the refName is not found", function (done) {
       self = this;
-      expect(function () {
-        self.testRefs.rRemoveByRefName("unknown");
-      }).toThrow({
-        Error: 'References',
-        reason: "method rRemoveByRefName: refName not found",
-        details: 'stub stack'
-      });
-      expect(self.testRefs._rList[0]).toEqual(
-        {rActiveElt: Jtest1, rRefName: "name1", _rRefId: 0, _rActiveId: 11});
-      expect(self.testRefs._rList[1]).toEqual(
-        {rActiveElt: Jtest2, rRefName: "name2", _rRefId: 1, _rActiveId: 12});
-      expect(self.testRefs._rList[2]).toEqual(
-        {rActiveElt: Jtest3, rRefName: "name3", _rRefId: 2, _rActiveId: 13});
+      expect(self.testRefs.rRemoveByRefName("unknown"))
+        .toBeFalsy();
+      expect(self.testRefs._rList[0]).toEqual(ref1result);
+      expect(self.testRefs._rList[1]).toEqual(ref2result);
+      expect(self.testRefs._rList[2]).toEqual(ref3result);
       done();
     });
 
     it("should remove the reference", function (done) {
       self = this;
-      self.testRefs.rRemoveByRefName("name2");
-      expect(self.testRefs._rList[0]).toEqual(
-        {rActiveElt: Jtest1, rRefName: "name1", _rRefId: 0, _rActiveId: 11});
+      expect(self.testRefs.rRemoveByRefName("name2"))
+        .toBeTruthy();
+      expect(self.testRefs._rList[0]).toEqual(ref1result);
       expect(self.testRefs._rList[1]).toBeUndefined();
-      expect(self.testRefs._rList[2]).toEqual(
-        {rActiveElt: Jtest3, rRefName: "name3", _rRefId: 2, _rActiveId: 13});
+      expect(self.testRefs._rList[2]).toEqual(ref3result);
       done();
     });
   });
 
-  xdescribe("rGetActiveIdByRefName", function () {
+  describe("rGetActiveIdByRefName", function () {
     beforeEach(function (done) {
       self = this;
       spyOn(Match, "test").and.callFake(function (value) {
         return !value.noName;
       });
-      var refsList = [
-        {newRefName: "name1", newActiveElt: Jtest1},
-        {newRefName: "name2", newActiveElt: Jtest2},
-        {newRefName: "name3", newActiveElt: Jtest3}
-      ];
+
       self.testRefs = new J.References(refsList, function () {
         spyOn(self.testRefs, "_rGetIndexByRefName").and
           .callFake(function (refName) {
@@ -389,15 +368,9 @@ describe("J.References", function () {
         done();
       });
 
-    it("should throw an Error if the activeId is not found", function (done) {
+    it("should return null if the activeId is not found", function (done) {
       self = this;
-      expect(function () {
-        self.testRefs.rGetActiveIdByRefName("unknown");
-      }).toThrow({
-        Error: 'References',
-        reason: "method rGetActiveIdByRefName: refName not found",
-        details: 'stub stack'
-      });
+      expect(self.testRefs.rGetActiveIdByRefName("unknown")).toBeNull();
       done();
     });
 
@@ -410,17 +383,13 @@ describe("J.References", function () {
     });
   });
 
-  xdescribe("rGetRefNameByActiveId", function () {
+  describe("rGetRefNameByActiveId", function () {
     beforeEach(function (done) {
       self = this;
       spyOn(Match, "test").and.callFake(function (value) {
         return !value.noId;
       });
-      var refsList = [
-        {newRefName: "name1", newActiveElt: Jtest1},
-        {newRefName: "name2", newActiveElt: Jtest2},
-        {newRefName: "name3", newActiveElt: Jtest3}
-      ];
+
       self.testRefs = new J.References(refsList, function () {
         spyOn(self.testRefs, "_rGetIndexByActiveId").
           and.callFake(function (activeId) {
@@ -452,15 +421,9 @@ describe("J.References", function () {
         done();
       });
 
-    it("should throw an Error if the activeId is not found", function (done) {
+    it("should return null if the activeId is not found", function (done) {
       self = this;
-      expect(function () {
-        self.testRefs.rGetRefNameByActiveId("unknown");
-      }).toThrow({
-        Error: 'References',
-        reason: "method rGetRefNameByActiveId: activeId not found",
-        details: 'stub stack'
-      });
+      expect(self.testRefs.rGetRefNameByActiveId("unknown")).toBeNull();
       done();
     });
 
@@ -473,17 +436,13 @@ describe("J.References", function () {
     });
   });
 
-  xdescribe("rIsRefNameIn", function () {
+  describe("rIsRefNameIn", function () {
     beforeEach(function (done) {
       self = this;
       spyOn(Match, "test").and.callFake(function (value) {
         return !value.noId;
       });
-      var refsList = [
-        {newRefName: "name1", newActiveElt: Jtest1},
-        {newRefName: "name2", newActiveElt: Jtest2},
-        {newRefName: "name3", newActiveElt: Jtest3}
-      ];
+
       self.testRefs = new J.References(refsList);
       spyOn(self.testRefs, "_rGetIndexByRefName")
         .and.callFake(function (refName) {
@@ -514,17 +473,13 @@ describe("J.References", function () {
     });
   });
 
-  xdescribe("rIsActiveIdIn", function () {
+  describe("rIsActiveIdIn", function () {
     beforeEach(function (done) {
       self = this;
       spyOn(Match, "test").and.callFake(function (value) {
         return !value.noId;
       });
-      var refsList = [
-        {newRefName: "name1", newActiveElt: Jtest1},
-        {newRefName: "name2", newActiveElt: Jtest2},
-        {newRefName: "name3", newActiveElt: Jtest3}
-      ];
+
       self.testRefs = new J.References(refsList);
       spyOn(self.testRefs, "_rGetIndexByActiveId")
         .and.callFake(function (activeId) {
@@ -555,18 +510,14 @@ describe("J.References", function () {
     });
   });
 
-  xdescribe("_rGetIndexByActiveId", function () {
+  describe("_rGetIndexByActiveId", function () {
     beforeEach(function (done) {
       self = this;
       spyOn(Match, "test").and.callFake(function (value) {
         return !value.noId;
       });
       spyOn(_, "indexOf").and.callThrough();
-      var refsList = [
-        {newRefName: "name1", newActiveElt: Jtest1},
-        {newRefName: "name2", newActiveElt: Jtest2},
-        {newRefName: "name3", newActiveElt: Jtest3}
-      ];
+
       self.testRefs = new J.References(refsList, function () {
         done();
       });
@@ -588,17 +539,13 @@ describe("J.References", function () {
       });
   });
 
-  xdescribe("_rGetIndexByRefName", function () {
+  describe("_rGetIndexByRefName", function () {
     beforeEach(function (done) {
       self = this;
       spyOn(Match, "test").and.callFake(function (value) {
         return !value.noId;
       });
-      var refsList = [
-        {newRefName: "name1", newActiveElt: Jtest1},
-        {newRefName: "name2", newActiveElt: Jtest2},
-        {newRefName: "name3", newActiveElt: Jtest3}
-      ];
+
       self.testRefs = new J.References(refsList, function () {
         done();
       });
