@@ -55,7 +55,7 @@ J.References = (function () {
    * Add a reference
    *
    * @param {Array.<newJRefForActiveJ> | newJRefForActiveJ } refArrayOrOne
-   * @param {callback} callback
+   * @param {callback} [callback]
    * @return {boolean}
    */
   References.prototype.rAdd = function (refArrayOrOne, callback) {
@@ -261,6 +261,9 @@ J.References = (function () {
    * @returns {boolean}
    * @static
    */
+
+  //todo: make a test of this function after meteor update
+  //todo: Match.ObjectIncluding is not available in this current meteor version
   References.rPatternOneRef = function (oneRef) {
     /*return (Match.test(oneRef, Object) && oneRef.rRefName &&
      oneRef.refActiveId && Match.test(oneRef.rRefName, String) &&
@@ -270,6 +273,7 @@ J.References = (function () {
         rActiveElt: J,
         _rRefId: Number,
         _rActiveId: String}));
+
   };
 
   References.rPatternArg = function (arrayOrOneRef) {
@@ -283,7 +287,7 @@ J.References = (function () {
   /**#@+
    * @private
    */
-  //TODO: create specifics test for cleanRef
+
   /**
    *
    * @param {Object} ref
