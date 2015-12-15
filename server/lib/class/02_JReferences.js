@@ -289,7 +289,7 @@ J.References = (function () {
    */
 
   /**
-   *
+   * It s the same parameter as {newJRefForActiveJ}
    * @param {Object} ref
    * @param {number} [ref.activeId]
    * @param {activeName} [ref.activeName]

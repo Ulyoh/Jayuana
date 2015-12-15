@@ -46,7 +46,17 @@ C = {  // jshint ignore:line
  * @property {DbIdOrDbName} JInDb
  */
 
-
+/**
+ * new info to create a new Reference
+ *
+ * @typedef {Object} newJRefForActiveJ
+ *
+ * @property {number} [activeId]
+ * @property {activeName} [activeName]
+ * @property {string} [newRefName]
+ *
+ * activeId or activeName must be given
+ */
 
 /**
  * reference created to an active Jayuana
@@ -61,20 +71,6 @@ C = {  // jshint ignore:line
  * @property  {string} rDbName
  * @property  {J} rActiveElt
  */
-
-/** @type  {cleanJRef} */
-var testCleanJRef = {
-  rRefName: 1, //should have a warning here
-  rActiveId: "0",
-  rActiveName: "Name",
-  rDbId: "0",
-  rDbName: "nom",
-  rActiveElt: "new Object()", //should have a warning here
-  incorrectProp: "false" //should have a warning here
-};
-
-
-testCleanJRef._rActiveId = 88;
 
 /**
  * DbId or DbName
