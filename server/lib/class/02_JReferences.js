@@ -26,8 +26,6 @@ J.References = (function () {
     }
 
     var self = this;
-    var refArray = [];
-    var cleanRefs = [];
 
     self.objType = "J.References";
 
@@ -46,22 +44,7 @@ J.References = (function () {
     self.rNextRefId = 0;  //TODO: create tests of refId
 
     if (refArrayOrOne !== null) {
-      //TODO: rAdd should be used here, no?
-      if (!Match.test(refArrayOrOne, Array)) {
-        refArray[0] = refArrayOrOne;
-      }
-      else {
-        refArray = refArrayOrOne;
-      }
-
-      utils.v("refArray:" + EJSON.stringify(refArray));
-
-      refArray.forEach(function (element) {
-        cleanRefs.push(References._rCleanRef(element));
-      });
-
-      self._rStackRefsToAdd.push({refs: cleanRefs, callback: callback});
-      self._rStackTreatment();
+      self.rAdd(refArrayOrOne, callback);
     }
   };
 
@@ -70,23 +53,33 @@ J.References = (function () {
    */
   /**
    * Add a reference
-   * return true if success
    *
-   * @param {newJRefForActiveJ} ref
+   * @param {Array.<newJRefForActiveJ> | newJRefForActiveJ } refArrayOrOne
    * @param {callback} callback
    * @return {boolean}
    */
-  References.prototype.rAdd = function (ref, callback) {
+  References.prototype.rAdd = function (refArrayOrOne, callback) {
     utils.v(" + start rAdd");
     var self = this;
     var cleanRefs = [];
+    var refArray = [];
 
-    cleanRefs[0] = References._rCleanRef(ref);
+    if (!Match.test(refArrayOrOne, Array)) {
+      refArray[0] = refArrayOrOne;
+    }
+    else {
+      refArray = refArrayOrOne;
+    }
 
-    self._rStackRefsToAdd.push({ref: cleanRefs, callback: callback});
+    utils.v("refArray:" + EJSON.stringify(refArray));
+
+    refArray.forEach(function (element) {
+      cleanRefs.push(References._rCleanRef(element));
+    });
+
+    self._rStackRefsToAdd.push({refs: cleanRefs, callback: callback});
     self._rStackTreatment();
     utils.v(" - end rAdd");
-    return true;
   };
 
   /**
