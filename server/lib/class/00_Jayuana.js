@@ -23,15 +23,22 @@
 
 J = (function () {
   "use strict";
+
+  /**
+   * @callback JCallback
+   */
+
   /**
    * @param {Object} options  one of the three next possibilities is necessary
    * @param {string} [options.dbId]
    * @param {string} [options.dbName]
    * @param {boolean} [options.jStart]
-   * @param {callback} [callback]
+   * @param {string} [options.activeName] //todo: create test for this option
+   * @param {JCallback} [callback]
    * @constructor
    *
    */
+
   var J = function (options, callback) {
     utils.v("+ J with options: " + EJSON.stringify(options));
     var self = this;
@@ -48,7 +55,7 @@ J = (function () {
           }
           else {
             utils.v("   first element to run: " + EJSON.stringify(element));
-            J._JCreateJayuanaObj.call(self, element);
+            J._JCreateJayuanaObj.call(self, element, options.activeName);
             J._jStarter = self;
             J._jStarter.jRun();
             //callback(self);
@@ -63,7 +70,7 @@ J = (function () {
           //TODO
         }
         else {
-          J._JCreateJayuanaObj.call(self, element);
+          J._JCreateJayuanaObj.call(self, element, options.activeName);
           callback(self);
         }
       };
@@ -88,12 +95,17 @@ J = (function () {
 
   /**
    *
-   * @param element
+   * @param
+   * @param {string} [activeName]
    * @static
    * @private
    */
-  J._JCreateJayuanaObj = function (element) {
+  J._JCreateJayuanaObj = function (element, activeName) {
     var self = this;
+
+    if (!activeName){
+      activeName = element.dbName; //todo: verify if this activeName exists
+    }
     if (self instanceof J) {
 
       self.objType = "Jayuana";
@@ -120,6 +132,7 @@ J = (function () {
       self._jDbId = element.dbId;
       self._jDbName = element.dbName;
       self._jActiveId = -1;
+      self._activeName = activeName;
       self._jRefsFrom = new J.References(element.refsFrom);
       self._jRefsTo = new J.References(element.refsTo);
       eval("element.obj =" + element.objToEval);  //jshint ignore: line
