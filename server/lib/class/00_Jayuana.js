@@ -95,13 +95,14 @@ J = (function () {
 
   /**
    *
-   * @param
+   * @param {JFromDb} element
    * @param {string} [activeName]
    * @static
    * @private
    */
   J._JCreateJayuanaObj = function (element, activeName) {
     var self = this;
+    var obj = {};
 
     if (!activeName){
       activeName = element.dbName; //todo: verify if this activeName exists
@@ -116,11 +117,11 @@ J = (function () {
 
       utils.v("+ jStart create new instance of J, dbName :" + element.dbName);
 
-      if (!element.refsFrom) {
-        element.refsFrom = null;
+      if (!element.JInitRefFrom) {
+        element.JInitRefFrom = null;
       }
-      if (!element.refsTo) {
-        element.refsTo = null;
+      if (!element.JInitRefTo) {
+        element.JInitRefTo = null;
       }
 
       //J[element.dbId] = self;
@@ -133,10 +134,22 @@ J = (function () {
       self._jDbName = element.dbName;
       self._jActiveId = -1;
       self._activeName = activeName;
-      self._jRefsFrom = new J.References(element.refsFrom);
-      self._jRefsTo = new J.References(element.refsTo);
-      eval("element.obj =" + element.objToEval);  //jshint ignore: line
-      self._jObj = element.obj;
+      //todo: soit un activeName est donné soit l'element doit etre créé
+      //todo: si l'elt doit être créé, un cb est utilisé pour le créé
+      //todo: et seulement ensuite la Reference correspondante est créé
+      //todo: si l'activeName n'existe pas, une liste d'attente de référence
+      //todo: répertorie les activeName attendu. A chaque nouvelle création
+      //todo: d'un Jayuana, la liste d'attente est consulté.
+      //todo: un défaut apparait si la liste d'attente n'est pas vide alors
+      //todo: que aucun nouveau Jayuana est en cours de création.
+
+      self._jRefsFrom = new J.References(element.JInitRefFrom);
+      //todo pour chaque reference, il faut créer un jayuana
+      self._jRefsTo = new J.References(element.JInitRefTo);
+      eval("obj =" + element.objToEval);  //jshint ignore: line
+      self._jObj = obj;
+
+
 
       J._jActivate(self);
       utils.v("+ end create new instance of J, dbName :" + element.dbName);
@@ -304,13 +317,16 @@ J = (function () {
   };
 
   //TODO: create test for this method:
-  J.jGetActiveByActiveName = function (activeName) {
-    return J._jGetActiveBy({_jActiveName: activeName});
+  J.jGetActiveByActiveName = function (activeName, returnNullifNotFound) {
+    return J._jGetActiveBy({_jActiveName: activeName}, returnNullifNotFound);
   };
 
   //TODO: create test for this method:
-  J.jGetActiveByActiveId = function (activeId) {
+  J.jGetActiveByActiveId = function (activeId, returnNullifNotFound) {
     if (!J._jActivated[activeId]) {
+      if (returnNullifNotFound){
+        return null;
+      }
       throw new J.Error("J.jGetActiveByActiveId",
         "not active Jayuana with this activeId");
     }
@@ -319,14 +335,14 @@ J = (function () {
 
   //TODO: create test for this method:
   //TODO: should return an array:
-  J.jGetActiveByDbId = function (dbId) {
-    J._jGetActiveBy({_jdbId: dbId});
+  J.jGetActiveByDbId = function (dbId, returnNullifNotFound) {
+    J._jGetActiveBy({_jdbId: dbId}, returnNullifNotFound);
   };
 
   //TODO: create test for this method:
   //TODO: should return an array:
-  J.jGetActiveByDbName = function (dbName) {
-    J._jGetActiveBy({_jDbName: dbName});
+  J.jGetActiveByDbName = function (dbName, returnNullifNotFound) {
+    J._jGetActiveBy({_jDbName: dbName}, returnNullifNotFound);
   };
 
   J.jStart = function () {
@@ -344,6 +360,9 @@ J = (function () {
     utils.addStackToArray(J, J._jActivated, J._jStackJayuanasToAdd,
       "_jActiveId",
       function () {
+        if (J.jGetActiveByActiveName(newValue.activeName)){
+          throw new J.Error("J._jActivate", "activeName already exists");
+        }
         return J._jNextJActiveId++;
       });
   });
@@ -511,7 +530,7 @@ J = (function () {
   };
 
   //TODO: write test for this method (must work with holes in the array)
-  J._jGetActiveBy = function (condition) {
+  J._jGetActiveBy = function (condition, returnNullifNotFound) {
     utils.v("+ jStart J._jGetActiveBy( " + EJSON.stringify(condition) + " ), " +
       "J._jActivated.length: " + J._jActivated.length + "/n J._jActivated: " +
       EJSON.stringify(J._jActivated));
@@ -536,6 +555,9 @@ J = (function () {
     }
 
     if (index === -1) {
+      if (returnNullifNotFound){
+        return null;
+      }
       throw new J.Error("J._jGetActiveBy", "index not found, index: " + index);
     }
 

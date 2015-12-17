@@ -29,12 +29,10 @@ C = {  // jshint ignore:line
  *
  * @property {string} dbId
  * @property {string} dbName
- * @property {JDataType} JDataType
+ * @property {string} objToEval
  * @property {boolean} jStart
- * @property {boolean} available
- * @property {Array.<JRefForDb>} [JInitRefInput]
- * @property {Array.<JRefForDb>} [JInitRefOutput]
- * @property {string} path
+ * @property {Array.<JRefForDb>} [JInitRefFrom]
+ * @property {Array.<JRefForDb>} [JInitRefTo]
  */
 
 /**
@@ -43,7 +41,11 @@ C = {  // jshint ignore:line
  * @typedef {Object} JRefForDb
  *
  * @property {string} [newRefName]
- * @property {DbIdOrDbName} JInDb
+ * @property {string} [dbId]
+ * @property {string} [dbName]
+ * @property {string} [activeName]
+ *
+ * dbId, dbName or activeName is necessary
  */
 
 /**
