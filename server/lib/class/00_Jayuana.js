@@ -55,10 +55,12 @@ J = (function () {
           }
           else {
             utils.v("   first element to run: " + EJSON.stringify(element));
-            J._JCreateJayuanaObj.call(self, element, options.activeName);
+            J._JCreateJayuanaObj.call(self, element, {
+                activeName: options.activeName,
+                callback: callback
+              });
             J._jStarter = self;
             J._jStarter.jRun();
-            //callback(self);
             utils.v("- end J.jStart()");
           }
         });
@@ -70,8 +72,10 @@ J = (function () {
           //TODO
         }
         else {
-          J._JCreateJayuanaObj.call(self, element, options.activeName);
-          callback(self);
+          J._JCreateJayuanaObj.call(self, element, {
+            activeName: options.activeName,
+            callback: callback
+        });
         }
       };
 
@@ -94,17 +98,24 @@ J = (function () {
   };
 
   /**
+   *@callback cbCreateJObj
    *
    * @param {JFromDb} element
-   * @param {string} [activeName]
+   * @param {Object} [options]
+   * @param {string} [options.activeName]
+   * @param {cbCreateJObj} [options.callback]
    * @static
    * @private
    */
-  J._JCreateJayuanaObj = function (element, activeName) {
+  J._JCreateJayuanaObj = function (element, options) {
     var self = this;
     var obj = {};
+    var activeName, callback;
 
-    if (!activeName){
+    if (options && options.callback){
+      callback = options.callback;
+    }
+    if (!options || !options.activeName){
       activeName = element.dbName; //todo: verify if this activeName exists
     }
     if (self instanceof J) {
@@ -134,6 +145,7 @@ J = (function () {
       self._jDbName = element.dbName;
       self._jActiveId = -1;
       self._activeName = activeName;
+      self._allRefsActivated = false;
       //todo: soit un activeName est donné soit l'element doit etre créé
       //todo: si l'elt doit être créé, un cb est utilisé pour le créé
       //todo: et seulement ensuite la Reference correspondante est créé
@@ -150,7 +162,10 @@ J = (function () {
       self._jObj = obj;
 
 
-
+      J._jStackJayuanasToAdd.push({
+        valueToAdd: self,
+        callback: callback
+      });
       J._jActivate(self);
       utils.v("+ end create new instance of J, dbName :" + element.dbName);
     }
@@ -356,15 +371,19 @@ J = (function () {
    */
 
   J._jActivate = __.debounce(function () {
-
+    debugger;
     utils.addStackToArray(J, J._jActivated, J._jStackJayuanasToAdd,
       "_jActiveId",
       function () {
-        if (J.jGetActiveByActiveName(newValue.activeName)){
+        return J._jNextJActiveId++;
+      },
+      function (newValue) {
+        debugger;
+        if (J.jGetActiveByActiveName(newValue.activeName, true)){
           throw new J.Error("J._jActivate", "activeName already exists");
         }
-        return J._jNextJActiveId++;
-      });
+      }
+    );
   });
 
   //TODO: write test for this method

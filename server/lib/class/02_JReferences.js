@@ -54,6 +54,8 @@ J.References = (function () {
   /**
    * Add a reference
    *
+   * If a callback is specify, it will be executed once for each reference added
+   *
    * @param {Array.<newJRefForActiveJ> | newJRefForActiveJ } refArrayOrOne
    * @param {callback} [callback]
    * @return {boolean}
@@ -61,8 +63,8 @@ J.References = (function () {
   References.prototype.rAdd = function (refArrayOrOne, callback) {
     utils.v(" + start rAdd");
     var self = this;
-    var cleanRefs = [];
     var refArray = [];
+    var length = 0;
 
     if (!Match.test(refArrayOrOne, Array)) {
       refArray[0] = refArrayOrOne;
@@ -73,11 +75,18 @@ J.References = (function () {
 
     utils.v("refArray:" + EJSON.stringify(refArray));
 
-    refArray.forEach(function (element) {
-      cleanRefs.push(References._rCleanRef(element));
+    length = refArray.length;
+    refArray.forEach(function (element, index) {
+      var cb = function () { };
+      if (index === length -1){
+        cb = callback;
+      }
+      self._rStackRefsToAdd.push({
+        valueToAdd: References._rCleanRef(element),
+        callback: cb});
     });
 
-    self._rStackRefsToAdd.push({refs: cleanRefs, callback: callback});
+
     self._rStackTreatment();
     utils.v(" - end rAdd");
   };

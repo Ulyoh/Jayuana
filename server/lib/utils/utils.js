@@ -34,30 +34,34 @@ utils = {
   },
 
   addStackToArray: function (thisObj, array, stack, idPropertyName,
-                             generateIdFunc) {
-    var newValues, newValue;
+                             generateIdFunc, previousGenerateFunc) {
+    var newElt;
     var callback;
     var id = -1;
 
-    while(newValues = stack[0]){
+    while( newElt = stack[0]){
       callback = null;
-
-      while( newValue = newValues.refs[0]){
-        id = generateIdFunc();
-        newValue[idPropertyName] = id;
-        array[id] = newValue; //TODO create test for refId
-        if (newValues.callback){
-          callback = newValues.callback.bind(thisObj);
-        }
-        newValues.refs.shift();
+      //newValues.refs[0]
+      if (previousGenerateFunc){
+        previousGenerateFunc(newElt.valueToAdd);
       }
 
+      id = generateIdFunc();
+      newElt.valueToAdd[idPropertyName] = id;
+      array[id] = newElt.valueToAdd;
+      //TODO create test for refId
+      if (newElt.callback){
+        callback = newElt.callback.bind(thisObj);
+      }
       if (callback){
         callback(); //to have the callback called just after the related ref are
         //added and before other are added;
       }
       stack.shift();
     }
+
+
+
   }
 };
 
