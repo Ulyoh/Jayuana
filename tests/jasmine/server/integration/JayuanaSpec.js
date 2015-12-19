@@ -88,7 +88,6 @@ describe("J", function () {
 
       it("should add an element in the db with related properties",
         function (done) {
-
         expect(J.db.findOne({_id: self.dbId }))
           .toEqual({
             _id: self.dbId,
@@ -178,8 +177,6 @@ describe("J", function () {
     xdescribe("should call the callback only once");
   });
 
-  
-
   describe("jGetPassiveByDbId", function () {
     it("should access to an element by its dbId", function (done) {
       var obj = "blabla"; //TODO: add test with different objects
@@ -188,7 +185,6 @@ describe("J", function () {
         dbName: "",
         type: "EJSON",
         jStart: false,
-        available: true,
         objToEval: EJSON.stringify(obj)
       };
       var eltDef = {
@@ -222,7 +218,6 @@ describe("J", function () {
         dbName: dbName,
         type: "EJSON",
         jStart: false,
-        available: true,
         objToEval: EJSON.stringify(obj)
       };
       var eltDef = {

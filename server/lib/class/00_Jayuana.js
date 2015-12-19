@@ -24,6 +24,7 @@
 J = (function () {
   "use strict";
 
+
   /**
    * @callback JCallback
    */
@@ -49,7 +50,8 @@ J = (function () {
       self._loaded = false;
 
       if (options.jStart && options.jStart === true){
-        J._jGetPassiveBy({jStart: true}, function (err, element) {
+        J._jGetPassiveBy({jStart: true},
+          function (err, element) {
           if (err) {
             throw err;
           }
@@ -99,7 +101,8 @@ J = (function () {
 
   /**
    *@callback cbCreateJObj
-   *
+   */
+  /**
    * @param {JFromDb} element
    * @param {Object} [options]
    * @param {string} [options.activeName]
@@ -316,14 +319,25 @@ J = (function () {
     }
     callbackOnce = _.after(eltsDef.length, callback);
     eltsDef.forEach(function (eltDef) {
-      J._jAddOne(eltDef, callbackOnce);
+      J._jAddOneInDb(eltDef, callbackOnce);
     });
   };
 
+  /**
+   *
+   * @param {string} dbId
+   * @param {cbGetPassive} callback
+   */
   //TODO: should return an array
   J.jGetPassiveByDbId = function (dbId, callback) {
     J._jGetPassiveBy({_id: dbId}, callback);
   };
+
+  /**
+   *
+   * @param {string} dbName
+   * @param {cbGetPassive} callback
+   */
 
   //TODO: should return an array
   J.jGetPassiveByDbName = function (dbName, callback) {
@@ -371,14 +385,12 @@ J = (function () {
    */
 
   J._jActivate = __.debounce(function () {
-    debugger;
     utils.addStackToArray(J, J._jActivated, J._jStackJayuanasToAdd,
       "_jActiveId",
       function () {
         return J._jNextJActiveId++;
       },
       function (newValue) {
-        debugger;
         if (J.jGetActiveByActiveName(newValue.activeName, true)){
           throw new J.Error("J._jActivate", "activeName already exists");
         }
@@ -459,11 +471,11 @@ J = (function () {
    * @param callback {function}
    * @private
    */
-  J._jAddOne = function (elementDef, callback) {
+  J._jAddOneInDb = function (elementDef, callback) {
     var objUnderTest, element, dbId, data, filePath;
     var obj = elementDef.obj, type = elementDef.type;
     var dbName = elementDef.dbName, jStart = elementDef.jStart;
-    utils.v("+ jStart J._jAddOne( " + dbName + " )");
+    utils.v("+ jStart J._jAddOneInDb( " + dbName + " )");
 
     function writeFileAndSetDb() {
       utils.v("+ writeFileAndSetDb " + dbName);
@@ -541,11 +553,9 @@ J = (function () {
         break;
     }
 
-    if (type !== "file") {
-      writeFileAndSetDb();
-    }
+    writeFileAndSetDb();
 
-    utils.v("- jStart J._jAddOne( " + dbName + " )");
+    utils.v("- jStart J._jAddOneInDb( " + dbName + " )");
   };
 
   //TODO: write test for this method (must work with holes in the array)
@@ -585,6 +595,18 @@ J = (function () {
     return J._jActivated[index];
   };
 
+  /**
+   * @callback cbGetPassive
+   * @param {Error}
+   * @param {JFromDb}
+   */
+  /**
+   *
+   * @param {Object} condition
+   * @param {cbGetPassive} callback
+   * @private
+   */
+
   J._jGetPassiveBy = function (condition, callback) {
     utils.v(" + J._jGetPassiveBy with condition: ", EJSON.stringify(condition));
     //var fs = Npm.require('fs');
@@ -592,12 +614,22 @@ J = (function () {
 
     utils.fs.readFile(element.path, {encoding: 'utf8'},
       function (err, data) {
+        var eltForConstructor;
         if (!err) {
-          element.objToEval = data;
-        }
-        if (callback) {
-          callback(err, element);
-          utils.v(" - J._jGetPassiveBy");
+          eltForConstructor = {
+            dbId: element._id,
+            dbName: element.dbName,
+            type: element.type,
+            objToEval: data,
+            jStart: element.jStart,
+            refFrom: element.refFrom,
+            refTo: element.refTo
+          };
+          if (callback) {
+            debugger;
+            callback(err, eltForConstructor);
+            utils.v(" - J._jGetPassiveBy");
+          }
         }
       });
   };

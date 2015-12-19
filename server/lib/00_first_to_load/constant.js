@@ -29,6 +29,7 @@ C = {  // jshint ignore:line
  *
  * @property {string} dbId
  * @property {string} dbName
+ * @property {JDataType} type
  * @property {string} objToEval
  * @property {boolean} jStart
  * @property {Array.<JRefForDb>} [JInitRefFrom]
