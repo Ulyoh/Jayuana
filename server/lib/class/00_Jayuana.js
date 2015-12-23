@@ -334,7 +334,14 @@ J = (function () {
 
   //TODO: create test for this method:
   J.jGetActiveByActiveName = function (activeName, returnNullifNotFound) {
-    return J._jGetActiveBy({_jActiveName: activeName}, returnNullifNotFound);
+    var result;
+    result =  J._jGetActiveBy({_jActiveName: activeName}, returnNullifNotFound);
+    if (result){
+      return result[0];
+    }
+    else {
+      return null;
+    }
   };
 
   //TODO: create test for this method:
@@ -350,13 +357,11 @@ J = (function () {
   };
 
   //TODO: create test for this method:
-  //TODO: should return an array:
   J.jGetActiveByDbId = function (dbId, returnNullifNotFound) {
     J._jGetActiveBy({_jdbId: dbId}, returnNullifNotFound);
   };
 
   //TODO: create test for this method:
-  //TODO: should return an array:
   J.jGetActiveByDbName = function (dbName, returnNullifNotFound) {
     J._jGetActiveBy({_jDbName: dbName}, returnNullifNotFound);
   };
@@ -461,11 +466,14 @@ J = (function () {
   J._jAddOneInDb = function (elementDef, callback) {
     var objUnderTest, element, dbId, data, filePath;
     var obj = elementDef.obj, type = elementDef.type;
-    var dbName = elementDef.dbName, jStart = elementDef.jStart;
-    utils.v("+ jStart J._jAddOneInDb( " + dbName + " )");
+    utils.v("+ jStart J._jAddOneInDb( " + elementDef.dbName + " )");
+
+    if ((type !== "EJSON") && (type !== "code") && (type !== "file")) {
+      throw new J.Error("J.jAddInDb", "type not defined correctly");
+    }
 
     function writeFileAndSetDb() {
-      utils.v("+ writeFileAndSetDb " + dbName);
+      utils.v("+ writeFileAndSetDb " + elementDef.dbName);
       if (objUnderTest === undefined) {
         throw new J.Error("J.jAddInDb", "undefined object");
       }
@@ -478,7 +486,7 @@ J = (function () {
       dbId = J.db.insert(element);
       filePath = J._rootPath + J._folderName + dbId;
       utils.fs.writeFile(filePath, data, Meteor.bindEnvironment(function (e) {
-        utils.v("+ jStart writeFile of " + dbName);
+        utils.v("+ jStart writeFile of " + elementDef.dbName);
         if (e) {
           J.db.remove(dbId);
           //TODO : should not throw an Error but pass the Error to
@@ -487,7 +495,7 @@ J = (function () {
           throw new J.Error("J.jAddInDb", "writeFile: " + e.message);
         }
         else {
-          utils.v("- end J.jAddInDb( " + dbName + " )");
+          utils.v("- end J.jAddInDb( " + elementDef.dbName + " )");
           J.db.update({_id: dbId}, {
             $set: {
               available: true,
@@ -500,23 +508,19 @@ J = (function () {
           }
 
         }
-        utils.v("- writeFileAndSetDb " + dbName);
+        utils.v("- writeFileAndSetDb " + elementDef.dbName);
       }));
     }
 
-    dbName = dbName || '';
-    jStart = jStart || false;
     element = {
-      dbName: dbName,
+      dbName: elementDef.dbName,
       type: type,
-      jStart: jStart,
+      jStart: elementDef.jStart,
+      newJInitRefInput: elementDef.newJInitRefInput,
+      newJInitRefOutput: elementDef.newJInitRefOutput,
       available: false,
       path: 'unknown'
     };
-
-    if ((type !== "EJSON") && (type !== "code") && (type !== "file")) {
-      throw new J.Error("J.jAddInDb", "type not defined correctly");
-    }
 
     switch (type) {
       case "EJSON":
@@ -542,35 +546,43 @@ J = (function () {
 
     writeFileAndSetDb();
 
-    utils.v("- jStart J._jAddOneInDb( " + dbName + " )");
+    utils.v("- jStart J._jAddOneInDb( " + elementDef.dbName + " )");
   };
 
   //TODO: write test for this method (must work with holes in the array)
+  //TODO: must return an array.
   J._jGetActiveBy = function (condition, returnNullifNotFound) {
     utils.v("+ jStart J._jGetActiveBy( " + EJSON.stringify(condition) + " ), " +
       "J._jActivated.length: " + J._jActivated.length + "/n J._jActivated: " +
       EJSON.stringify(J._jActivated));
 
     var index = -1;
+    var found = false;
     var cp = Object.getOwnPropertyNames(condition); //cp: conditionsProperties
-    var activeJ;
+    var currentActiveJ;
+    var result = [];
 
     for(var i = J._jActivated.length - 1; i >= 0 ; i--){
-      activeJ = J._jActivated[i];
-      for(var j = cp.length - 1; j >= 0 ; j--){
-        if(activeJ[cp[j]] !== condition[cp[j]]) {
-          break;
+      currentActiveJ = J._jActivated[i];
+      if (currentActiveJ){
+        for(var j = cp.length - 1; j >= 0 ; j--){
+          if(currentActiveJ[cp[j]] !== condition[cp[j]]) {
+            break;
+          }
+          if(j === 0){
+            index = i;
+          }
         }
-        if(j === 0){
-          index = i;
+        //if active J found
+        if(index !== -1){
+          result.push(J._jActivated[index]);
+          found = true;
         }
-      }
-      if(index !== -1){
-        break;
       }
     }
 
-    if (index === -1) {
+    //if none found
+    if (!found) {
       if (returnNullifNotFound){
         return null;
       }
@@ -579,7 +591,7 @@ J = (function () {
 
     utils.v("+ end J._jGetActiveBy( " + EJSON.stringify(condition) +
       " ), index: " + index);
-    return J._jActivated[index];
+    return result;
   };
 
   /**

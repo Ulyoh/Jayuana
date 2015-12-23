@@ -91,6 +91,8 @@ describe("J", function () {
             dbName: "",
             type: type,
             jStart: false,
+            newJInitRefInput: null,
+            newJInitRefOutput: null,
             available: true,
             path: self.pathFile
           });
