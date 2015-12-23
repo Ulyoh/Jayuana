@@ -54,9 +54,6 @@ describe("J", function () {
     xit("should throw an Error if the type of element is not given");
 
     function setAdd(type, obj){
-      if ((type !== "EJSON") && (type !== "code") && (type !== "file")){
-        return;
-      }
       return function (done) {
         var eltDef = {
           obj: obj,
@@ -112,8 +109,7 @@ describe("J", function () {
 
       xit("should verify self the new element(s) has(ve) been tested");
       xit("should throw an Error if EJSON.parse give a different result");
-      xit("should throw an Error if the jStart flag is set to true");
-      xit("should throw an Error if the argument do not match");
+      xit("should throw an Error if the arguments do not match");
       xit("should throw an Error if the dbName already exists");
     });
 
@@ -309,6 +305,12 @@ xdescribe("J object", function () {
     dbName: "coucou 1",
     jStart: true
   };
+  eltsDefs[2] = {
+    obj: "{nothing: 'empty', zero: 0}",
+    type: "EJSON",
+    dbName: "empty",
+    jStart: false
+  };
 
   describe("private properties created", function () {
     var verifyPropertiesTypes = function(elt, property, type){
@@ -342,14 +344,26 @@ xdescribe("J object", function () {
     //TODO: test also with an object which is not J._jStarter
     it("should have a private dbId property (dbId in the db)", function (done) {
       var self = this;
-      verifyPropertiesTypes(self.JayuanaElts[0], "dbId", String);
-      verifyPropertiesTypes(self.JayuanaElts[1], "dbId", String);
+      verifyPropertiesTypes(self.JayuanaElts[0], "_jDbId", String);
+      verifyPropertiesTypes(self.JayuanaElts[1], "_jDbId", String);
       done();
     });
     it("should have a private dbName property", function (done) {
       var self = this;
       verifyPropertiesTypes(self.JayuanaElts[0], "_jDbName", String);
       verifyPropertiesTypes(self.JayuanaElts[1], "_jDbName", String);
+      done();
+    });
+    it("should have a private jActiveId property", function (done) {
+      var self = this;
+      verifyPropertiesTypes(self.JayuanaElts[0], "_jActiveId", String);
+      verifyPropertiesTypes(self.JayuanaElts[1], "_jActiveId", String);
+      done();
+    });
+    it("should have a private jActiveName property", function (done) {
+      var self = this;
+      verifyPropertiesTypes(self.JayuanaElts[0], "_jActiveName", String);
+      verifyPropertiesTypes(self.JayuanaElts[1], "_jActiveName", String);
       done();
     });
     it("should have a private refsFrom property", function (done) {
@@ -368,11 +382,12 @@ xdescribe("J object", function () {
         self.JayuanaElts[1], "_jRefsTo", "J.References");
       done();
     });
-    it("should have a private object property which is a Function",
+    it("should have a private object property which is a Function or a JSON",
       function(done){
         var self = this;
         verifyPropertiesTypes(self.JayuanaElts[0], "_jObj", Function);
         verifyPropertiesTypes(self.JayuanaElts[1], "_jObj", Function);
+        verifyPropertiesTypes(self.JayuanaElts[2], "_jObj", EJSON);
         done();
       //TODO: test either a regular object or a Function
     });

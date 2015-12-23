@@ -1,7 +1,6 @@
-//var fs = Npm.require('fs');
-//TODO: replace all *getBy* by *getBy*InDb
-//TODO: create _jGetActiveBy, jGetActiveByDbName and jGetActiveByDbId
-//TODO: create prototype.getId and .getName
+
+
+
 //TODO: getName. getRefName in Reference
 
 /*TODO: create test for:
@@ -17,9 +16,6 @@
 *
 * */
 
-//TODO: place utils.v(...) after arguments test
-
-//TODO: replace all 'J' by Jayuana
 
 J = (function () {
   "use strict";
@@ -147,7 +143,7 @@ J = (function () {
       self._jDbId = element.dbId;
       self._jDbName = element.dbName;
       self._jActiveId = -1;
-      self._activeName = activeName;
+      self._jActiveName = activeName;
       self._allRefsActivated = false;
       //todo: soit un activeName est donné soit l'element doit etre créé
       //todo: si l'elt doit être créé, un cb est utilisé pour le créé
@@ -293,15 +289,6 @@ J = (function () {
     J._jWipe();
     utils.v("- end J.jInit()");
   };
-
-  /**
-   * used to add a new element in the db
-   * @typedef {Object} elementDefinition
-   * @property {Object} obj
-   * @property {RefType} type
-   * @property {string} dbName
-   * @property {boolean} start
-   */
 
   /**
    *
@@ -626,7 +613,6 @@ J = (function () {
             refTo: element.refTo
           };
           if (callback) {
-            debugger;
             callback(err, eltForConstructor);
             utils.v(" - J._jGetPassiveBy");
           }

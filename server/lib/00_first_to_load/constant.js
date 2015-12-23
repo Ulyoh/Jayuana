@@ -10,14 +10,12 @@ C = {  // jshint ignore:line
 };
 
 /**
- * Object to add a new Jayuana element to the database
- *
- * @typedef {Object} newJ
- *
- * @property {string} newJDbName
- * @property {StrOrJSON} type //TODO: perhaps use JDataType
- * @property {string | JSON} newJObj
- * @property {boolean} newJStart
+ * used to add a new element in the db
+ * @typedef {Object} elementDefinition
+ * @property {Object} obj
+ * @property {JDataType} type
+ * @property {string} dbName
+ * @property {boolean} jStart
  * @property {Array.<JRefForDb>} [newJInitRefInput]
  * @property {Array.<JRefForDb>} [newJInitRefOutput]
  */

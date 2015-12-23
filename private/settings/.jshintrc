@@ -133,7 +133,9 @@
     "global": false,
     "Log": false,
     "MongoInternals": false,
-    "process": false,
+    "process": true,
+    "process.env": true,
+    "process.env.PWD": true,
     "WebApp": false,
     "WebAppInternals": false,
     // globals useful when creating Meteor packages
@@ -177,7 +179,6 @@
     "ObjInfo"   : true,
     "__"        : true,
     "lodash"    : true,
-    "process.env.PWD": true,
     "utils.fs.mkdirSync": true
   }
 }
