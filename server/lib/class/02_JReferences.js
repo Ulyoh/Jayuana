@@ -99,8 +99,9 @@ J.References = (function () {
    */
 
   References.prototype.rGetActiveIdByRefName = function (refName) {
+    var self;
     var index;
-    var self = this;
+    self = this;
     if (!Match.test(refName, String)) {
       throw new J.Error("References", "method rGetActiveIdByRefName: argument" +
         " is not a string");
@@ -323,7 +324,7 @@ J.References = (function () {
     //looking for the Jayuana object
     utils.v(EJSON.stringify(ref));
 
-    if (ref.activeId !== undefined) {
+    if (ref.activeId) {
       elt = J.jGetActiveByActiveId(ref.activeId);
     }
     else if (ref.activeName !== undefined){

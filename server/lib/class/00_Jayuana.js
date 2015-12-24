@@ -19,7 +19,10 @@
 
 J = (function () {
   "use strict";
-
+  //to avoid JSdocs warning:
+  var J = {
+    db:{}
+  };
 
   /**
    * @callback JCallback
@@ -36,7 +39,7 @@ J = (function () {
    *
    */
 
-  var J = function (options, callback) {
+  J = function (options, callback) {
     utils.v("+ J with options: " + EJSON.stringify(options));
     var self = this;
     var cb;
@@ -64,6 +67,7 @@ J = (function () {
         });
         return;
       }
+      //else:
       //else:
       cb = function (err, element) {
         if (err) {
@@ -262,7 +266,7 @@ J = (function () {
     //var fs = Npm.require('fs');
 
     if (J.db === undefined) {
-      J._rootPath = process.env.PWD + "/";
+      J._rootPath = utils.env.PWD + "/";
 
       if ((options) && (options.folderName)) {
         J._folderName = options.folderName + "/";
@@ -292,8 +296,8 @@ J = (function () {
 
   /**
    *
-   * @param oneOreMoreElements {Array.<elementDefinition>|elementDefinition}
-   * @param callback {Function}
+   * @param  {Array.<elementDefinition>|elementDefinition} oneOreMoreElements
+   * @param  {Function} [callback]
    */
   J.jAddInDb = function (oneOreMoreElements, callback) {
     var eltsDef = [];
@@ -523,12 +527,12 @@ J = (function () {
     };
 
     switch (type) {
-      case "EJSON":
+      case JDataType.EJSON:
         objUnderTest = obj;
         data = EJSON.stringify(obj);
         break;
 
-      case "code":
+      case JDataType.code:
         try {
           eval('objUnderTest = ' + obj); //jshint ignore:line
         }
@@ -539,7 +543,7 @@ J = (function () {
 
         break;
 
-      case "file":
+      case JDataType.file:
 
         break;
     }
@@ -642,7 +646,7 @@ J = (function () {
 
   J._jWipe = function () {
     //remove all files within the folder:
-    utils._emptyDirectory(process.env.PWD + "/" + J._folderName);
+    utils._emptyDirectory(utils.env.PWD + "/" + J._folderName);
 
     //empty the db:
     J.db.remove({});

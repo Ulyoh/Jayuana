@@ -259,7 +259,7 @@ describe("J.References", function () {
       function (done) {
         self = this;
         spyOn(self.testRefs, "_rGetIndexByActiveId").and.returnValue(1);
-        expect(self.testRefs.rRemoveByActiveId(12)).toBeTruthy();
+        expect(self.testRefs.rRemoveByActiveId("12")).toBeTruthy();
         expect(self.testRefs._rList[0]).toEqual(ref1result);
         expect(self.testRefs._rList[1]).toBeUndefined();
         expect(self.testRefs._rList[2]).toEqual(ref3result);
@@ -394,11 +394,11 @@ describe("J.References", function () {
         spyOn(self.testRefs, "_rGetIndexByActiveId").
           and.callFake(function (activeId) {
           switch (activeId) {
-            case 11:
+            case "11":
               return 0;
-            case 12:
+            case "12":
               return 1;
-            case 13:
+            case "13":
               return 2;
             default:
               return -1;
@@ -429,9 +429,9 @@ describe("J.References", function () {
 
     it("should return the activeId if the refName is found", function (done) {
       self = this;
-      expect(self.testRefs.rGetRefNameByActiveId(11)).toEqual("name1");
-      expect(self.testRefs.rGetRefNameByActiveId(12)).toEqual("name2");
-      expect(self.testRefs.rGetRefNameByActiveId(13)).toEqual("name3");
+      expect(self.testRefs.rGetRefNameByActiveId("11")).toEqual("name1");
+      expect(self.testRefs.rGetRefNameByActiveId("12")).toEqual("name2");
+      expect(self.testRefs.rGetRefNameByActiveId("13")).toEqual("name3");
       done();
     });
   });
@@ -484,11 +484,11 @@ describe("J.References", function () {
       spyOn(self.testRefs, "_rGetIndexByActiveId")
         .and.callFake(function (activeId) {
         switch (activeId) {
-          case 11:
+          case "11":
             return 0;
-          case 12:
+          case "12":
             return 1;
-          case 13:
+          case "13":
             return 2;
           default:
             return -1;
@@ -503,9 +503,9 @@ describe("J.References", function () {
     });
     it("should return true if activeId is found", function (done) {
       self = this;
-      expect(self.testRefs.rIsActiveIdIn(11)).toBeTruthy();
-      expect(self.testRefs.rIsActiveIdIn(12)).toBeTruthy();
-      expect(self.testRefs.rIsActiveIdIn(13)).toBeTruthy();
+      expect(self.testRefs.rIsActiveIdIn("11")).toBeTruthy();
+      expect(self.testRefs.rIsActiveIdIn("12")).toBeTruthy();
+      expect(self.testRefs.rIsActiveIdIn("13")).toBeTruthy();
       done();
     });
   });

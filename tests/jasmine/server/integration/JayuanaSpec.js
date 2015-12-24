@@ -29,9 +29,9 @@ describe("J", function () {
     //var fs = Npm.require('fs');
     //utils.fs.accessSync not working yet, use it when existsSync is removed
     //from fs API :
-    //expect(utils.fs.accessSync(process.env.PWD + "/" + directoryName)).not
+    //expect(utils.fs.accessSync(utils.env.PWD + "/" + directoryName)).not
     //.toThrow();
-    expect(utils.fs.existsSync(process.env.PWD + "/" + directoryName))
+    expect(utils.fs.existsSync(utils.env.PWD + "/" + directoryName))
       .toBeTruthy();
   });
 
@@ -47,7 +47,9 @@ describe("J", function () {
       "the db and J");
   });
 
-  xdescribe("_jWipe");
+  xdescribe("_jWipe", function () {
+
+  });
 
   describe("add", function () {
 
@@ -62,7 +64,7 @@ describe("J", function () {
           jStart: false
       };
         J.jAddInDb(eltDef, function (dbId) {
-          self.pathFile = process.env.PWD + "/" + directoryName + "/" + dbId;
+          self.pathFile = utils.env.PWD + "/" + directoryName + "/" + dbId;
           self.dbId = dbId;
           done();
         });
@@ -124,9 +126,10 @@ describe("J", function () {
 
       it("should be able to set the jStart flag to true, and verify if the " +
       "code generate a function", function (done) {
+        /** @type {elementDefinition}*/
         var eltDef = {
           obj: code,
-          type: "code",
+          type: JDataType.code,
           dbName: "",
           jStart: false
         };
@@ -138,7 +141,7 @@ describe("J", function () {
 
           var eltDef = {
             obj: "{info: 'this is not a function'}",
-            type: "code",
+            type: JDataType.code,
             dbName: "",
             jStart: true
           };
@@ -172,7 +175,9 @@ describe("J", function () {
       xit("should verify if file with same code already exists");
     });
 
-    xdescribe("should call the callback only once");
+    xdescribe("should call the callback only once", function () {
+
+    });
   });
 
   describe("jGetPassiveByDbId", function () {
@@ -187,7 +192,7 @@ describe("J", function () {
       };
       var eltDef = {
         obj: obj,
-        type: "EJSON",
+        type: JDataType.EJSON,
         dbName: "",
         jStart: false
       };
@@ -214,13 +219,13 @@ describe("J", function () {
       var dbName = "name_test";
       var elementPartial = {
         dbName: dbName,
-        type: "EJSON",
+        type: JDataType.EJSON,
         jStart: false,
         objToEval: EJSON.stringify(obj)
       };
       var eltDef = {
         obj: obj,
-        type: "EJSON",
+        type: JDataType.EJSON,
         dbName: dbName,
         jStart: false
       };
@@ -256,12 +261,13 @@ describe("J", function () {
     "the jStart flag = true", function (done) {
       var eltDef = {
         obj: "function() {this.testMessage = 'coucou';}",
-        type: "code",
+        type: JDataType.code,
         dbName: "coucou",
         jStart: true
       };
 
       J.jAddInDb(eltDef, function () {
+        J._jStarter.testMessage = ''; //to avoid JSDoc warning here after
         J.jStart();
       });
 
@@ -433,5 +439,5 @@ xdescribe("J object", function () {
 });
 
 Meteor.setTimeout(function () {
-  utils._emptyDirectory(process.env.PWD + "/" + directoryName);
+  utils._emptyDirectory(utils.env.PWD + "/" + directoryName);
 }, 5000);

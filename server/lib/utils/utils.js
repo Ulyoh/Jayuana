@@ -2,8 +2,32 @@
  * Created by yoh on 5/10/15.
  */
 
+//to avoid JSDocs warnings:
+utils = {
+  fs: {
+    mkdirSync: function () {
+    },
+    readdirSync: function () {
+    },
+    existsSync: function () {
+    },
+    readFileSync: function () {
+    },
+    statSync: function () {
+    },
+    rmdirSync: function () {
+    },
+    unlinkSync: function () {
+    }
+  },
+  env:{
+    PWD:""
+  }
+};
+
 var fs = Npm.require('fs');
 utils = {
+  env: process.env,
   fs: fs,
 
   _emptyDirectory: function (target) {

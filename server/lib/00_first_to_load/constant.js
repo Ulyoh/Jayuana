@@ -12,7 +12,7 @@ C = {  // jshint ignore:line
 /**
  * used to add a new element in the db
  * @typedef {Object} elementDefinition
- * @property {Object} obj
+ * @property {EJSON | string} obj
  * @property {JDataType} type
  * @property {string} dbName
  * @property {boolean} jStart
@@ -52,7 +52,7 @@ C = {  // jshint ignore:line
  *
  * @typedef {Object} newJRefForActiveJ
  *
- * @property {number} [activeId]
+ * @property {string} [activeId]
  * @property {activeName} [activeName]
  * @property {string} [newRefName]
  *
