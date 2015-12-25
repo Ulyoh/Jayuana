@@ -63,7 +63,7 @@ utils = {
     var callback;
     var id = -1;
 
-    while( newElt = stack[0]){
+    while( newElt = stack.shift()){
       callback = null;
       //newValues.refs[0]
       if (previousGenerateFunc){
@@ -81,7 +81,6 @@ utils = {
         callback(); //to have the callback called just after the related ref are
         //added and before other are added;
       }
-      stack.shift();
     }
 
 

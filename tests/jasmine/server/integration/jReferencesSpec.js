@@ -61,7 +61,7 @@ describe("J.References",function(){
     this.Jtest3 = Jtest3;
 
     this.ref1result = {
-      rRefName: "Jtest1",
+      rRefName: "name1",
       _rActiveId: 11,
       rActiveName: 'Jtest1',
       rDbId: 1,
@@ -69,7 +69,7 @@ describe("J.References",function(){
       rActiveElt: Jtest1,
       _rRefId: 0};
     this.ref2result = {
-      rRefName: "Jtest2",
+      rRefName: "name2",
       _rActiveId: 12,
       rActiveName: 'Jtest2',
       rDbId: 2,
@@ -77,7 +77,7 @@ describe("J.References",function(){
       rActiveElt: Jtest2,
       _rRefId: 1};
     this.ref3result = {
-      rRefName: "Jtest3",
+      rRefName: "name3",
       _rActiveId: 13,
       rActiveName: 'Jtest3',
       rDbId: 3,
@@ -144,22 +144,22 @@ describe("J.References",function(){
           });
       });
 
-      xit("should add an array of references to the reference list and" +
+      it("should add an array of references to the reference list and" +
         " have only rRefName, activeElt, _rRefId and _rActiveId as properties",
         function (done) {
           utils.v("+ Ref.constr.rAdd add ref array to ref list");
-          var self = this;
+          var jasmineSelf = this;
           spyOn(Match, "test").and.returnValue(true);
 
-          new J.References(self.refsList, function () {
-            self = this;
+          new J.References(jasmineSelf.refsList, function () {
+            var self = this;
             expect(self._rList[0]).toEqual({
               rRefName: "name1",
               _rActiveId: 11,
               rActiveName: 'Jtest1',
               rDbId: 1,
               rDbName: 'db1',
-              rActiveElt: Jtest1,
+              rActiveElt: jasmineSelf.Jtest1,
               _rRefId: 0});
             expect(self._rList[1]).toEqual({
               rRefName: "name2",
@@ -167,7 +167,7 @@ describe("J.References",function(){
               rActiveName: 'Jtest2',
               rDbId: 2,
               rDbName: 'db2',
-              rActiveElt: Jtest2,
+              rActiveElt: jasmineSelf.Jtest2,
               _rRefId: 1});
             expect(self._rList[2]).toEqual({
               rRefName: "name3",
@@ -175,7 +175,7 @@ describe("J.References",function(){
               rActiveName: 'Jtest3',
               rDbId: 3,
               rDbName: 'db3',
-              rActiveElt: Jtest3,
+              rActiveElt: jasmineSelf.Jtest3,
               _rRefId: 2});
             utils.v("- Ref.constr.rAdd add ref array to ref list");
             done();
@@ -185,6 +185,251 @@ describe("J.References",function(){
 
     });
 
+  });
+
+  describe("rRemoveByActiveId", function () {
+    beforeEach(function (done) {
+      var self = this;
+      self.testRefs = new J.References(self.refsList, function () {
+        done();
+      });
+    });
+
+    it("should throw an Error if argument is not a string",
+      function (done) {
+        var self = this;
+        expect(function () {
+          self.testRefs.rRemoveByActiveId({noId: "noId"});})
+          .toThrowError(J.Error,"method rRemoveByActiveId: activeId argument" +
+          " is not a number [References]");
+        expect(self.testRefs._rList[0]).toEqual(self.ref1result);
+        expect(self.testRefs._rList[1]).toEqual(self.ref2result);
+        expect(self.testRefs._rList[2]).toEqual(self.ref3result);
+        done();
+      });
+
+    it("should return false if activeId is not found",
+      function (done) {
+        var self = this;
+        spyOn(self.testRefs, "_rGetIndexByActiveId").and.returnValue(-1);
+        expect(self.testRefs.rRemoveByActiveId(100)).toBeFalsy();
+        expect(self.testRefs._rList[0]).toEqual(self.ref1result);
+        expect(self.testRefs._rList[1]).toEqual(self.ref2result);
+        expect(self.testRefs._rList[2]).toEqual(self.ref3result);
+        done();
+      });
+
+    it("should remove the reference corresponding to the given activeId",
+      function (done) {
+        var self = this;
+        spyOn(self.testRefs, "_rGetIndexByActiveId").and.returnValue(1);
+        expect(self.testRefs.rRemoveByActiveId(12)).toBeTruthy();
+        expect(self.testRefs._rList[0]).toEqual(self.ref1result);
+        expect(self.testRefs._rList[1]).toBeUndefined();
+        expect(self.testRefs._rList[2]).toEqual(self.ref3result);
+        done();
+      });
+  });
+
+  describe("rRemoveByRefName", function () {
+    beforeEach(function (done) {
+      var self = this;
+      self.testRefs = new J.References(self.refsList, function () {
+        done();
+      });
+
+    });
+    it("should throw an Error if argument is not a string",
+      function (done) {
+        //   spyOn(self.testRefs, "_rGetIndexByRefName").and.returnValue(-1);
+        var self = this;
+        expect(function () {
+          self.testRefs.rRemoveByRefName({obj: "this is an obj"});
+        }).toThrowError(J.Error,
+          "method rRemoveByRefName: argument is not a string [References]");
+        expect(self.testRefs._rList[0]).toEqual(self.ref1result);
+        expect(self.testRefs._rList[1]).toEqual(self.ref2result);
+        expect(self.testRefs._rList[2]).toEqual(self.ref3result);
+        done();
+      });
+
+    it("should return false if the refName is not found", function (done) {
+      var self = this;
+      expect(self.testRefs.rRemoveByRefName("unknown"))
+        .toBeFalsy();
+      expect(self.testRefs._rList[0]).toEqual(self.ref1result);
+      expect(self.testRefs._rList[1]).toEqual(self.ref2result);
+      expect(self.testRefs._rList[2]).toEqual(self.ref3result);
+      done();
+    });
+
+    it("should remove the reference", function (done) {
+      var self = this;
+      expect(self.testRefs.rRemoveByRefName("name2"))
+        .toBeTruthy();
+      expect(self.testRefs._rList[0]).toEqual(self.ref1result);
+      expect(self.testRefs._rList[1]).toBeUndefined();
+      expect(self.testRefs._rList[2]).toEqual(self.ref3result);
+      done();
+    });
+  });
+
+  describe("rGetActiveIdByRefName", function () {
+    beforeEach(function (done) {
+      var self = this;
+      self.testRefs = new J.References(self.refsList, function () {
+        done();
+      });
+    });
+
+    it("should throw an Error if argument is not a string",
+      function (done) {
+        var self = this;
+        expect(function () {
+          self.testRefs.rGetActiveIdByRefName({noName: "noName"});
+        }).toThrowError(J.Error,
+          "method rGetActiveIdByRefName: argument is not a string [References]");
+        done();
+      });
+
+    it("should return null if the activeId is not found", function (done) {
+      var self = this;
+      expect(self.testRefs.rGetActiveIdByRefName("unknown")).toBeNull();
+      done();
+    });
+
+    it("should return the activeId if the refName is found", function (done) {
+      var self = this;
+      expect(self.testRefs.rGetActiveIdByRefName("name1")).toEqual(11);
+      expect(self.testRefs.rGetActiveIdByRefName("name2")).toEqual(12);
+      expect(self.testRefs.rGetActiveIdByRefName("name3")).toEqual(13);
+      done();
+    });
+  });
+
+  describe("rGetRefNameByActiveId", function () {
+    beforeEach(function (done) {
+      var self = this;
+      self.testRefs = new J.References(self.refsList, function () {
+        done();
+      });
+    });
+
+    it("should throw an Error if argument is not a number",
+      function (done) {
+        var self = this;
+        expect(function () {
+          self.testRefs.rGetRefNameByActiveId({noId: "noId"});
+        }).toThrowError(J.Error,
+          "method rGetRefNameByActiveId: argument is not a Number [References]"
+        );
+        done();
+      });
+
+    it("should return null if the activeId is not found", function (done) {
+      var self = this;
+      expect(self.testRefs.rGetRefNameByActiveId(100)).toBeNull();
+      done();
+    });
+
+    it("should return the activeId if the refName is found", function (done) {
+      var self = this;
+      debugger;
+      expect(self.testRefs.rGetRefNameByActiveId(11)).toEqual("name1");
+      expect(self.testRefs.rGetRefNameByActiveId(12)).toEqual("name2");
+      expect(self.testRefs.rGetRefNameByActiveId(13)).toEqual("name3");
+      done();
+    });
+  });
+
+  describe("rIsRefNameIn", function () {
+    beforeEach(function (done) {
+      var self = this;
+      self.testRefs = new J.References(self.refsList, function () {
+        done();
+      });
+    });
+    it("should return false if the refName is not found", function (done) {
+      var self = this;
+      expect(self.testRefs.rIsRefNameIn("unknown")).toBeFalsy();
+      done();
+    });
+    it("should return true if the refName is found", function (done) {
+      var self = this;
+      expect(self.testRefs.rIsRefNameIn("name1")).toBeTruthy();
+      expect(self.testRefs.rIsRefNameIn("name2")).toBeTruthy();
+      expect(self.testRefs.rIsRefNameIn("name3")).toBeTruthy();
+      done();
+    });
+  });
+
+  describe("rIsActiveIdIn", function () {
+    beforeEach(function (done) {
+      var self = this;
+      self.testRefs = new J.References(self.refsList, function () {
+        done();
+      });
+    });
+    it("should return false if activeId is not found", function (done) {
+      var self = this;
+      expect(self.testRefs.rIsActiveIdIn("unknown")).toBeFalsy();
+      done();
+    });
+    it("should return true if activeId is found", function (done) {
+      var self = this;
+      expect(self.testRefs.rIsActiveIdIn(11)).toBeTruthy();
+      expect(self.testRefs.rIsActiveIdIn(12)).toBeTruthy();
+      expect(self.testRefs.rIsActiveIdIn(13)).toBeTruthy();
+      done();
+    });
+  });
+
+  describe("_rGetIndexByActiveId", function () {
+    beforeEach(function (done) {
+      var self = this;
+      self.testRefs = new J.References(self.refsList, function () {
+        done();
+      });
+    });
+
+    it("should return -1 if the given Id is not found", function (done) {
+      var self = this;
+      expect(self.testRefs._rGetIndexByActiveId("unknown")).toEqual(-1);
+      done();
+    });
+
+    it("should return the corresponding index to the given Id",
+      function (done) {
+        var self = this;
+        expect(self.testRefs._rGetIndexByActiveId(11)).toEqual(0);
+        expect(self.testRefs._rGetIndexByActiveId(12)).toEqual(1);
+        expect(self.testRefs._rGetIndexByActiveId(13)).toEqual(2);
+        done();
+      });
+  });
+
+  describe("_rGetIndexByRefName", function () {
+    beforeEach(function (done) {
+      var self = this;
+      self.testRefs = new J.References(self.refsList, function () {
+        done();
+      });
+    });
+    it("should return -1 if the given refName is not found",
+      function (done) {
+        var self = this;
+        expect(self.testRefs._rGetIndexByRefName("unknown")).toEqual(-1);
+        done();
+      });
+    it("should return the corresponding index to the given refName",
+      function (done) {
+        var self = this;
+        expect(self.testRefs._rGetIndexByRefName("name1")).toEqual(0);
+        expect(self.testRefs._rGetIndexByRefName("name2")).toEqual(1);
+        expect(self.testRefs._rGetIndexByRefName("name3")).toEqual(2);
+        done();
+
+      });
   });
 
   describe("_rCleanRef", function () {

@@ -124,7 +124,7 @@ J.References = (function () {
   /**
    * Get reference name by activeId
    *
-   * @param {string} activeId
+   * @param {number} activeId
    * @returns {string | null}
    */
   References.prototype.rGetRefNameByActiveId = function (activeId) {
@@ -155,7 +155,7 @@ J.References = (function () {
   /**
    * Is the string is an activeId of one of the references
    *
-   * @param {string} activeId
+   * @param {number} activeId
    * @returns {boolean}
    */
 
@@ -168,15 +168,15 @@ J.References = (function () {
    * Remove a reference by activeId
    * return false if not found
    *
-   * @param {string} activeId
+   * @param {number} activeId
    * @returns {boolean}
    */
   References.prototype.rRemoveByActiveId = function (activeId) {
     var index;
     var self = this;
-    if (!Match.test(activeId, String)) {
+    if (!Match.test(activeId, Number)) {
       throw new J.Error("References", "method rRemoveByActiveId: activeId " +
-        "argument is not a string");
+        "argument is not a number");
     }
 
     index = self._rGetIndexByActiveId(activeId);
@@ -234,7 +234,7 @@ J.References = (function () {
 
   /**
    *
-   * @param {string} activeId
+   * @param {number} activeId
    * @returns {number}
    * @private
    */
