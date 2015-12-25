@@ -125,8 +125,9 @@ describe("J.References",function(){
           'method [References _rCleanRef]');
       });
 
-      xit("should add a reference to the reference list", function (done) {
+      it("should add a reference to the reference list", function (done) {
         utils.v("+ Ref.constr.rAdd add ref to ref list");
+        var jasmineSelf = this;
         new J.References({newRefName: "rRefName", activeId: 11},
           function () {
             var self = this;
@@ -136,7 +137,7 @@ describe("J.References",function(){
               rActiveName: 'Jtest1',
               rDbId: 1,
               rDbName: 'db1',
-              rActiveElt: self.Jtest1,
+              rActiveElt: jasmineSelf.Jtest1,
               _rRefId: 0});
             utils.v("- Ref.constr.rAdd add ref to ref list");
             done();

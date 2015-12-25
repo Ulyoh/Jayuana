@@ -196,6 +196,7 @@ describe("J", function () {
         dbName: "",
         jStart: false
       };
+      var self = this;
 
       J.jAddInDb(eltDef, function (dbId) {
         J.jGetPassiveByDbId(dbId, function (err, data) {
@@ -205,7 +206,7 @@ describe("J", function () {
       Meteor.setTimeout(function () {
         expect(self.data).toEqual(jasmine.objectContaining(elementPartial));
         done();
-      }, 50);
+      }, 100);
     });
 
     xit("should throw an Error if the dbId is not found");
