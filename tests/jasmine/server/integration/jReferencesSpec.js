@@ -21,41 +21,43 @@ describe("J.References",function(){
         }
       };
 
-      var j0 = {
+      var Jtest0 = {
         _jActiveId: 0,
-        _jActiveName: "j0",
+        _jActiveName: "Jtest0",
         _jDbId: 0,
         _jDbName: "db0"
       };
-      var j1 = {
+      var Jtest1 = {
         _jActiveId: 1,
-        _jActiveName: "j1",
+        _jActiveName: "Jtest1",
         _jDbId: 1,
         _jDbName: "db1"
       };
-      var j2 = {
+      var Jtest2 = {
         _jActiveId: 2,
-        _jActiveName: "j2",
+        _jActiveName: "Jtest2",
         _jDbId: 2,
         _jDbName: "db2"
       };
-      var j3 = {
+      var Jtest3 = {
         _jActiveId: 3,
-        _jActiveName: "j3",
+        _jActiveName: "Jtest3",
         _jDbId: 3,
         _jDbName: "db3"
       };
-      __.extend(j0,fakeJayuana);
-      __.extend(j1,fakeJayuana);
-      __.extend(j2,fakeJayuana);
-      __.extend(j3,fakeJayuana);
+      __.extend(Jtest0,fakeJayuana);
+      __.extend(Jtest1,fakeJayuana);
+      __.extend(Jtest2,fakeJayuana);
+      __.extend(Jtest3,fakeJayuana);
 
-      J._jActivated = [j0, j1, j2, j3];
+      J._jActivated = [Jtest0, Jtest1, Jtest2, Jtest3];
 
-      this.j0 = j0;
-      this.j1 = j1;
-      this.j2 = j2;
-      this.j3 = j3;
+      this.Jtest0 = Jtest0;
+      this.Jtest1 = Jtest1;
+      this.Jtest2 = Jtest2;
+      this.Jtest3 = Jtest3;
+
+
     });
 
     afterEach(function () {
@@ -86,42 +88,42 @@ describe("J.References",function(){
       });
 
     it("should return a cleanRef by activeId", function () {
-      var j2 = this.j2;
+      var Jtest2 = this.Jtest2;
       expect(J.References._rCleanRef({activeId: 2, newRefName:"ref2"}))
         .toEqual({
           rRefName: "ref2",
           _rActiveId: 2,
-          rActiveName: "j2",
+          rActiveName: "Jtest2",
           rDbId: 2,
           rDbName:  "db2",
-          rActiveElt: j2
+          rActiveElt: Jtest2
         });
     });
 
     it("should return a cleanRef by activeName", function () {
-      var j2 = this.j2;
-      expect(J.References._rCleanRef({activeName: "j2", newRefName:"ref2"}))
+      var Jtest2 = this.Jtest2;
+      expect(J.References._rCleanRef({activeName: "Jtest2", newRefName:"ref2"}))
         .toEqual({
           rRefName: "ref2",
           _rActiveId: 2,
-          rActiveName: "j2",
+          rActiveName: "Jtest2",
           rDbId: 2,
           rDbName:  "db2",
-          rActiveElt: j2
+          rActiveElt: Jtest2
         });
     });
 
     it("should give the activeName as the reference name if newRefName is " +
       "not specify ", function () {
-      var j2 = this.j2;
+      var Jtest2 = this.Jtest2;
       expect(J.References._rCleanRef({activeId: 2}))
         .toEqual({
-          rRefName: "j2",
+          rRefName: "Jtest2",
           _rActiveId: 2,
-          rActiveName: "j2",
+          rActiveName: "Jtest2",
           rDbId: 2,
           rDbName:  "db2",
-          rActiveElt: j2
+          rActiveElt: Jtest2
         });
     });
 
@@ -131,19 +133,22 @@ describe("J.References",function(){
 
     it("should throw an error if the reference name already exists",
       function () {
-        var j0 = this.j0;
+        var Jtest0 = this.Jtest0;
         expect(function () {
-          j0._jRefsTo._rCleanRef({activeId: 3, newRefName:"j1"});
+          Jtest0._jRefsTo._rCleanRef({activeId: 3, newRefName:"Jtest1"});
         }).toThrowError('');
 
       });
 
     it("should throw an error if a reference to the active Jayuana already " +
       "exists", function () {
-      var j0 = this.j0;
+      var Jtest0 = this.Jtest0;
       expect(function () {
-        j0._jRefsTo._rCleanRef({activeId: 2, newRefName:"already exists"});
+        Jtest0._jRefsTo._rCleanRef({activeId: 2, newRefName:"already exists"});
       }).toThrowError('');
     });
-  });
+  })
+
+
+
 });
