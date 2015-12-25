@@ -22,25 +22,25 @@ describe("J.References",function(){
       };
 
       var Jtest0 = {
-        _jActiveId: 0,
+        _jActiveId: 10,
         _jActiveName: "Jtest0",
         _jDbId: 0,
         _jDbName: "db0"
       };
       var Jtest1 = {
-        _jActiveId: 1,
+        _jActiveId: 11,
         _jActiveName: "Jtest1",
         _jDbId: 1,
         _jDbName: "db1"
       };
       var Jtest2 = {
-        _jActiveId: 2,
+        _jActiveId: 12,
         _jActiveName: "Jtest2",
         _jDbId: 2,
         _jDbName: "db2"
       };
       var Jtest3 = {
-        _jActiveId: 3,
+        _jActiveId: 13,
         _jActiveName: "Jtest3",
         _jDbId: 3,
         _jDbName: "db3"
@@ -50,14 +50,47 @@ describe("J.References",function(){
       __.extend(Jtest2,fakeJayuana);
       __.extend(Jtest3,fakeJayuana);
 
-      J._jActivated = [Jtest0, Jtest1, Jtest2, Jtest3];
+      //J._jActivated = [Jtest0, Jtest1, Jtest2, Jtest3];
+      J._jActivated[10]=Jtest0;
+      J._jActivated[11]=Jtest1;
+      J._jActivated[12]=Jtest2;
+      J._jActivated[13]=Jtest3;
 
       this.Jtest0 = Jtest0;
       this.Jtest1 = Jtest1;
       this.Jtest2 = Jtest2;
       this.Jtest3 = Jtest3;
 
+      this.ref1result = {
+        rRefName: "Jtest1",
+        _rActiveId: 11,
+        rActiveName: 'Jtest1',
+        rDbId: 1,
+        rDbName: 'db1',
+        rActiveElt: Jtest1,
+        _rRefId: 0};
+      this.ref2result = {
+        rRefName: "Jtest2",
+        _rActiveId: 12,
+        rActiveName: 'Jtest2',
+        rDbId: 2,
+        rDbName: 'db2',
+        rActiveElt: Jtest2,
+        _rRefId: 1};
+      this.ref3result = {
+        rRefName: "Jtest3",
+        _rActiveId: 13,
+        rActiveName: 'Jtest3',
+        rDbId: 3,
+        rDbName: 'db3',
+        rActiveElt: Jtest3,
+        _rRefId: 2};
 
+      this.refsList = [
+        {newRefName: "name1", activeId: 11, somethingElse: "thing"},
+        {newRefName: "name2", activeId: 12},
+        {newRefName: "name3", activeName: "Jtest3"}
+      ];
     });
 
     afterEach(function () {
@@ -89,10 +122,10 @@ describe("J.References",function(){
 
     it("should return a cleanRef by activeId", function () {
       var Jtest2 = this.Jtest2;
-      expect(J.References._rCleanRef({activeId: 2, newRefName:"ref2"}))
+      expect(J.References._rCleanRef({activeId: 12, newRefName:"ref2"}))
         .toEqual({
           rRefName: "ref2",
-          _rActiveId: 2,
+          _rActiveId: 12,
           rActiveName: "Jtest2",
           rDbId: 2,
           rDbName:  "db2",
@@ -105,7 +138,7 @@ describe("J.References",function(){
       expect(J.References._rCleanRef({activeName: "Jtest2", newRefName:"ref2"}))
         .toEqual({
           rRefName: "ref2",
-          _rActiveId: 2,
+          _rActiveId: 12,
           rActiveName: "Jtest2",
           rDbId: 2,
           rDbName:  "db2",
@@ -116,10 +149,10 @@ describe("J.References",function(){
     it("should give the activeName as the reference name if newRefName is " +
       "not specify ", function () {
       var Jtest2 = this.Jtest2;
-      expect(J.References._rCleanRef({activeId: 2}))
+      expect(J.References._rCleanRef({activeId: 12}))
         .toEqual({
           rRefName: "Jtest2",
-          _rActiveId: 2,
+          _rActiveId: 12,
           rActiveName: "Jtest2",
           rDbId: 2,
           rDbName:  "db2",
@@ -135,7 +168,7 @@ describe("J.References",function(){
       function () {
         var Jtest0 = this.Jtest0;
         expect(function () {
-          Jtest0._jRefsTo._rCleanRef({activeId: 3, newRefName:"Jtest1"});
+          Jtest0._jRefsTo._rCleanRef({activeId: 13, newRefName:"Jtest1"});
         }).toThrowError('');
 
       });
@@ -144,10 +177,10 @@ describe("J.References",function(){
       "exists", function () {
       var Jtest0 = this.Jtest0;
       expect(function () {
-        Jtest0._jRefsTo._rCleanRef({activeId: 2, newRefName:"already exists"});
+        Jtest0._jRefsTo._rCleanRef({activeId: 12, newRefName:"already exists"});
       }).toThrowError('');
     });
-  })
+  });
 
 
 
