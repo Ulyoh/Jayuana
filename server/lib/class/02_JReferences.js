@@ -41,6 +41,7 @@ J.References = (function () {
 
     self._rList = [];
     self._rStackRefsToAdd = []; //TODO: add test for the use of it
+    self._rStackTreatmentRunning = false;
     self.rNextRefId = 0;  //TODO: create tests of refId
 
     if (refArrayOrOne !== null) {
@@ -52,12 +53,15 @@ J.References = (function () {
    * @public
    */
   /**
+   * @callback rAddCallback
+   */
+  /**
    * Add a reference
    *
    * If a callback is specify, it will be executed once for each reference added
    *
    * @param {Array.<newJRefForActiveJ> | newJRefForActiveJ } refArrayOrOne
-   * @param {callback} [callback]
+   * @param {callback} [rAddCallback]
    * @return {boolean}
    */
   References.prototype.rAdd = function (refArrayOrOne, callback) {
@@ -79,7 +83,10 @@ J.References = (function () {
     refArray.forEach(function (element, index) {
       var cb = function () { };
       if (index === length -1){
-        cb = callback;
+        cb = Meteor.bindEnvironment(function () {
+          //self._rStackTreatment();
+          callback.call(self);
+        });
       }
       self._rStackRefsToAdd.push({
         valueToAdd: References._rCleanRef(element),
@@ -88,6 +95,7 @@ J.References = (function () {
 
 
     self._rStackTreatment();
+
     utils.v(" - end rAdd");
   };
 
@@ -259,6 +267,28 @@ J.References = (function () {
         return self.rNextRefId++;
       });
   });
+  References.prototype._rStackTreatment2 = function () {
+    if(!this._rStackTreatmentRunning){
+      this._rStackTreatmentRunning = true;
+      this._rStackTreatmentBasic();
+    }
+    else{
+      var self = this;
+      Meteor.setTimeout(function () {
+        self._rStackTreatment();
+      }, 0);
+    }
+  };
+
+  References.prototype._rStackTreatment3 = function () {
+    var self = this;
+
+    utils.addStackToArray(self, self._rList, self._rStackRefsToAdd, "_rRefId",
+      function () {
+        self._rStackTreatmentRunning = false;
+        return self.rNextRefId++;
+      });
+  };
 
   //////////// STATICS METHODS  /////////////////////
 
